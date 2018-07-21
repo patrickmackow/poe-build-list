@@ -2,6 +2,7 @@
   "name": "poe-build-list",
   "version": "1.0.0",
   "description": "",
+  "private": true,
   "main": "index.js",
   "scripts": {
     "test": "jest",
