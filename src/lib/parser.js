@@ -2,9 +2,7 @@ const cheerio = require("cheerio");
 
 parser = body => {
   let rows;
-  const $ = cheerio.load(body, {
-    normalizeWhitespace: true
-  });
+  const $ = cheerio.load(body);
 
   rows = $("#view_forum_table tbody tr")
     .map((i, el) => {
