@@ -25,8 +25,8 @@ describe("returned array contains objects with valid data", () => {
       title: expect.stringMatching(/.+/), // Any non empty string
       author: expect.stringMatching(/.+/),
       url: expect.stringMatching(/http(s)?:\/\/.+/), // string beginning with http(s)://
-      views: expect.stringMatching(/.+/),
-      postDate: expect.stringMatching(/.+/)
+      views: expect.stringMatching(/\d+/), // string containing digits
+      postDate: expect.stringMatching(/\w{3} .+/) // string beginning with 3 letter month
     };
 
     expect(rows[0]).toMatchObject(expectedRow);
