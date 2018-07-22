@@ -1,15 +1,7 @@
 const parser = require("./parser");
 const fs = require("fs");
 
-let testFile, rows;
-
-beforeAll(() => {
-  testFile = fs.readFileSync(__dirname + "/parserTestFile.html");
-});
-
-beforeEach(() => {
-  rows = parser(testFile);
-});
+const testFile = fs.readFileSync(__dirname + "/parserTestFile.html");
 
 it("returns empty array when it doesn't find valid data", () => {
   const empty = parser("");
@@ -18,26 +10,25 @@ it("returns empty array when it doesn't find valid data", () => {
 });
 
 describe("returned array contains objects with valid data", () => {
+  const rows = parser(testFile);
+
   it("returns an array", () => {
     expect(Array.isArray(rows)).toBe(true);
   });
 
   it("array must not be empty", () => {
-    expect(rows.length).toBeGreaterThanOrEqual(1);
+    expect(rows.length).toBeGreaterThan(0);
   });
 
-  it("object in array contains all data", () => {
+  it("object in array contains all keys", () => {
     const expectedRow = {
-      title: "",
-      author: "",
-      url: "",
-      views: "",
-      postDate: ""
+      title: expect.stringMatching(/.+/), // Any non empty string
+      author: expect.stringMatching(/.+/),
+      url: expect.stringMatching(/http(s)?:\/\/.+/), // string beginning with http(s)://
+      views: expect.stringMatching(/.+/),
+      postDate: expect.stringMatching(/.+/)
     };
-    const row = rows[0];
 
-    Object.keys(expectedRow).map(key => {
-      expect(row).toHaveProperty(key);
-    });
+    expect(rows[0]).toMatchObject(expectedRow);
   });
 });
