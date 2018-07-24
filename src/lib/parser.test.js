@@ -6,7 +6,7 @@ const {
 } = require("./parser");
 const fs = require("fs");
 
-const testFile = fs.readFileSync(__dirname + "/parserTestFile.html");
+const testFile = fs.readFileSync(__dirname + "/parserTestFile.html", "utf-8");
 
 expect.extend({
   toBeStringInArray(received, argument) {
