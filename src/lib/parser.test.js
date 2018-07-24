@@ -87,4 +87,10 @@ describe("testing extractVersion", () => {
       expect(extractVersion(s)).toBe(expected);
     }
   );
+
+  it("Number found higher than latest patch verion should not be returned", () => {
+    const s = "5.3 mill viable all blade flurry";
+
+    expect(extractVersion(s)).toBe("");
+  });
 });

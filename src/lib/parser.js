@@ -1,6 +1,7 @@
 const cheerio = require("cheerio");
 const url = require("url");
 
+const LATEST_VERSION = "3.3";
 const GAME_CLASSES = [
   "duelist",
   "marauder",
@@ -63,7 +64,13 @@ const extractGameClass = $ => {
 const extractVersion = title => {
   const versionRegExp = /(\d\.\d)/; // Look for #.#, this will only match the first instance
   const version = versionRegExp.exec(title);
-  return version ? version[1] : "";
+
+  // Return empty string if found string is greater than current patch version
+  if (version && parseFloat(LATEST_VERSION) >= parseFloat(version[0])) {
+    return version[0];
+  } else {
+    return "";
+  }
 };
 
 const parser = body => {
