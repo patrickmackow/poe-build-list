@@ -1,6 +1,8 @@
 const cheerio = require("cheerio");
 const url = require("url");
 
+const TAGS = require("./tags");
+
 const LATEST_VERSION = "3.3";
 const GAME_CLASSES = [
   "duelist",
@@ -74,7 +76,15 @@ const extractVersion = title => {
 };
 
 const extractTags = title => {
-  return [];
+  const loweCaseTitle = title.toLowerCase();
+
+  const parsedTags = Object.keys(TAGS).filter(key => {
+    const found = TAGS[key].find(tag => {
+      return loweCaseTitle.includes(tag);
+    });
+    return found ? true : false;
+  });
+  return parsedTags;
 };
 
 const parser = body => {

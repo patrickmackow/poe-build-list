@@ -102,7 +102,16 @@ describe("testing extractVersion", () => {
 });
 
 describe("testing extractTags", () => {
-  const expectedTags = [["", []]];
+  const expectedTags = [
+    [
+      "Patch 3.3 4.7m Shaper dps - Max Block Blade Flurry - Gladiator",
+      ["blade flurry"]
+    ],
+    [
+      "[3.3] From League Starter to Shaper – Cheap, Tanky, Fast and Fun Physical ST – Very Detailed Guide",
+      ["spectral throw"]
+    ]
+  ];
 
   it.each(expectedTags)("extractTags parses '%s' into '%s'", (s, expected) => {
     expect(extractTags(s)).toEqual(expected);
