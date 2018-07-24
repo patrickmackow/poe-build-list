@@ -54,3 +54,25 @@ describe("parser returns array that contains objects with valid data", () => {
     });
   });
 });
+
+describe("testing extractVersion", () => {
+  const expectedVersions = [
+    [
+      "[3.3] From League Starter to Shaper – Cheap, Tanky, Fast and Fun Physical ST – Very Detailed Guide",
+      "3.3"
+    ],
+    [
+      "[3.3] Ahfack's Crimson Cyclone | 3.1 Video Build Guide! UP! | 100% Pure Phys | All Content",
+      "3.3"
+    ],
+    ["(3.3)Double strike uber elder farm pick ur budget Incursion O_O", "3.3"],
+    ["Patch 3.3 4.7m Shaper dps - Max Block Blade Flurry - Gladiator", "3.3"]
+  ];
+
+  it.each(expectedVersions)(
+    "extractVersion parses '%s' into '%s'",
+    (s, expected) => {
+      expect(extractVersion(s)).toBe(expected);
+    }
+  );
+});
