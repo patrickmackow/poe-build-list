@@ -45,7 +45,8 @@ describe("parser returns array that contains objects with valid data", () => {
       views: expect.stringMatching(/\d+/), // string containing digits
       createdOn: expect.stringMatching(/\w{3} .+/), // string beginning with 3 letter month
       latestPost: expect.stringMatching(/\w{3} .+/),
-      gameClass: expect.toBeStringInArray(GAME_CLASSES)
+      gameClass: expect.toBeStringInArray(GAME_CLASSES),
+      version: expect.anything()
     };
 
     rows.map(row => {

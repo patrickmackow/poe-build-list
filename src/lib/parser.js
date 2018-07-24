@@ -62,7 +62,7 @@ const extractGameClass = $ => {
 };
 
 const extractVersion = title => {
-  const versionRegExp = /(\d\.\d)/; // Look for #.#, this will only match the first instance
+  const versionRegExp = /(\d+\.\d+)/; // Look for #.#, this will only match the first instance
   const version = versionRegExp.exec(title);
 
   // Return empty string if found string is greater than current patch version
@@ -79,7 +79,7 @@ const parser = body => {
   const gameClass = extractGameClass($);
   const rows = $("#view_forum_table tbody tr")
     .map((i, el) => {
-      return {
+      const row = {
         title: extractTitle(el, $),
         author: extractAuthor(el, $),
         url: extractUrl(el, $),
@@ -88,6 +88,8 @@ const parser = body => {
         latestPost: extractLatestPost(el, $),
         gameClass
       };
+      row.version = extractVersion(row.title);
+      return row;
     })
     .get();
 
