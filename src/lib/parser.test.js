@@ -1,4 +1,4 @@
-const { parser, GAME_CLASSES } = require("./parser");
+const { parser, GAME_CLASSES, extractVersion } = require("./parser");
 const fs = require("fs");
 
 const testFile = fs.readFileSync(__dirname + "/parserTestFile.html");
@@ -48,7 +48,6 @@ describe("parser returns array that contains objects with valid data", () => {
       gameClass: expect.toBeStringInArray(GAME_CLASSES)
     };
 
-    console.log(rows[0]);
     rows.map(row => {
       expect(row).toMatchObject(expectedRow);
     });
@@ -66,7 +65,20 @@ describe("testing extractVersion", () => {
       "3.3"
     ],
     ["(3.3)Double strike uber elder farm pick ur budget Incursion O_O", "3.3"],
-    ["Patch 3.3 4.7m Shaper dps - Max Block Blade Flurry - Gladiator", "3.3"]
+    ["Patch 3.3 4.7m Shaper dps - Max Block Blade Flurry - Gladiator", "3.3"],
+    [
+      "[3.3 Updated] MoM`s bloody Gladiator: when bleed actually does the job",
+      "3.3"
+    ],
+    [
+      "beyblade and fidget spinners love child slayer/champion cyclone vp bm build",
+      ""
+    ],
+    ["3.3 morgan dual blade flurry 5.3 mill viable all", "3.3"],
+    [
+      "*Updated for 3.2* Volkuur's poison! millions of dps (7.5 mil shaper - 20 mil shaper GG gear)",
+      "3.2"
+    ]
   ];
 
   it.each(expectedVersions)(

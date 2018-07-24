@@ -60,6 +60,12 @@ const extractGameClass = $ => {
   });
 };
 
+const extractVersion = title => {
+  const versionRegExp = /(\d\.\d)/; // Look for #.#, this will only match the first instance
+  const version = versionRegExp.exec(title);
+  return version ? version[1] : "";
+};
+
 const parser = body => {
   const $ = cheerio.load(body);
 
@@ -83,5 +89,6 @@ const parser = body => {
 
 module.exports = {
   parser,
-  GAME_CLASSES
+  GAME_CLASSES,
+  extractVersion
 };
