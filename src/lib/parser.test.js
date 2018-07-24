@@ -20,13 +20,13 @@ expect.extend({
   }
 });
 
-it("returns empty array when it doesn't find valid data", () => {
+it("parser returns empty array when it doesn't find valid data", () => {
   const empty = parser("");
   expect(Array.isArray(empty)).toBe(true);
   expect(empty.length).toBe(0);
 });
 
-describe("returned array contains objects with valid data", () => {
+describe("parser returns array that contains objects with valid data", () => {
   const rows = parser(testFile);
 
   it("returns an array", () => {
