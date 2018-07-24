@@ -11,44 +11,44 @@ const GAME_CLASSES = [
   "witch"
 ];
 
-extractTitle = (el, $) => {
+const extractTitle = (el, $) => {
   return $(".title a", el)
     .text()
     .trim();
 };
 
-extractAuthor = (el, $) => {
+const extractAuthor = (el, $) => {
   return $(".postBy a", el)
     .eq(0)
     .text()
     .trim();
 };
 
-extractUrl = (el, $) => {
+const extractUrl = (el, $) => {
   const relative = $(".title a", el).attr("href");
   return url.resolve("https://www.pathofexile.com/forum", relative);
 };
 
-extractViews = (el, $) => {
+const extractViews = (el, $) => {
   return $(".post-stat span", el)
     .text()
     .trim();
 };
 
-extractCreationDate = (el, $) => {
+const extractCreationDate = (el, $) => {
   return $(".postBy .post_date", el)
     .text()
     .trim()
     .slice(2);
 };
 
-extractLatestPost = (el, $) => {
+const extractLatestPost = (el, $) => {
   return $(".last_post .post_date a", el)
     .text()
     .trim();
 };
 
-extractGameClass = $ => {
+const extractGameClass = $ => {
   title = $("head title")
     .text()
     .trim()
