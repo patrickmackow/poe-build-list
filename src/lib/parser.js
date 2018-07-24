@@ -73,6 +73,10 @@ const extractVersion = title => {
   }
 };
 
+const extractTags = title => {
+  return [];
+};
+
 const parser = body => {
   const $ = cheerio.load(body);
 
@@ -99,5 +103,6 @@ const parser = body => {
 module.exports = {
   parser,
   GAME_CLASSES,
-  extractVersion
+  extractVersion,
+  extractTags
 };

@@ -1,4 +1,9 @@
-const { parser, GAME_CLASSES, extractVersion } = require("./parser");
+const {
+  parser,
+  GAME_CLASSES,
+  extractVersion,
+  extractTags
+} = require("./parser");
 const fs = require("fs");
 
 const testFile = fs.readFileSync(__dirname + "/parserTestFile.html");
@@ -93,5 +98,13 @@ describe("testing extractVersion", () => {
     const s = "5.3 mill viable all blade flurry";
 
     expect(extractVersion(s)).toBe("");
+  });
+});
+
+describe("testing extractTags", () => {
+  const expectedTags = [["", []]];
+
+  it.each(expectedTags)("extractTags parses '%s' into '%s'", (s, expected) => {
+    expect(extractTags(s)).toEqual(expected);
   });
 });
