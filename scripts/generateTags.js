@@ -27,7 +27,11 @@ function writeFile(filePath, file) {
     console.log(file);
     return;
   }
-  fs.writeFileSync(filePath, file, "utf-8");
+  try {
+    fs.writeFileSync(filePath, file, "utf-8");
+  } catch (error) {
+    console.log("Error writing file", error.message);
+  }
 }
 
 function jsonToObject(json) {
