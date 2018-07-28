@@ -51,7 +51,7 @@ describe("parser returns array that contains objects with valid data", () => {
       expect(row.author).toEqual(expect.any(String));
       expect(row.author.length).toBeGreaterThan(0);
 
-      expect(row.url).toContain("www.pathofexile.com/forum");
+      expect(row.url).toContain("www.pathofexile.com/forum/view-thread/");
 
       expect(row.views).toMatch(/\d+/);
 
