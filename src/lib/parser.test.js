@@ -111,7 +111,8 @@ describe("testing extractTags", () => {
     [
       "[3.3] From League Starter to Shaper – Cheap, Tanky, Fast and Fun Physical ST – Very Detailed Guide",
       ["spectral throw"]
-    ]
+    ],
+    ["[3.3] Vision of the Divine - DW Dagger Crit Gladiator", []]
   ];
 
   it.each(expectedTags)("extractTags parses '%s' into '%s'", (s, expected) => {
