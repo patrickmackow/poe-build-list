@@ -8,23 +8,6 @@ const fs = require("fs");
 
 const testFile = fs.readFileSync(__dirname + "/parserTestFile.html", "utf-8");
 
-expect.extend({
-  toBeStringInArray(received, argument) {
-    const pass = argument.includes(received);
-    if (pass) {
-      return {
-        message: () => `expected ${received} not to be in array ${argument}`,
-        pass
-      };
-    } else {
-      return {
-        message: () => `expected ${received} to be in array ${argument}`,
-        pass
-      };
-    }
-  }
-});
-
 it("parser returns empty array when it doesn't find valid data", () => {
   const empty = parser("");
   expect(Array.isArray(empty)).toBe(true);
@@ -42,21 +25,45 @@ describe("parser returns array that contains objects with valid data", () => {
     expect(rows.length).toBeGreaterThan(0);
   });
 
-  it("objects in array contain all keys", () => {
-    const expectedRow = {
-      title: expect.stringMatching(/.+/), // Any non empty string
-      author: expect.stringMatching(/.+/),
-      url: expect.stringMatching(/http(s)?:\/\/.+/), // string beginning with http(s)://
-      views: expect.stringMatching(/\d+/), // string containing digits
-      createdOn: expect.stringMatching(/\w{3} .+/), // string beginning with 3 letter month
-      latestPost: expect.stringMatching(/\w{3} .+/),
-      gameClass: expect.toBeStringInArray(GAME_CLASSES),
-      version: expect.anything(),
-      tags: expect.any(Array)
-    };
+  it("rows in array contain all keys", () => {
+    const fields = [
+      "title",
+      "author",
+      "url",
+      "views",
+      "createdOn",
+      "latestPost",
+      "gameClass",
+      "version",
+      "tags"
+    ];
 
     rows.map(row => {
-      expect(row).toMatchObject(expectedRow);
+      expect(Object.keys(row)).toEqual(expect.arrayContaining(fields));
+    });
+  });
+
+  it("row fields contain valid data", () => {
+    rows.map(row => {
+      expect(row.title).toEqual(expect.any(String));
+      expect(row.title.length).toBeGreaterThan(0);
+
+      expect(row.author).toEqual(expect.any(String));
+      expect(row.author.length).toBeGreaterThan(0);
+
+      expect(row.url).toContain("www.pathofexile.com/forum");
+
+      expect(row.views).toMatch(/\d+/);
+
+      expect(row.createdOn).toMatch(/\w{3} .+/);
+
+      expect(row.latestPost).toMatch(/\w{3} .+/);
+
+      expect(GAME_CLASSES).toContain(row.gameClass);
+
+      expect(row.version).toBeDefined();
+
+      expect(row.tags).toEqual(expect.any(Array));
     });
   });
 });
