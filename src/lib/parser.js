@@ -103,6 +103,7 @@ const parser = body => {
         gameClass
       };
       row.version = extractVersion(row.title);
+      row.tags = extractTags(row.title);
       return row;
     })
     .get();
