@@ -3,10 +3,15 @@ const request = require("request");
 const fs = require("fs");
 const path = require("path");
 const prettier = require("prettier");
+const axios = require("axios");
 
 const URL = "http://poedb.tw/us/gem.php?cn=Active+Skill+Gem";
-
-const tags = {};
+const config = {
+  headers: {
+    "User-Agent":
+      "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0"
+  }
+};
 
 function readFile(filePath) {
   try {
@@ -18,6 +23,10 @@ function readFile(filePath) {
 }
 
 function writeFile(filePath, file) {
+  if (!filePath) {
+    console.log(file);
+    return;
+  }
   fs.writeFileSync(filePath, file, "utf-8");
 }
 
@@ -29,12 +38,10 @@ function jsonToObject(json) {
   }
 }
 
-request(URL, function(error, response, body) {
-  if (response && response.statusCode !== 200) {
-    throw new Error("Request returned with status: " + response.statusCode);
-  }
-
+function scrapeTags(body) {
   const $ = cheerio.load(body);
+  const tags = {};
+
   $("table tbody tr").each(function(i, el) {
     tag = $("a", el)
       .eq(1)
@@ -43,19 +50,47 @@ request(URL, function(error, response, body) {
     tags[tag] = [tag];
   });
 
-  const filePath = process.argv[2] ? path.resolve(process.argv[2]) : undefined;
+  return tags;
+}
 
-  // Write to console if filePath is not specified
-  if (!filePath) {
-    console.log(tags);
-    return;
+function sortJSON(json) {
+  const sorted = JSON.stringify(json, Object.keys(json).sort(), 2);
+  return prettier.format(sorted, { parser: "json" });
+}
+
+function handleErrors(error) {
+  if (error.response) {
+    // The request was made and the server responded with a status code
+    // that falls out of the range of 2xx
+    console.log(error.response.data);
+    console.log(error.response.status);
+    console.log(error.response.headers);
+  } else if (error.request) {
+    // The request was made but no response was received
+    // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+    // http.ClientRequest in node.js
+    console.log(error.request);
+  } else {
+    // Something happened in setting up the request that triggered an Error
+    console.log("Error", error.message);
   }
+  console.log(error.config);
+}
 
-  const oldFile = jsonToObject(readFile(filePath));
-  const newFile = Object.assign(tags, oldFile);
-  const sortedJSON = prettier.format(
-    JSON.stringify(newFile, Object.keys(newFile).sort(), 2),
-    { parser: "json" }
-  );
-  writeFile(filePath, sortedJSON);
-});
+axios
+  .get(URL, config)
+  .then(response => {
+    const tags = scrapeTags(response.data);
+    const filePath = process.argv[2]
+      ? path.resolve(process.argv[2])
+      : undefined;
+
+    const oldFile = jsonToObject(readFile(filePath));
+    const newFile = Object.assign(tags, oldFile);
+    const sortedJSON = sortJSON(newFile);
+
+    writeFile(filePath, sortedJSON);
+  })
+  .catch(error => {
+    handleErrors(error);
+  });
