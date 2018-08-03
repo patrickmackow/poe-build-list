@@ -1,10 +1,15 @@
 const axios = require("axios");
 const url = require("url");
+const http = require("http");
+const https = require("https");
 
 const { parser } = require("./parser");
 
 const config = {
-  headers: {},
+  headers: {
+    "User-Agent":
+      "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0"
+  },
   timeout: 0
 };
 
@@ -23,11 +28,39 @@ const mapUrls = (urls = [], depth = 0) => {
   return mappedUrls;
 };
 
-const scraper = async scapeURL => {};
+const scrapeURL = u => {
+  return axios
+    .get(u, config)
+    .then(response => {
+      return {
+        url: u,
+        data: parser(response.data)
+      };
+    })
+    .catch(error => {
+      return {
+        url: u,
+        error
+      };
+    });
+};
 
-const scrape = (urls, options = { limit: 0, depth: 3 }) => {};
+const scraper = async (urls, options = { limit: 0, depth: 1 }) => {
+  if (options && options.limit) {
+    config.httpAgent = new http.Agent({ maxSockets: limit });
+    config.httpsAgent = new https.Agent({ maxSockets: limit });
+  }
+
+  const promises = mapUrls(urls, options.depth).map(u => {
+    scrapeURL(u);
+  });
+
+  const rows = await Promise.all(promises);
+  return rows;
+};
 
 module.exports = {
-  scrape,
-  mapUrls
+  scraper,
+  mapUrls,
+  scrapeURL
 };
