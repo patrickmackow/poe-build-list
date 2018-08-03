@@ -77,6 +77,16 @@ describe("testing scraper", () => {
     });
   });
 
+  it("object in returned array has necessary fields", () => {
+    mock.onAny().reply(200, { data: "" });
+
+    expect.assertions(2);
+    return scraper(urls).then(([result]) => {
+      expect(result).toHaveProperty("url");
+      expect(result).toHaveProperty("data");
+    });
+  });
+
   it("scraper with defined depth returns array of objects with length of urls * depth", () => {
     mock.onAny().reply(200, { data: "" });
     const options = { depth: 2 };

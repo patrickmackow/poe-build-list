@@ -52,7 +52,7 @@ const scraper = async (urls, options = { limit: 0, depth: 1 }) => {
   }
 
   const promises = mapUrls(urls, options.depth).map(u => {
-    scrapeURL(u);
+    return scrapeURL(u);
   });
 
   const rows = await Promise.all(promises);
