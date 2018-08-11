@@ -76,15 +76,30 @@ const extractVersion = title => {
 };
 
 const extractTags = title => {
-  const loweCaseTitle = title.toLowerCase();
+  const lowerCaseTitle = title.toLowerCase();
 
-  const parsedTags = Object.keys(TAGS).filter(key => {
+  /*  Tags priority:
+      1. Tags on their own
+      2. Tag keys included within the string
+  */
+  const regexTags = Object.keys(TAGS).filter(key => {
     const found = TAGS[key].find(tag => {
-      return loweCaseTitle.includes(tag);
+      let tagRegex = new RegExp(`\\b${tag}\\b`);
+      return tagRegex.test(lowerCaseTitle);
     });
     return found ? true : false;
   });
-  return parsedTags;
+
+  if (regexTags.length) {
+    return regexTags;
+  }
+
+  // No tags found, check again for tag anywhere in the string
+  const includeTags = Object.keys(TAGS).filter(key => {
+    return lowerCaseTitle.includes(key);
+  });
+
+  return includeTags;
 };
 
 const parser = body => {
