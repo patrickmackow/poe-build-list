@@ -4,6 +4,10 @@ const mock = new MockAdapter(axios);
 
 const { mapUrls, scrapeURL, scraper } = require("./scraper");
 
+afterAll(() => {
+  mock.restore();
+});
+
 describe("testing mapUrls", () => {
   const urls = [
     "https://www.pathofexile.com/forum/view-forum/40",
@@ -31,11 +35,11 @@ describe("testing mapUrls", () => {
 });
 
 describe("testing scrapeURL", () => {
-  const url = "https://www.pathofexile.com/forum/view-forum/40";
-
   afterEach(() => {
     mock.reset();
   });
+
+  const url = "https://www.pathofexile.com/forum/view-forum/40";
 
   it("promise resolves into object", () => {
     mock.onGet(url).reply(200, { data: "" });
@@ -59,14 +63,14 @@ describe("testing scrapeURL", () => {
 });
 
 describe("testing scraper", () => {
+  afterEach(() => {
+    mock.reset();
+  });
+
   const urls = [
     "https://www.pathofexile.com/forum/view-forum/40",
     "https://www.pathofexile.com/forum/view-forum/marauder"
   ];
-
-  afterEach(() => {
-    mock.reset();
-  });
 
   it("returns an array with an object per url", () => {
     mock.onAny().reply(200, { data: "" });
