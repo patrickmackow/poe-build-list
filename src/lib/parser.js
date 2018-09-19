@@ -3,7 +3,7 @@ const url = require("url");
 
 const TAGS = require("./tags");
 
-const LATEST_VERSION = "3.3";
+const LATEST_VERSION = "3.4";
 const GAME_CLASSES = [
   "duelist",
   "marauder",
@@ -63,6 +63,12 @@ const extractGameClass = $ => {
   });
 };
 
+const extractReplies = (el, $) => {
+  return $("td.views div:not(.post-stat) span", el)
+    .text()
+    .trim();
+};
+
 const extractVersion = title => {
   const versionRegExp = /(\d+\.\d+)/; // Look for #.#, this will only match the first instance
   const version = versionRegExp.exec(title);
@@ -113,6 +119,7 @@ const parser = body => {
         author: extractAuthor(el, $),
         url: extractUrl(el, $),
         views: extractViews(el, $),
+        replies: extractReplies(el, $),
         createdOn: extractCreationDate(el, $),
         latestPost: extractLatestPost(el, $),
         gameClass

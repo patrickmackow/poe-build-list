@@ -31,6 +31,7 @@ describe("parser returns array that contains objects with valid data", () => {
       "author",
       "url",
       "views",
+      "replies",
       "createdOn",
       "latestPost",
       "gameClass",
@@ -54,6 +55,8 @@ describe("parser returns array that contains objects with valid data", () => {
       expect(row.url).toContain("www.pathofexile.com/forum/view-thread/");
 
       expect(row.views).toMatch(/\d+/);
+
+      expect(row.replies).toMatch(/\d+/);
 
       expect(row.createdOn).toMatch(/\w{3} .+/);
 
