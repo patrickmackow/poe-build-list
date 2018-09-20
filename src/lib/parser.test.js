@@ -2,7 +2,7 @@ const {
   parser,
   GAME_CLASSES,
   extractVersion,
-  extractTags
+  generateTags
 } = require("./parser");
 const fs = require("fs");
 
@@ -36,7 +36,7 @@ describe("parser returns array that contains objects with valid data", () => {
       "latestPost",
       "gameClass",
       "version",
-      "tags"
+      "generatedTags"
     ];
 
     rows.map(row => {
@@ -66,7 +66,7 @@ describe("parser returns array that contains objects with valid data", () => {
 
       expect(row.version).toBeDefined();
 
-      expect(row.tags).toEqual(expect.any(Array));
+      expect(row.generatedTags).toEqual(expect.any(Array));
     });
   });
 });
@@ -112,7 +112,7 @@ describe("testing extractVersion", () => {
   });
 });
 
-describe("testing extractTags", () => {
+describe("testing generateTags", () => {
   const expectedTags = [
     [
       "Patch 3.3 4.7m Shaper dps - Max Block Blade Flurry - Gladiator",
@@ -141,14 +141,14 @@ describe("testing extractTags", () => {
     ["[3.3] Lifting's Uber Lab Warchief Totem Champion", "arc"]
   ];
 
-  it.each(expectedTags)("extractTags parses '%s' into '%s'", (s, expected) => {
-    expect(extractTags(s)).toEqual(expected);
+  it.each(expectedTags)("generateTags parses '%s' into '%s'", (s, expected) => {
+    expect(generateTags(s)).toEqual(expected);
   });
 
   it.each(unexpectedTags)(
     "Abbreviated tags should not be found if part of a word",
     (s, unexpected) => {
-      expect(extractTags(s)).not.toContain(unexpected);
+      expect(generateTags(s)).not.toContain(unexpected);
     }
   );
 });

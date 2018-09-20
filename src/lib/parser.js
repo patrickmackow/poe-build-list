@@ -81,7 +81,7 @@ const extractVersion = title => {
   }
 };
 
-const extractTags = title => {
+const generateTags = title => {
   const lowerCaseTitle = title.toLowerCase();
 
   /*  Tags priority:
@@ -125,7 +125,7 @@ const parser = body => {
         gameClass
       };
       row.version = extractVersion(row.title);
-      row.tags = extractTags(row.title);
+      row.generatedTags = generateTags(row.title);
       return row;
     })
     .get();
@@ -137,5 +137,5 @@ module.exports = {
   parser,
   GAME_CLASSES,
   extractVersion,
-  extractTags
+  generateTags
 };
