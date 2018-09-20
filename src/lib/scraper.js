@@ -47,8 +47,8 @@ const scrapeURL = u => {
 
 const scraper = async (urls, options = { limit: 0, depth: 1 }) => {
   if (options && options.limit) {
-    config.httpAgent = new http.Agent({ maxSockets: limit });
-    config.httpsAgent = new https.Agent({ maxSockets: limit });
+    config.httpAgent = new http.Agent({ maxSockets: options.limit });
+    config.httpsAgent = new https.Agent({ maxSockets: options.limit });
   }
 
   const promises = mapUrls(urls, options.depth).map(u => {
