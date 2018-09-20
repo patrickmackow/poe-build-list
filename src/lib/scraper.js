@@ -5,7 +5,7 @@ const https = require("https");
 
 const { parser } = require("./parser");
 
-/** Set the user agent so web server will think scraper is a browser */
+// Set the user agent so web server will think scraper is a browser
 const config = {
   headers: {
     "User-Agent":
@@ -14,12 +14,7 @@ const config = {
   timeout: 0
 };
 
-/**
- * Format urls to be used in scraper
- * @param {string[]} [urls=[]] - URLs to format
- * @param {number} [depth=0] - Maximum depth to scrape each URL
- * @returns {string[]}
- */
+// Format urls to be used in scraper
 const mapUrls = (urls = [], depth = 0) => {
   mappedUrls = [];
   urls.map(u => {
@@ -36,11 +31,6 @@ const mapUrls = (urls = [], depth = 0) => {
   return mappedUrls;
 };
 
-/**
- * Scrape URL
- * @param {string} u - URL to scrape
- * @returns {Promise}
- */
 const scrapeURL = u => {
   return axios
     .get(u, config)
