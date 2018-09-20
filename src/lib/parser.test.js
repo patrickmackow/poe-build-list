@@ -54,13 +54,13 @@ describe("parser returns array that contains objects with valid data", () => {
 
       expect(row.url).toContain("www.pathofexile.com/forum/view-thread/");
 
-      expect(row.views).toMatch(/\d+/);
+      expect(row.views).toEqual(expect.any(Number));
 
-      expect(row.replies).toMatch(/\d+/);
+      expect(row.replies).toEqual(expect.any(Number));
 
-      expect(row.createdOn).toMatch(/\w{3} .+/);
+      expect(row.createdOn).toEqual(expect.any(Date));
 
-      expect(row.latestPost).toMatch(/\w{3} .+/);
+      expect(row.latestPost).toEqual(expect.any(Date));
 
       expect(GAME_CLASSES).toContain(row.gameClass);
 

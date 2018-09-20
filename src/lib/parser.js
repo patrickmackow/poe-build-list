@@ -118,10 +118,10 @@ const parser = body => {
         title: extractTitle(el, $),
         author: extractAuthor(el, $),
         url: extractUrl(el, $),
-        views: extractViews(el, $),
-        replies: extractReplies(el, $),
-        createdOn: extractCreationDate(el, $),
-        latestPost: extractLatestPost(el, $),
+        views: parseInt(extractViews(el, $)),
+        replies: parseInt(extractReplies(el, $)),
+        createdOn: new Date(extractCreationDate(el, $)),
+        latestPost: new Date(extractLatestPost(el, $)),
         gameClass
       };
       row.version = extractVersion(row.title);
