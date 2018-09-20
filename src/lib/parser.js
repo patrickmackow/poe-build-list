@@ -69,6 +69,11 @@ const extractReplies = (el, $) => {
     .trim();
 };
 
+/**
+ * Extract the game version the build is meant for
+ * @param {*} title - Title of build
+ * @returns {string}
+ */
 const extractVersion = title => {
   const versionRegExp = /(\d+\.\d+)/; // Look for #.#, this will only match the first instance
   const version = versionRegExp.exec(title);
@@ -81,6 +86,11 @@ const extractVersion = title => {
   }
 };
 
+/**
+ * Automatically generate tags from title
+ * @param {string} title - Title of build
+ * @return {string[]}
+ */
 const generateTags = title => {
   const lowerCaseTitle = title.toLowerCase();
 
@@ -108,6 +118,11 @@ const generateTags = title => {
   return includeTags;
 };
 
+/**
+ * Parse HTTP request body and extract data
+ * @param {string} body - Body of HTTP request
+ * @returns {Object[]}
+ */
 const parser = body => {
   const $ = cheerio.load(body);
 

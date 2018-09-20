@@ -5,6 +5,7 @@ const https = require("https");
 
 const { parser } = require("./parser");
 
+/** Set the user agent so web server will think scraper is a browser */
 const config = {
   headers: {
     "User-Agent":
@@ -13,6 +14,12 @@ const config = {
   timeout: 0
 };
 
+/**
+ * Format urls to be used in scraper
+ * @param {string[]} [urls=[]] - URLs to format
+ * @param {number} [depth=0] - Maximum depth to scrape each URL
+ * @returns {string[]}
+ */
 const mapUrls = (urls = [], depth = 0) => {
   mappedUrls = [];
   urls.map(u => {
@@ -21,6 +28,7 @@ const mapUrls = (urls = [], depth = 0) => {
       u = u + "/";
     }
 
+    // Add page/#, max # being the depth
     for (let i = 1; i <= depth; i++) {
       mappedUrls.push(url.resolve(u, "page/" + i));
     }
@@ -28,6 +36,11 @@ const mapUrls = (urls = [], depth = 0) => {
   return mappedUrls;
 };
 
+/**
+ * Scrape URL
+ * @param {string} u - URL to scrape
+ * @returns {Promise}
+ */
 const scrapeURL = u => {
   return axios
     .get(u, config)
@@ -45,6 +58,14 @@ const scrapeURL = u => {
     });
 };
 
+/**
+ * Main scraper function
+ * @param {string[]} urls - Array of URLs to scrape
+ * @param {Object} options - Options object
+ * @param {number} [options.limit=0] - Maximum number of connections
+ * @param {number} [options.depth=1] - Maximum depth to scrape each URL
+ * @returns {Promise}
+ */
 const scraper = async (urls, options = { limit: 0, depth: 1 }) => {
   if (options && options.limit) {
     config.httpAgent = new http.Agent({ maxSockets: options.limit });
