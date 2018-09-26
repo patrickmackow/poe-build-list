@@ -1,4 +1,5 @@
-const MongoClient = require("mongodb").MongoClient;
+const mongoose = require("mongoose");
+const Build = require("../src/models/Build");
 require("dotenv").config();
 
 const { scraper } = require("../src/lib/scraper");
@@ -13,7 +14,7 @@ const urls = [
   "https://www.pathofexile.com/forum/view-forum/22"
 ];
 
-async function runScraper() {
+async function scrape() {
   const results = await scraper(urls, { limit: 10, depth: 5 });
 
   // All urls must not return errors
@@ -25,34 +26,51 @@ async function runScraper() {
 
   // Merge data into one array
   const builds = [].concat(...results.map(result => result.data));
+  return builds;
+}
 
-  MongoClient.connect(
+async function writeToDb(builds) {
+  await mongoose.connect(
     process.env.MONGO_URL,
-    { useNewUrlParser: true },
-    function(err, client) {
-      if (err) throw err;
-      console.log(`Connected to db (${process.env.MONGO_URL}) successfully`);
-
-      const db = client.db(process.env.MONGO_DB_NAME);
-
-      // Create bulk update operations for Mongo
-      let bulk = db.collection("builds").initializeUnorderedBulkOp();
-      builds.map(build => {
-        bulk
-          .find({ url: build.url })
-          .upsert()
-          .updateOne({
-            ...build
-          });
-      });
-
-      bulk.execute().then(({ result }) => {
-        console.log(result);
-      });
-
-      client.close();
+    {
+      dbName: process.env.MONGO_DB_NAME,
+      useNewUrlParser: true
     }
   );
+
+  mongoose.Promise = Promise;
+
+  console.log(`Connected to db (${process.env.MONGO_URL}) successfully`);
+
+  const bulk = Build.collection.initializeUnorderedBulkOp();
+  builds.map(build => {
+    build.updatedOn = new Date();
+    bulk
+      .find({ url: build.url })
+      .upsert()
+      .updateOne({ ...build });
+  });
+
+  bulk
+    .execute()
+    .then(({ result }) =>
+      console.log(
+        "Upserted: " +
+          result.nUpserted +
+          "\nMatched: " +
+          result.nMatched +
+          "\nModified: " +
+          result.nModified
+      )
+    )
+    .catch(err => console.log(JSON.stringify(err)));
+
+  mongoose.disconnect();
+}
+
+async function runScraper() {
+  const builds = await scrape();
+  await writeToDb(builds);
 }
 
 runScraper();
