@@ -7,8 +7,9 @@
   "scripts": {
     "test": "jest",
     "test-watch": "npm run test -- --watch",
+    "client": "npm start --prefix src/client",
     "server": "nodemon src/index.js",
-    "dev": "concurrently \"npm run server\" \"npm run test-watch\"",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
     "generate-tags": "node ./scripts/generateTags.js"
   },
   "author": "Patrick Mackow",
