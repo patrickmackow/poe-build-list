@@ -1,16 +1,24 @@
 import React, { Component } from "react";
 
 class VersionSelect extends Component {
-  render() {
-    const versionSet = new Set();
+  constructor(props) {
+    super(props);
+
+    this.versionSet = new Set();
     this.props.builds.map(
-      build => (build.version ? versionSet.add(build.version) : null)
+      build => (build.version ? this.versionSet.add(build.version) : null)
     );
+  }
+  render() {
     return (
       <select value={this.props.value} onChange={this.props.onChange}>
-        {Array.from(versionSet)
+        {Array.from(this.versionSet)
           .sort((a, b) => b - a)
-          .map(version => <option value={version}>{version}</option>)}
+          .map(version => (
+            <option key={version} value={version}>
+              {version}
+            </option>
+          ))}
       </select>
     );
   }
