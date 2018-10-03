@@ -32,10 +32,12 @@ class BuildsTable extends Component {
         />
         <table>
           <thead>
-            <th>Title</th>
-            <th>Views</th>
-            <th>Replies</th>
-            <th>Latest Post</th>
+            <tr>
+              <th>Title</th>
+              <th>Views</th>
+              <th>Replies</th>
+              <th>Latest Post</th>
+            </tr>
           </thead>
           <tbody>{buildRows}</tbody>
         </table>
