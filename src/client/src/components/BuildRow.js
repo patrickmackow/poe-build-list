@@ -7,7 +7,9 @@ class BuildRow extends Component {
     return (
       <tr>
         <td>
-          <a href={build.url}>{build.title}</a>
+          <a rel="external" href={build.url}>
+            {build.title}
+          </a>
         </td>
         <td>{build.views}</td>
         <td>{build.replies}</td>
