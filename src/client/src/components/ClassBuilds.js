@@ -1,14 +1,16 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import BuildsTable from "./BuildsTable";
 
 class ClassBuilds extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      loading: true
+    };
   }
 
   componentDidMount() {
-    this.setState({ loading: true });
     fetch("/api/builds/" + this.props.match.params.gameClass)
       .then(res => res.json())
       .then(builds => {
@@ -33,7 +35,7 @@ class ClassBuilds extends Component {
     } else {
       buildsView = (
         <div>
-          <p>{builds ? builds.length : 0} builds loaded</p>
+          <BuildsTable builds={builds} />
         </div>
       );
     }
