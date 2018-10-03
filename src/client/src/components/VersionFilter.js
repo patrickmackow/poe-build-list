@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-class VersionSelect extends Component {
+class VersionFilter extends Component {
   constructor(props) {
     super(props);
 
@@ -9,6 +9,7 @@ class VersionSelect extends Component {
       build => (build.version ? this.versionSet.add(build.version) : null)
     );
   }
+
   render() {
     return (
       <select value={this.props.value} onChange={this.props.onChange}>
@@ -24,4 +25,4 @@ class VersionSelect extends Component {
   }
 }
 
-export default VersionSelect;
+export default VersionFilter;

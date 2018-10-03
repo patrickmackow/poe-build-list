@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import BuildRow from "./BuildRow";
-import VersionSelect from "./VersionSelect";
+import VersionFilter from "./VersionFilter";
 
 class BuildsTable extends Component {
   constructor(props) {
@@ -25,7 +25,7 @@ class BuildsTable extends Component {
       <div>
         <p>{builds ? builds.length : 0} builds loaded</p>
         <p>{buildRows.length} builds displayed</p>
-        <VersionSelect
+        <VersionFilter
           value={this.state.version}
           builds={builds}
           onChange={this.handleVersionChange}
