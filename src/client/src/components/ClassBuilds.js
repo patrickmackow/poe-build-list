@@ -1,13 +1,18 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import BuildsTable from "./BuildsTable";
+import VersionFilter from "./VersionFilter";
 
 class ClassBuilds extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: true
+      loading: true,
+      builds: [],
+      version: "3.4"
     };
+
+    this.handleVersionChange = this.handleVersionChange.bind(this);
   }
 
   componentDidMount() {
@@ -19,6 +24,14 @@ class ClassBuilds extends Component {
           builds
         });
       });
+  }
+
+  handleVersionChange(e) {
+    this.setState({ version: e.target.value });
+  }
+
+  filterBuilds(builds) {
+    return builds.filter(build => build.version === this.state.version);
   }
 
   render() {
@@ -33,9 +46,18 @@ class ClassBuilds extends Component {
         </div>
       );
     } else {
+      const filteredBuilds = this.filterBuilds(builds);
+
       buildsView = (
         <div>
-          <BuildsTable builds={builds} />
+          <VersionFilter
+            value={this.state.version}
+            builds={builds}
+            onChange={this.handleVersionChange}
+          />
+          <p>{this.state.builds.length} builds loaded</p>
+          <p>{filteredBuilds.length} builds displayed</p>
+          <BuildsTable builds={filteredBuilds} />
         </div>
       );
     }
