@@ -101,7 +101,7 @@ const ClassFilter = props => {
     <select value={props.value} onChange={props.onChange}>
       {classes.map(c => {
         return (
-          <option key={c} value={c} children={c}>
+          <option key={c} value={c}>
             {c}
           </option>
         );
