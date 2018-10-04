@@ -5,6 +5,7 @@ import "./App.css";
 
 import Home from "./components/Home";
 import ClassBuilds from "./components/ClassBuilds";
+import TagBuilds from "./components/TagBuilds";
 
 class App extends Component {
   render() {
@@ -13,6 +14,7 @@ class App extends Component {
         <div>
           <Route exact path="/" component={Home} />
           <Route path="/class/:gameClass" component={ClassBuilds} />
+          <Route path="/tag/:tag" component={TagBuilds} />
         </div>
       </Router>
     );

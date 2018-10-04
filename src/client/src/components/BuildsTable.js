@@ -25,12 +25,14 @@ class BuildsTable extends Component {
       <div>
         <p>{builds ? builds.length : 0} builds loaded</p>
         <p>{buildRows.length} builds displayed</p>
+        {/* TODO: Extract this out into higher component */}
         <VersionFilter
           value={this.state.version}
           builds={builds}
           onChange={this.handleVersionChange}
         />
         <table>
+          {/* TODO: Generate these from props */}
           <thead>
             <tr>
               <th>Title</th>
