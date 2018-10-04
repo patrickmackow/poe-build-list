@@ -2,10 +2,6 @@ import React, { Component } from "react";
 import BuildRow from "./BuildRow";
 
 class BuildsTable extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const { builds } = this.props;
 
