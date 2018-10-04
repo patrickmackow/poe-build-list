@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import BuildRow from "./BuildRow";
-import VersionFilter from "./VersionFilter";
 
 class BuildsTable extends Component {
   constructor(props) {
