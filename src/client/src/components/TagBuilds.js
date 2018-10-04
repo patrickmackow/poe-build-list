@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import BuildsTable from "./BuildsTable";
 
 class TagBuilds extends Component {
   constructor(props) {
@@ -25,17 +26,18 @@ class TagBuilds extends Component {
 
   render() {
     const { loading, builds } = this.state;
+    const { tag } = this.props.match.params;
 
     const buildsViews = loading ? (
       <p>Loading...</p>
     ) : (
-      <p>{builds.length} builds loaded</p>
+      <BuildsTable builds={builds} />
     );
 
     return (
       <div>
         <Link to="/">Back to Home</Link>
-        <h1>Tag</h1>
+        <h1>{tag}</h1>
         {buildsViews}
       </div>
     );
