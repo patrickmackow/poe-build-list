@@ -13,8 +13,8 @@ class App extends Component {
       <Router>
         <div>
           <Route exact path="/" component={Home} />
-          <Route path="/class/:gameClass" component={ClassBuilds} />
-          <Route path="/tag/:tag" component={TagBuilds} />
+          <Route exact path="/class/:gameClass" component={ClassBuilds} />
+          <Route exact path="/tag/:tag" component={TagBuilds} />
         </div>
       </Router>
     );
