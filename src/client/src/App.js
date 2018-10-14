@@ -11,7 +11,7 @@ class App extends Component {
   render() {
     return (
       <Router>
-        <div>
+        <div className="container">
           <Route exact path="/" component={Home} />
           <Route exact path="/class/:gameClass" component={ClassBuilds} />
           <Route exact path="/tag/:tag" component={TagBuilds} />

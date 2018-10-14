@@ -21,37 +21,72 @@ class Home extends Component {
   render() {
     return (
       <div>
-        <h1>Path of Exile Build List</h1>
-        <form onSubmit={this.handleSubmit}>
-          <input
-            type="text"
-            placeholder="Search by tag"
-            value={this.state.tag}
-            onChange={this.handleChange}
-          />
-          <input type="submit" value="Search" />
-        </form>
-        <br />
-        <div>
-          <Link to="/class/duelist">Duelist</Link>
+        <div className="row justify-content-center">
+          <div className="col-5">
+            <h1>Path of Exile Build List</h1>
+          </div>
         </div>
-        <div>
-          <Link to="/class/marauder">Marauder</Link>
+        <div className="row justify-content-center">
+          <div className="col-12 col-sm-10 mb-3">
+            <form onSubmit={this.handleSubmit}>
+              <div className="form-row">
+                <div className="col-10">
+                  <input
+                    className="form-control bg-light border-0"
+                    type="text"
+                    placeholder="Search by tag"
+                    value={this.state.tag}
+                    onChange={this.handleChange}
+                  />
+                </div>
+                <div className="col-2">
+                  <input
+                    className="form-control bg-light border-0"
+                    type="submit"
+                    value="Search"
+                  />
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
-        <div>
-          <Link to="/class/ranger">Ranger</Link>
-        </div>
-        <div>
-          <Link to="/class/scion">Scion</Link>
-        </div>
-        <div>
-          <Link to="/class/shadow">Shadow</Link>
-        </div>
-        <div>
-          <Link to="/class/templar">Templar</Link>
-        </div>
-        <div>
-          <Link to="/class/witch">Witch</Link>
+        <p className="text-muted">Explore by class</p>
+        <div className="row">
+          <div className="card col-12 col-sm">
+            <div className="card-body">
+              <Link to="/class/duelist">Duelist</Link>
+            </div>
+          </div>
+          <div className="card col-12 col-sm">
+            <div className="card-body">
+              <Link to="/class/marauder">Marauder</Link>
+            </div>
+          </div>
+          <div className="card col-12 col-sm">
+            <div className="card-body">
+              <Link to="/class/ranger">Ranger</Link>
+            </div>
+          </div>
+          <div className="card col-12 col-sm">
+            <div className="card-body">
+              <Link to="/class/scion">Scion</Link>
+            </div>
+          </div>
+          <div className="card col-12 col-sm">
+            <div className="card-body">
+              <Link to="/class/shadow">Shadow</Link>
+            </div>
+          </div>
+          <div className="card col-12 col-sm">
+            <div className="card-body">
+              <Link to="/class/templar">Templar</Link>
+            </div>
+          </div>
+          <div className="card col-12 col-sm">
+            <div className="card-body">
+              <Link to="/class/witch">Witch</Link>
+            </div>
+          </div>
         </div>
       </div>
     );
