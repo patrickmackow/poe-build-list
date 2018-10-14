@@ -5,7 +5,7 @@ class BuildRow extends Component {
     const { build } = this.props;
 
     return (
-      <div className="row border-bottom">
+      <div className="row border-bottom mb-2">
         <div className="row">
           <div className="col-12" />
         </div>
@@ -18,17 +18,19 @@ class BuildRow extends Component {
             </div>
           </div>
           <div className="row">
-            <div className="col-12">
+            <div className="col-12 mb-sm-1">
               {build.generatedTags.map(tag => tagBadge(tag))}
             </div>
           </div>
         </div>
         <div className="col-sm-2">
           <div className="row">
-            <div className="col-12 text-sm-right">{build.views}</div>
-          </div>
-          <div className="row">
-            <div className="col-12 text-sm-right">{build.replies}</div>
+            <div className="col-auto col-sm-12 text-sm-right">
+              {build.views}
+            </div>
+            <div className="col-auto col-sm-12 text-sm-right">
+              {build.replies}
+            </div>
           </div>
         </div>
       </div>
