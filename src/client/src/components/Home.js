@@ -52,45 +52,27 @@ class Home extends Component {
         </div>
         <p className="text-muted">Explore by class</p>
         <div className="row">
-          <div className="card col-12 col-sm">
-            <div className="card-body">
-              <Link to="/class/duelist">Duelist</Link>
-            </div>
-          </div>
-          <div className="card col-12 col-sm">
-            <div className="card-body">
-              <Link to="/class/marauder">Marauder</Link>
-            </div>
-          </div>
-          <div className="card col-12 col-sm">
-            <div className="card-body">
-              <Link to="/class/ranger">Ranger</Link>
-            </div>
-          </div>
-          <div className="card col-12 col-sm">
-            <div className="card-body">
-              <Link to="/class/scion">Scion</Link>
-            </div>
-          </div>
-          <div className="card col-12 col-sm">
-            <div className="card-body">
-              <Link to="/class/shadow">Shadow</Link>
-            </div>
-          </div>
-          <div className="card col-12 col-sm">
-            <div className="card-body">
-              <Link to="/class/templar">Templar</Link>
-            </div>
-          </div>
-          <div className="card col-12 col-sm">
-            <div className="card-body">
-              <Link to="/class/witch">Witch</Link>
-            </div>
-          </div>
+          <ClassCard href="duelist">Duelist</ClassCard>
+          <ClassCard href="marauder">Marauder</ClassCard>
+          <ClassCard href="ranger">Ranger</ClassCard>
+          <ClassCard href="scion">Scion</ClassCard>
+          <ClassCard href="shadow">Shadow</ClassCard>
+          <ClassCard href="templar">Templar</ClassCard>
+          <ClassCard href="witch">Witch</ClassCard>
         </div>
       </div>
     );
   }
 }
+
+const ClassCard = props => {
+  return (
+    <div className="card col-12 col-sm">
+      <div className="card-body">
+        <Link to={`/class/${props.href}`}>{props.children}</Link>
+      </div>
+    </div>
+  );
+};
 
 export default Home;
