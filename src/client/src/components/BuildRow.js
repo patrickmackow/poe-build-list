@@ -25,11 +25,11 @@ class BuildRow extends Component {
         </div>
         <div className="col-sm-2">
           <div className="row">
-            <div className="col-auto col-sm-12 text-sm-right">
+            <div className="col-auto col-sm-12 text-sm-right text-muted">
               <i class="fa fa-eye mr-1" aria-hidden="true" />
               {build.views}
             </div>
-            <div className="col-auto col-sm-12 text-sm-right">
+            <div className="col-auto col-sm-12 text-sm-right text-muted">
               <i class="fa fa-comment-o mr-1" aria-hidden="true" />
               {build.replies}
             </div>
