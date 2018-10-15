@@ -31,7 +31,13 @@ class ClassBuilds extends Component {
   }
 
   filterBuilds(builds) {
-    return builds.filter(build => build.version === this.state.version);
+    // Default filter is latest patch and has at least 1 tag
+    return builds.filter(build => {
+      if (build.version === this.state.version && build.generatedTags.length) {
+        return true;
+      }
+      return false;
+    });
   }
 
   render() {
