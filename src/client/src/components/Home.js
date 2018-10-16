@@ -26,30 +26,11 @@ class Home extends Component {
             <h1>Path of Exile Build List</h1>
           </div>
         </div>
-        <div className="row justify-content-center">
-          <div className="col-12 col-sm-10 mb-3">
-            <form onSubmit={this.handleSubmit}>
-              <div className="form-row">
-                <div className="col-10">
-                  <input
-                    className="form-control bg-light border-0"
-                    type="text"
-                    placeholder="Search by tag"
-                    value={this.state.tag}
-                    onChange={this.handleChange}
-                  />
-                </div>
-                <div className="col-2">
-                  <input
-                    className="form-control bg-light border-0"
-                    type="submit"
-                    value="Search"
-                  />
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
+        <TagSearch
+          handleChange={this.handleChange}
+          handleSubmit={this.handleSubmit}
+          tag={this.state.tag}
+        />
         <p className="text-muted">Explore by class</p>
         <div className="row">
           <ClassCard href="duelist">Duelist</ClassCard>
@@ -70,6 +51,31 @@ const ClassCard = props => {
     <div className="card col-12 col-sm">
       <div className="card-body">
         <Link to={`/class/${props.href}`}>{props.children}</Link>
+      </div>
+    </div>
+  );
+};
+
+const TagSearch = props => {
+  return (
+    <div className="row justify-content-center">
+      <div className="col-12 col-sm-10 mb-3">
+        <form onSubmit={props.handleSubmit}>
+          <div className="input-group">
+            <input
+              className="form-control bg-light border-0"
+              type="text"
+              placeholder="Search by tag"
+              value={props.tag}
+              onChange={props.handleChange}
+            />
+            <div className="input-group-append">
+              <button className="btn bg-light btn-block">
+                <i class="fa fa-search text-muted" aria-hidden="true" />
+              </button>
+            </div>
+          </div>
+        </form>
       </div>
     </div>
   );
