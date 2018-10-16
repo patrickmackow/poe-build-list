@@ -26,11 +26,11 @@ class BuildRow extends Component {
         <div className="col-sm-2">
           <div className="row">
             <div className="col-auto col-sm-12 text-sm-right text-muted">
-              <i class="fa fa-eye mr-1" aria-hidden="true" />
+              <i className="fa fa-eye mr-1" aria-hidden="true" />
               {build.views}
             </div>
             <div className="col-auto col-sm-12 text-sm-right text-muted">
-              <i class="fa fa-comment-o mr-1" aria-hidden="true" />
+              <i className="fa fa-comment-o mr-1" aria-hidden="true" />
               {build.replies}
             </div>
           </div>
@@ -42,7 +42,10 @@ class BuildRow extends Component {
 
 const tagBadge = tag => {
   return (
-    <span className="badge badge-pill badge-primary mr-1 text-uppercase">
+    <span
+      key={tag}
+      className="badge badge-pill badge-primary mr-1 text-uppercase"
+    >
       {tag}
     </span>
   );

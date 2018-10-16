@@ -71,7 +71,7 @@ const TagSearch = props => {
             />
             <div className="input-group-append">
               <button className="btn bg-light btn-block">
-                <i class="fa fa-search text-muted" aria-hidden="true" />
+                <i className="fa fa-search text-muted" aria-hidden="true" />
               </button>
             </div>
           </div>
