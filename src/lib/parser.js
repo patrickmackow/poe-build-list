@@ -88,21 +88,47 @@ const generateTags = title => {
 
   /*  Tags priority:
       1. Tags on their own
-      2. Tag keys included within the string
+      2. Tag keys included within the string 
+      
+      Tags that are part of another tag, e.g. vortex and blade vortex,
+      should not be included as a tag. 
+
+      Simplest fix is to add an object to exclude tags that match
   */
+  const exclude = { vortex: ["blade vortex"] };
+
   const regexTags = Object.keys(TAGS).filter(key => {
-    const found = TAGS[key].find(tag => {
-      let tagRegex = new RegExp(`\\b${tag}\\b`);
-      return tagRegex.test(lowerCaseTitle);
+    const foundTag = TAGS[key].find(tag => {
+      const tagRegex = new RegExp(`\\b${tag}\\b`);
+
+      const result = tagRegex.test(lowerCaseTitle);
+      if (!result) {
+        // Tag not found with regex
+        return false;
+      }
+
+      // Tag found with regex, but not in excluded object
+      if (!exclude.hasOwnProperty(tag)) {
+        return true;
+      }
+
+      const excludeRegexes = exclude[tag].map(e => new RegExp(`\\b${e}\\b`));
+      // Tag has a match inside the exclude object
+      // Each excluded regex must not match in order for the tag to be valid
+      return excludeRegexes.every(
+        exclude => exclude.test(lowerCaseTitle) === false
+      );
     });
-    return found ? true : false;
+
+    return foundTag ? true : false;
   });
 
   if (regexTags.length) {
     return regexTags;
   }
 
-  // No tags found, check again for tag anywhere in the string
+  // No tags found, check again for tag key anywhere in the string,
+  // also checking for exclusions
   const includeTags = Object.keys(TAGS).filter(key => {
     return lowerCaseTitle.includes(key);
   });
