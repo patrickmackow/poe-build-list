@@ -3,23 +3,9 @@ import { Link } from "react-router-dom";
 import SearchBar from "./SearchBar";
 
 class Home extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { tag: "" };
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-  handleChange(e) {
-    this.setState({ tag: e.target.value });
-  }
-
-  handleSubmit(e) {
-    e.preventDefault();
-    this.props.history.push("/tag/" + this.state.tag);
-  }
-
   render() {
+    const { history } = this.props;
+
     return (
       <div>
         <div className="row justify-content-center">
@@ -27,11 +13,7 @@ class Home extends Component {
             <h1>Path of Exile Build List</h1>
           </div>
         </div>
-        <SearchBar
-          handleChange={this.handleChange}
-          handleSubmit={this.handleSubmit}
-          tag={this.state.tag}
-        />
+        <SearchBar history={history} />
         <p className="text-muted">Explore by class</p>
         <div className="row">
           <ClassCard href="duelist">Duelist</ClassCard>
