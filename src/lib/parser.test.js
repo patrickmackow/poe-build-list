@@ -129,26 +129,26 @@ describe("testing generateTags", () => {
     ]
   ];
 
-  const unexpectedTags = [
-    [
-      "[3.3] From League Starter to Shaper – Cheap, Tanky, Fast and Fun Physical ST – Very Detailed Guide",
-      "essence drain"
-    ],
-    [
-      "[3.3] SonicSunder, 2M+ DPS, SSF, HC, BEGINNER LEAGUE STARTER, UBER LAB/ELDER, SHAPER, FAST ]",
-      "spectral throw"
-    ],
-    ["[3.3] Lifting's Uber Lab Warchief Totem Champion", "arc"]
-  ];
-
   it.each(expectedTags)("generateTags parses '%s' into '%s'", (s, expected) => {
     expect(generateTags(s)).toEqual(expected);
   });
 
-  it.each(unexpectedTags)(
-    "Abbreviated tags should not be found if part of a word",
-    (s, unexpected) => {
+  describe("Alternate tags should not be found if it's a part of a word", () => {
+    const unexpectedTags = [
+      [
+        "[3.3] From League Starter to Shaper – Cheap, Tanky, Fast and Fun Physical ST – Very Detailed Guide",
+        "essence drain"
+      ],
+      [
+        "[3.3] SonicSunder, 2M+ DPS, SSF, HC, BEGINNER LEAGUE STARTER, UBER LAB/ELDER, SHAPER, FAST ]",
+        "spectral throw"
+      ],
+      ["[3.3] Lifting's Uber Lab Warchief Totem Champion", "arc"],
+      ["[3.4] Triple Herald Blade Vortex Elementalist", "vortex"]
+    ];
+
+    it.each(unexpectedTags)('"%s" shouldn\'t contain "%s"', (s, unexpected) => {
       expect(generateTags(s)).not.toContain(unexpected);
-    }
-  );
+    });
+  });
 });
