@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import SearchBar from "./SearchBar";
 
 class Home extends Component {
   constructor(props) {
@@ -26,7 +27,7 @@ class Home extends Component {
             <h1>Path of Exile Build List</h1>
           </div>
         </div>
-        <TagSearch
+        <SearchBar
           handleChange={this.handleChange}
           handleSubmit={this.handleSubmit}
           tag={this.state.tag}
@@ -51,31 +52,6 @@ const ClassCard = props => {
     <div className="card col-12 col-sm">
       <div className="card-body">
         <Link to={`/class/${props.href}`}>{props.children}</Link>
-      </div>
-    </div>
-  );
-};
-
-const TagSearch = props => {
-  return (
-    <div className="row justify-content-center">
-      <div className="col-12 col-sm-10 mb-3">
-        <form onSubmit={props.handleSubmit}>
-          <div className="input-group">
-            <input
-              className="form-control bg-light border-0"
-              type="text"
-              placeholder="Search by tag"
-              value={props.tag}
-              onChange={props.handleChange}
-            />
-            <div className="input-group-append">
-              <button className="btn bg-light btn-block">
-                <i className="fa fa-search text-muted" aria-hidden="true" />
-              </button>
-            </div>
-          </div>
-        </form>
       </div>
     </div>
   );
