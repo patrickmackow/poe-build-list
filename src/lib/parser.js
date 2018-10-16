@@ -130,7 +130,18 @@ const generateTags = title => {
   // No tags found, check again for tag key anywhere in the string,
   // also checking for exclusions
   const includeTags = Object.keys(TAGS).filter(key => {
-    return lowerCaseTitle.includes(key);
+    if (!lowerCaseTitle.includes(key)) {
+      // Tag key not found in string
+      return false;
+    } else if (
+      exclude.hasOwnProperty(key) &&
+      exclude[key].some(e => lowerCaseTitle.includes(e))
+    ) {
+      // Tag key found, but is excluded
+      return false;
+    }
+
+    return true;
   });
 
   return includeTags;

@@ -126,7 +126,8 @@ describe("testing generateTags", () => {
     [
       "[3.3] SonicSunder, 2M+ DPS, SSF, HC, BEGINNER LEAGUE STARTER, UBER LAB/ELDER, SHAPER, FAST ]",
       ["sunder"]
-    ]
+    ],
+    ["Blade vortexhypothetical", ["blade vortex"]]
   ];
 
   it.each(expectedTags)("generateTags parses '%s' into '%s'", (s, expected) => {
