@@ -10,8 +10,8 @@ class SearchBar extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(e) {
-    this.setState({ value: e.target.value });
+  handleChange(value) {
+    this.setState({ value });
   }
 
   handleSubmit(e) {

@@ -6,6 +6,7 @@ class AutoSuggest extends Component {
 
     this.state = { visible: false, index: undefined, suggestion: "" };
 
+    this.updateSuggestion = this.updateSuggestion.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.setVisibility = this.setVisibility.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
@@ -13,15 +14,20 @@ class AutoSuggest extends Component {
     this.activeIndex = this.isActive.bind(this);
   }
 
-  handleChange(e) {
+  updateSuggestion(suggestion) {
+    this.setState({ suggestion });
+  }
+
+  handleChange(value) {
     if (!this.state.visible) this.setVisibility(true);
-    this.props.onChange(e);
+    this.setState({ index: undefined, suggestion: "" });
+    this.props.onChange(value);
   }
 
   setVisibility(v) {
     this.setState({ visible: v });
     if (!v) {
-      this.setState({ index: undefined });
+      this.setState({ index: undefined, suggestion: "" });
     }
   }
 
@@ -29,9 +35,13 @@ class AutoSuggest extends Component {
     if (e.key === "Escape") {
       this.setVisibility(false);
     } else if (e.keyCode === 13) {
-      //e.preventDefault();
+      if (this.state.suggestion) {
+        e.preventDefault();
+        this.handleChange(this.state.suggestion);
+      }
     } else if (e.keyCode === 38) {
       // Arrow up
+      // TODO: Current logic isn't function properly. Negative index is bugged
       e.preventDefault();
 
       if (!this.state.visible) return;
@@ -57,7 +67,7 @@ class AutoSuggest extends Component {
 
   handleClick(e) {
     e.preventDefault();
-    this.props.onChange(e);
+    this.props.onChange(e.target.value);
     this.setVisibility(false);
   }
 
@@ -75,11 +85,17 @@ class AutoSuggest extends Component {
     let { index } = this.state;
 
     // TODO: add a suggestion when filtered data is empty
+    // TODO: style suggestion text based on current input value
+    // TODO: make case insensitive
     const suggestions = data.map((d, i, data) => {
       const active = this.isActive(index, i, data);
-
       return (
-        <Suggestion key={d} handleClick={this.handleClick} active={active}>
+        <Suggestion
+          key={d}
+          handleClick={this.handleClick}
+          active={active}
+          updateSuggestion={this.updateSuggestion}
+        >
           {d}
         </Suggestion>
       );
@@ -93,9 +109,11 @@ class AutoSuggest extends Component {
             type="text"
             placeholder="Search by tag"
             value={this.props.value}
-            onChange={this.handleChange}
+            onChange={e => {
+              this.handleChange(e.target.value);
+            }}
             onBlur={() => {
-              this.setVisibility(false);
+              //this.setVisibility(false);
             }}
             onKeyDown={this.handleKeyDown}
           />
@@ -106,6 +124,7 @@ class AutoSuggest extends Component {
           </div>
         </div>
         {this.state.visible ? (
+          // TODO: Make position absolute so that it's displayed on top of content
           <div className="list-group">{suggestions}</div>
         ) : null}
       </React.Fragment>
@@ -113,21 +132,31 @@ class AutoSuggest extends Component {
   }
 }
 
-const Suggestion = props => {
-  const { children, active } = props;
+class Suggestion extends Component {
+  componentDidUpdate(prevProps) {
+    const { active, children } = this.props;
 
-  return (
-    <button
-      className={
-        "list-group-item list-group-item-action py-2" +
-        (active ? " active" : "")
-      }
-      value={children}
-      onClick={props.handleClick}
-    >
-      {children}
-    </button>
-  );
-};
+    if (active && !prevProps.active) {
+      this.props.updateSuggestion(children);
+    }
+  }
+
+  render() {
+    const { children, active } = this.props;
+
+    return (
+      <button
+        className={
+          "list-group-item list-group-item-action py-2" +
+          (active ? " active" : "")
+        }
+        value={children}
+        onClick={this.props.handleClick}
+      >
+        {children}
+      </button>
+    );
+  }
+}
 
 export default AutoSuggest;
