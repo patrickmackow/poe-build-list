@@ -124,8 +124,11 @@ class AutoSuggest extends Component {
           </div>
         </div>
         {this.state.visible ? (
-          // TODO: Make position absolute so that it's displayed on top of content
-          <div className="list-group">{suggestions}</div>
+          <div className="dropdown">
+            <div className="dropdown-menu d-block col-12 py-0">
+              {suggestions}
+            </div>
+          </div>
         ) : null}
       </React.Fragment>
     );
@@ -146,10 +149,7 @@ class Suggestion extends Component {
 
     return (
       <button
-        className={
-          "list-group-item list-group-item-action py-2" +
-          (active ? " active" : "")
-        }
+        className={"dropdown-item py-2 " + (active ? " active" : " text-muted")}
         value={children}
         onClick={this.props.handleClick}
       >
