@@ -4,10 +4,16 @@ import AutoSuggest from "./AutoSuggest";
 class SearchBar extends Component {
   constructor(props) {
     super(props);
-    this.state = { value: "" };
+    this.state = { value: "", data: [] };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  componentDidMount() {
+    fetch("/api/tags")
+      .then(res => res.json())
+      .then(data => this.setState({ data }));
   }
 
   handleChange(value) {
@@ -25,7 +31,7 @@ class SearchBar extends Component {
         <div className="col-12 col-sm-10 mb-3">
           <form onSubmit={this.handleSubmit} autoComplete="off">
             <AutoSuggest
-              data={["caustic arrow", "cleave", "cyclone"]}
+              data={this.state.data}
               value={this.state.value}
               onChange={this.handleChange}
             />
