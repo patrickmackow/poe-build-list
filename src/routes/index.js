@@ -16,7 +16,7 @@ router.get("/builds/:class", (req, res) => {
 
 router.get("/tags", (req, res) => {
   Build.distinct("generatedTags").then(tags => {
-    res.json(tags.sort);
+    res.json(tags.sort());
   });
 });
 
