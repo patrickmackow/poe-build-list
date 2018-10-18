@@ -14,6 +14,12 @@ router.get("/builds/:class", (req, res) => {
   Build.find({ gameClass: req.params.class }).then(builds => res.json(builds));
 });
 
+router.get("/tags", (req, res) => {
+  Build.distinct("generatedTags").then(tags => {
+    res.json(tags.sort);
+  });
+});
+
 router.get("/tags/:tags", (req, res) => {
   const tags = req.params.tags.split(",");
   Build.find({ generatedTags: { $all: tags } }).then(builds => {
