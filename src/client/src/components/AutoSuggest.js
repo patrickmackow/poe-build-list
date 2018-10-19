@@ -35,9 +35,11 @@ class AutoSuggest extends Component {
     if (e.key === "Escape") {
       this.setVisibility(false);
     } else if (e.keyCode === 13) {
+      // Enter key
       if (this.state.suggestion) {
         e.preventDefault();
         this.handleChange(this.state.suggestion);
+        this.setVisibility(false);
       }
     } else if (e.keyCode === 38) {
       // Arrow up
@@ -81,24 +83,31 @@ class AutoSuggest extends Component {
   }
 
   render() {
-    const data = this.props.data.filter(d => {
-      return d.match(new RegExp(this.props.value, "i")) !== null;
-    });
+    const data = this.props.data
+      .map(tag => tag.match(new RegExp(this.props.value, "i")))
+      .filter(tag => tag !== null);
     let { index } = this.state;
 
     // TODO: add a suggestion when filtered data is empty
-    // TODO: style suggestion text based on current input value
-    // TODO: make case insensitive
     const suggestions = data.map((d, i, data) => {
       const active = this.isActive(index, i, data);
+      const tag = d.input;
+      const formattedTag = (
+        <React.Fragment>
+          {tag.substring(0, d.index)}
+          <span className="font-weight-bold">{d[0]}</span>
+          {tag.substring(d.index + d[0].length)}
+        </React.Fragment>
+      );
       return (
         <Suggestion
-          key={d}
+          key={d.input}
+          value={tag}
           handleClick={this.handleClick}
           active={active}
           updateSuggestion={this.updateSuggestion}
         >
-          {d}
+          {formattedTag}
         </Suggestion>
       );
     });
@@ -142,21 +151,21 @@ class AutoSuggest extends Component {
 
 class Suggestion extends Component {
   componentDidUpdate(prevProps) {
-    const { active, children } = this.props;
+    const { active, value } = this.props;
 
     if (active && !prevProps.active) {
-      this.props.updateSuggestion(children);
+      this.props.updateSuggestion(value);
     }
   }
 
   render() {
-    const { children, active } = this.props;
+    const { children, value, active } = this.props;
 
     return (
       <button
         className={"dropdown-item py-2 " + (active ? " active" : " text-muted")}
-        value={children}
         onClick={this.props.handleClick}
+        value={value}
       >
         {children}
       </button>
