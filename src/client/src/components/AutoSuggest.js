@@ -81,7 +81,9 @@ class AutoSuggest extends Component {
   }
 
   render() {
-    const data = this.props.data.filter(d => d.includes(this.props.value));
+    const data = this.props.data.filter(d => {
+      return d.match(new RegExp(this.props.value, "i")) !== null;
+    });
     let { index } = this.state;
 
     // TODO: add a suggestion when filtered data is empty
@@ -125,7 +127,10 @@ class AutoSuggest extends Component {
         </div>
         {this.state.visible ? (
           <div className="dropdown">
-            <div className="dropdown-menu d-block col-12 py-0">
+            <div
+              className="dropdown-menu d-block col-12 py-0"
+              style={{ maxHeight: 200, overflowY: "scroll" }}
+            >
               {suggestions}
             </div>
           </div>

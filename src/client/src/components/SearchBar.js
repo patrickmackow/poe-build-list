@@ -13,7 +13,15 @@ class SearchBar extends Component {
   componentDidMount() {
     fetch("/api/tags")
       .then(res => res.json())
-      .then(data => this.setState({ data }));
+      .then(data => {
+        const formattedTags = data.map(d =>
+          d
+            .split(" ")
+            .map(tag => tag[0].toUpperCase() + tag.substr(1))
+            .join(" ")
+        );
+        this.setState({ data: formattedTags });
+      });
   }
 
   handleChange(value) {
@@ -22,7 +30,7 @@ class SearchBar extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    this.props.history.push("/tag/" + this.state.value);
+    this.props.history.push("/tag/" + this.state.value.toLowerCase());
   }
 
   render() {
