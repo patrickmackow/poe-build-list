@@ -2,10 +2,10 @@ import React, { Component } from "react";
 
 class BuildRow extends Component {
   render() {
-    const { build } = this.props;
+    const { build, ...rest } = this.props;
 
     return (
-      <div className="row border-bottom mb-2">
+      <div className="row border-bottom mb-2" {...rest}>
         <div className="row">
           <div className="col-12" />
         </div>

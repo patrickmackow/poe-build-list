@@ -3,17 +3,18 @@ import BuildRow from "./BuildRow";
 
 class BuildsTable extends Component {
   sortBuilds(builds) {
-    builds.sort((a, b) => {
+    const newArray = builds.slice();
+    newArray.sort((a, b) => {
       return new Date(b.latestPost) - new Date(a.latestPost);
     });
+    return newArray;
   }
 
   render() {
-    const { builds } = this.props;
-    this.sortBuilds(builds);
+    const builds = this.sortBuilds(this.props.builds);
 
     const buildRows = builds.map(build => (
-      <BuildRow key={build._id} build={build} />
+      <BuildRow key={build._id} build={build} data-testid="build-row" />
     ));
 
     return <div>{buildRows}</div>;
