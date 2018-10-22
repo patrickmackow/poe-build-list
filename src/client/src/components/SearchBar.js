@@ -4,7 +4,11 @@ import AutoSuggest from "./AutoSuggest";
 class SearchBar extends Component {
   constructor(props) {
     super(props);
-    this.state = { value: "", data: [] };
+
+    this.state = {
+      value: "",
+      data: []
+    };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);

@@ -4,7 +4,11 @@ class AutoSuggest extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { visible: false, index: undefined, suggestion: "" };
+    this.state = {
+      visible: false,
+      index: undefined,
+      suggestion: ""
+    };
 
     this.updateSuggestion = this.updateSuggestion.bind(this);
     this.handleChange = this.handleChange.bind(this);
