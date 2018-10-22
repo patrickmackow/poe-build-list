@@ -12,7 +12,7 @@ class BuildRow extends Component {
         <div className="col-sm-10">
           <div className="row">
             <div className="col-12">
-              <a rel="external" href={build.url}>
+              <a rel="external" href={build.url} data-testid="build-link">
                 {build.title}
               </a>
             </div>
@@ -25,11 +25,17 @@ class BuildRow extends Component {
         </div>
         <div className="col-sm-2">
           <div className="row">
-            <div className="col-auto col-sm-12 text-sm-right text-muted">
+            <div
+              className="col-auto col-sm-12 text-sm-right text-muted"
+              data-testid="build-views"
+            >
               <i className="fa fa-eye mr-1" aria-hidden="true" />
               {build.views}
             </div>
-            <div className="col-auto col-sm-12 text-sm-right text-muted">
+            <div
+              className="col-auto col-sm-12 text-sm-right text-muted"
+              data-testid="build-replies"
+            >
               <i className="fa fa-comment-o mr-1" aria-hidden="true" />
               {build.replies}
             </div>
@@ -45,6 +51,7 @@ const tagBadge = tag => {
     <span
       key={tag}
       className="badge badge-pill badge-primary mr-1 text-uppercase"
+      data-testid="build-tag"
     >
       {tag}
     </span>
