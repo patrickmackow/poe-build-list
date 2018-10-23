@@ -26,10 +26,14 @@ class VersionFilter extends Component {
 
     return (
       <div className="form-inline mb-2">
-        <label className="col-form-label col-form-label-sm text-muted text-uppercase mr-2">
+        <label
+          className="col-form-label col-form-label-sm text-muted text-uppercase mr-2"
+          htmlFor="version-filter"
+        >
           Patch
         </label>
         <select
+          id="version-filter"
           className="col-auto form-control form-control-sm custom-select border-0 bg-light"
           value={this.props.value}
           onChange={this.props.onChange}
