@@ -90,3 +90,34 @@ test("<TagBuilds />", async () => {
   expect(getByLabelText("Class").value).toBe("marauder");
   expect(getByTestId("build-table").childElementCount).toBe(1);
 });
+
+test("<TagBuilds /> with build lower than default version filter", async () => {
+  const builds = [
+    {
+      generatedTags: ["animate guardian", "righteous fire"],
+      _id: "5bc0f66ba53ff0234c201404",
+      title:
+        "[3.2] TRIPLE your Righteous Fire Damage w/ ANIMATE GUARDIAN - Juggernaut",
+      author: "Hollyphantom",
+      url: "https://www.pathofexile.com/forum/view-thread/2118817",
+      views: 49348,
+      replies: 37,
+      createdOn: "2018-03-24T13:52:12.000Z",
+      latestPost: "2018-09-18T01:46:07.000Z",
+      gameClass: "marauder",
+      version: "3.2",
+      updatedOn: "2018-10-17T03:03:13.050Z"
+    }
+  ];
+  fetch.mockResponseOnce(JSON.stringify(builds));
+
+  const { debug, queryByTestId, getByTestId, getByLabelText } = render(
+    <MemoryRouter>
+      <TagBuilds match={match} />
+    </MemoryRouter>
+  );
+
+  await waitForElement(() => getByTestId("build-table"));
+  expect(getByLabelText("Patch").value).toBe("3.2");
+  expect(getByTestId("build-table").childElementCount).toBe(1);
+});

@@ -6,23 +6,29 @@ class VersionFilter extends Component {
   constructor(props) {
     super(props);
 
-    this.versionSet = new Set();
+    const versionSet = new Set();
     this.props.builds.map(
       build =>
         build.version && build.version >= MINIMUM_VERSION
-          ? this.versionSet.add(build.version)
+          ? versionSet.add(build.version)
           : null
     );
+
+    this.patches = Array.from(versionSet).sort((a, b) => b - a);
+  }
+
+  componentDidMount() {
+    if (this.props.value !== this.patches[0]) {
+      this.props.onChange({ target: { value: this.patches[0] } });
+    }
   }
 
   render() {
-    const patches = Array.from(this.versionSet)
-      .sort((a, b) => b - a)
-      .map(version => (
-        <option key={version} value={version}>
-          {version}
-        </option>
-      ));
+    const patches = this.patches.map(version => (
+      <option key={version} value={version}>
+        {version}
+      </option>
+    ));
 
     return (
       <div className="form-inline mb-2">

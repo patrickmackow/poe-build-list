@@ -10,7 +10,7 @@ class TagBuilds extends Component {
     this.state = {
       loading: true,
       builds: [],
-      version: "3.4",
+      version: "", // TODO: Determine latest version within this component
       class: "all"
     };
 

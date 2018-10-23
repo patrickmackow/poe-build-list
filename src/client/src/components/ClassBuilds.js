@@ -9,7 +9,7 @@ class ClassBuilds extends Component {
     this.state = {
       loading: true,
       builds: [],
-      version: "3.4"
+      version: "" // TODO: Determine latest version within this component
     };
 
     this.handleVersionChange = this.handleVersionChange.bind(this);
