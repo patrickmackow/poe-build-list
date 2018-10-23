@@ -1,0 +1,92 @@
+import React from "react";
+import {
+  render,
+  cleanup,
+  fireEvent,
+  waitForElement
+} from "react-testing-library";
+import { MemoryRouter } from "react-router-dom";
+import TagBuilds from "./TagBuilds";
+
+global.fetch = require("jest-fetch-mock");
+
+afterEach(() => {
+  cleanup();
+});
+
+const match = {
+  params: {
+    tag: "cyclone"
+  }
+};
+
+const builds = [
+  {
+    generatedTags: ["cyclone"],
+    _id: "5bc0f66ba53ff0234c201323",
+    title:
+      '[3.4] "Delve Terrorizer" by Jessica - 10k life budget Cyclone Slayer, Everything viable (videos up)',
+    author: "JessicaSc2",
+    url: "https://www.pathofexile.com/forum/view-thread/2236634",
+    views: 2871,
+    replies: 13,
+    createdOn: "2018-10-12T16:19:50.000Z",
+    latestPost: "2018-10-16T02:30:43.000Z",
+    gameClass: "duelist",
+    version: "3.4",
+    updatedOn: "2018-10-17T03:03:13.042Z"
+  },
+  {
+    generatedTags: ["consecrated path", "cyclone"],
+    _id: "5bc0f66ba53ff0234c20132c",
+    title:
+      "[3.4] For Slayer / Champion - Ngamahu Cyclone / Consecrated Path Build (Uber Lab Runner + End Game)",
+    author: "kira1414",
+    url: "https://www.pathofexile.com/forum/view-thread/1819239",
+    views: 3155260,
+    replies: 4444,
+    createdOn: "2017-01-15T08:00:30.000Z",
+    latestPost: "2018-10-11T15:29:12.000Z",
+    gameClass: "duelist",
+    version: "3.4",
+    updatedOn: "2018-10-17T03:03:13.043Z"
+  },
+  {
+    generatedTags: ["cyclone"],
+    _id: "5bc0f66ba53ff0234c2013dc",
+    title:
+      "[3.4] Cyclone-tank Juggernaut / Best Cyclone Build / Full Video-Guide (eng) + DEMO The Shaper",
+    author: "OkeyKeks",
+    url: "https://www.pathofexile.com/forum/view-thread/1810582",
+    views: 249291,
+    replies: 238,
+    createdOn: "2017-01-02T10:33:01.000Z",
+    latestPost: "2018-10-07T15:36:35.000Z",
+    gameClass: "marauder",
+    version: "3.4",
+    updatedOn: "2018-10-17T03:03:13.049Z"
+  }
+];
+
+test("<TagBuilds />", async () => {
+  fetch.mockResponseOnce(JSON.stringify(builds));
+  const { debug, queryByTestId, getByTestId, getByLabelText } = render(
+    <MemoryRouter>
+      <TagBuilds match={match} />
+    </MemoryRouter>
+  );
+
+  expect(queryByTestId("loading")).toBeTruthy();
+  await waitForElement(() => getByTestId("build-table"));
+  expect(queryByTestId("loading")).toBeFalsy();
+  expect(getByLabelText("Class").value).toBe("all");
+  expect(getByTestId("build-table").childElementCount).toBe(3);
+
+  fireEvent.change(getByLabelText("Class"), { target: { value: "duelist" } });
+  expect(getByLabelText("Class").value).toBe("duelist");
+  expect(getByTestId("build-table").childElementCount).toBe(2);
+
+  fireEvent.change(getByLabelText("Class"), { target: { value: "marauder" } });
+  expect(getByLabelText("Class").value).toBe("marauder");
+  expect(getByTestId("build-table").childElementCount).toBe(1);
+});

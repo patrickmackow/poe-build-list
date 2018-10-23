@@ -56,7 +56,7 @@ class TagBuilds extends Component {
 
     let buildsView;
     if (loading) {
-      buildsView = <p>Loading...</p>;
+      buildsView = <p data-testid="loading">Loading...</p>;
     } else {
       const filteredBuilds = this.filterBuilds(builds);
       buildsView = (
@@ -98,15 +98,18 @@ const ClassFilter = props => {
   ];
 
   return (
-    <select value={props.value} onChange={props.onChange}>
-      {classes.map(c => {
-        return (
-          <option key={c} value={c}>
-            {c}
-          </option>
-        );
-      })}
-    </select>
+    <React.Fragment>
+      <label htmlFor="class-filter">Class</label>
+      <select id="class-filter" value={props.value} onChange={props.onChange}>
+        {classes.map(c => {
+          return (
+            <option key={c} value={c}>
+              {c}
+            </option>
+          );
+        })}
+      </select>
+    </React.Fragment>
   );
 };
 
