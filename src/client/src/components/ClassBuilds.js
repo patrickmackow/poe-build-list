@@ -47,7 +47,7 @@ class ClassBuilds extends Component {
 
     if (loading) {
       buildsView = (
-        <div>
+        <div data-testid="loading">
           <p>Loading...</p>
         </div>
       );

@@ -17,7 +17,7 @@ class BuildsTable extends Component {
       <BuildRow key={build._id} build={build} data-testid="build-row" />
     ));
 
-    return <div>{buildRows}</div>;
+    return <div data-testid="build-table">{buildRows}</div>;
   }
 }
 
