@@ -87,9 +87,13 @@ class AutoSuggest extends Component {
   }
 
   render() {
-    const data = this.props.data
-      .map(tag => tag.match(new RegExp(this.props.value, "i")))
-      .filter(tag => tag !== null);
+    // TODO: This is messy, clean it up
+    // Check if dataSrc is undefined
+    const data = this.props.dataSrc
+      ? this.props.dataSrc
+          .map(tag => tag.match(new RegExp(this.props.value, "i")))
+          .filter(tag => tag !== null)
+      : [];
     let { index } = this.state;
 
     // TODO: add a suggestion when filtered data is empty
@@ -138,7 +142,7 @@ class AutoSuggest extends Component {
             </button>
           </div>
         </div>
-        {this.state.visible ? (
+        {this.state.visible && suggestions.length ? (
           <div className="dropdown">
             <div
               className="dropdown-menu d-block col-12 py-0"

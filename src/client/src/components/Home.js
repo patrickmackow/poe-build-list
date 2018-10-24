@@ -1,11 +1,37 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import SearchBar from "./SearchBar";
+import SearchForm from "./SearchForm";
 
 class Home extends Component {
-  render() {
-    const { history } = this.props;
+  constructor(props) {
+    super(props);
 
+    this.state = {
+      tags: []
+    };
+
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  componentDidMount() {
+    fetch("/api/tags")
+      .then(res => res.json())
+      .then(data => {
+        const formattedTags = data.map(d =>
+          d
+            .split(" ")
+            .map(tag => tag[0].toUpperCase() + tag.substr(1))
+            .join(" ")
+        );
+        this.setState({ tags: formattedTags });
+      });
+  }
+
+  handleSubmit(value) {
+    this.props.history.push("/tag/" + value.toLowerCase());
+  }
+
+  render() {
     return (
       <div>
         <div className="row justify-content-center">
@@ -13,7 +39,14 @@ class Home extends Component {
             <h1>Path of Exile Build List</h1>
           </div>
         </div>
-        <SearchBar history={history} />
+        <div className="row justify-content-center">
+          <div className="col-12 col-sm-10 mb-3">
+            <SearchForm
+              onSubmit={this.handleSubmit}
+              dataSrc={this.state.tags}
+            />
+          </div>
+        </div>
         <p className="text-muted">Explore by class</p>
         <div className="row">
           <ClassCard href="duelist">Duelist</ClassCard>
