@@ -7,6 +7,7 @@
   "scripts": {
     "test": "jest",
     "test-watch": "npm run test -- --watch",
+    "test-client": "npm test --prefix src/client",
     "client": "npm start --prefix src/client",
     "server": "nodemon src/index.js",
     "dev": "concurrently \"npm run server\" \"npm run client\"",

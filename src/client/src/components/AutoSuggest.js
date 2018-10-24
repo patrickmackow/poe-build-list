@@ -170,6 +170,7 @@ class Suggestion extends Component {
         className={"dropdown-item py-2 " + (active ? " active" : " text-muted")}
         onClick={this.props.handleClick}
         value={value}
+        data-testid="suggestion"
       >
         {children}
       </button>
