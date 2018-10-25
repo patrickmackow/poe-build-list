@@ -13,6 +13,7 @@ const tags = ["Caustic Arrow", "Cleave", "Cyclone", "Double Strike"];
 
 test("<SearchForm />", () => {
   const {
+    container,
     debug,
     getByPlaceholderText,
     getAllByTestId,
@@ -23,14 +24,17 @@ test("<SearchForm />", () => {
   const searchInput = getByPlaceholderText("Search by tag");
 
   fireEvent.change(searchInput, { target: { value: "c" } });
-  expect(getAllByTestId("suggestion").length).toBe(3);
+  fireEvent.keyDown(container, { keyCode: 40 });
+  expect(getAllByTestId(/^suggestion/).length).toBe(3);
+  expect(queryByTestId("suggestion-active")).toBeTruthy();
 
   fireEvent.change(searchInput, { target: { value: "d" } });
-  expect(getAllByTestId("suggestion").length).toBe(1);
+  expect(getAllByTestId(/^suggestion/).length).toBe(1);
+  expect(queryByTestId("suggestion-active")).toBeFalsy();
 
   fireEvent.click(getByTestId("suggestion"));
   expect(searchInput.value).toBe("Double Strike");
-  expect(queryByTestId("suggestion")).toBeFalsy();
+  expect(queryByTestId(/^suggestion/)).toBeFalsy();
 
   fireEvent.submit(searchInput);
   expect(onSubmit).toHaveBeenCalledTimes(1);

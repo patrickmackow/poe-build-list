@@ -21,9 +21,9 @@ class AutoSuggest extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    /* TODO: Reset active index
-    Possibly keep active index on the same value
-    */
+    if (prevProps.value !== this.props.value) {
+      this.setState({ active: undefined });
+    }
   }
 
   handleKeyDown(e) {
