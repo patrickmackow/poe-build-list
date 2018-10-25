@@ -76,13 +76,16 @@ class AutoSuggest extends Component {
   }
 
   filterDataSrcByValue(dataSrc, value) {
-    // Check if dataSrc is undefined
     // TODO: Memoize this?
     // TODO: Arguments are always the same
-    // TODO: Escape value, breaks regex
+    const escapeValue = v => {
+      return v.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
+    };
+
+    // Check if dataSrc is undefined
     return dataSrc
       ? dataSrc
-          .map(tag => tag.match(new RegExp(value, "i")))
+          .map(tag => tag.match(new RegExp(escapeValue(value), "i")))
           .filter(tag => tag !== null)
       : [];
   }

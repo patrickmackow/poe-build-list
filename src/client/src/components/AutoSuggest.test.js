@@ -18,7 +18,7 @@ test("<AutoSuggest />", () => {
     queryByTestId,
     queryAllByTestId,
     getAllByTestId
-  } = render(<AutoSuggest dataSrc={tags} onChange={onChange} />);
+  } = render(<AutoSuggest dataSrc={tags} onChange={onChange} value="" />);
   expect(getAllByTestId("suggestion").length).toBe(tags.length);
   expect(queryByTestId("suggestion-active")).toBeFalsy();
 
@@ -49,3 +49,13 @@ test("<AutoSuggest />", () => {
   expect(onChange).toHaveBeenCalledTimes(1);
   expect(onChange).toHaveBeenCalledWith("button", tags[3]);
 });
+
+const regexChars = ["[", "\\", "^", "$", ".", "|", "?", "*", "+", "(", ")"];
+
+test.each(regexChars)(
+  "<AutoSuggest value='%s' /> regex special char %s should render",
+  s => {
+    const { queryByTestId } = render(<AutoSuggest dataSrc={tags} value={s} />);
+    expect(queryByTestId(/suggestion/)).toBeFalsy();
+  }
+);
