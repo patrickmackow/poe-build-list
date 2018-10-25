@@ -5,100 +5,96 @@ class AutoSuggest extends Component {
     super(props);
 
     this.state = {
-      visible: false,
-      index: undefined,
-      suggestion: ""
+      active: undefined
     };
 
-    this.updateSuggestion = this.updateSuggestion.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.setVisibility = this.setVisibility.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleClick = this.handleClick.bind(this);
-    this.activeIndex = this.isActive.bind(this);
   }
 
-  updateSuggestion(suggestion) {
-    this.setState({ suggestion });
+  componentDidMount() {
+    window.addEventListener("keydown", this.handleKeyDown);
   }
 
-  handleChange(value) {
-    if (!this.state.visible) this.setVisibility(true);
-    this.setState({ index: undefined, suggestion: "" });
-    this.props.onChange(value);
+  componentWillUnmount() {
+    window.removeEventListener("keydown", this.handleKeyDown);
   }
 
-  setVisibility(v) {
-    this.setState({ visible: v });
-    if (!v) {
-      this.setState({ index: undefined, suggestion: "" });
-    }
+  componentDidUpdate(prevProps) {
+    /* TODO: Reset active index
+    Possibly keep active index on the same value
+    */
   }
 
   handleKeyDown(e) {
-    if (e.key === "Escape") {
-      this.setVisibility(false);
-    } else if (e.keyCode === 13) {
+    // TODO: Clean this up
+    if (e.keyCode === 13) {
       // Enter key
-      if (this.state.suggestion) {
+      if (this.state.active !== undefined) {
         e.preventDefault();
-        this.handleChange(this.state.suggestion);
-        this.setVisibility(false);
+        this.props.onChange(
+          "button",
+          this.filterDataSrcByValue(this.props.dataSrc, this.props.value)[
+            this.state.active
+          ].input
+        );
       }
     } else if (e.keyCode === 38) {
       // Arrow up
-      // TODO: Current logic isn't function properly. Negative index is bugged
       e.preventDefault();
 
-      if (!this.state.visible) return;
-
-      if (this.state.index !== undefined) {
-        this.setState({ index: this.state.index - 1 });
+      if (this.state.active === undefined || this.state.active <= 0) {
+        this.setState({
+          active:
+            this.filterDataSrcByValue(this.props.dataSrc, this.props.value)
+              .length - 1
+        });
       } else {
-        this.setState({ index: 0 });
+        this.setState({ active: this.state.active - 1 });
       }
     } else if (e.keyCode === 40) {
       // Arrow down
       e.preventDefault();
 
-      if (!this.state.visible) return;
-
-      if (this.state.index !== undefined) {
-        this.setState({ index: this.state.index + 1 });
+      if (this.state.active === undefined) {
+        this.setState({ active: 0 }); // TODO: what if dataSrc is empty?
+      } else if (
+        this.state.active >=
+        this.filterDataSrcByValue(this.props.dataSrc, this.props.value).length -
+          1
+      ) {
+        this.setState({ active: 0 }); // TODO: what if dataSrc is empty?
       } else {
-        this.setState({ index: 0 });
+        this.setState({ active: this.state.active + 1 });
       }
     }
   }
 
   handleClick(e) {
     e.preventDefault();
-    this.props.onChange(e.target.value);
-    this.setVisibility(false);
+    this.props.onChange("button", e.target.value);
   }
 
-  isActive(index, i, arr) {
-    if (index === undefined) {
-      return false;
-    }
-
-    index = index < 0 ? (index = arr.length + index) : index;
-    return index % arr.length === i ? true : false;
+  filterDataSrcByValue(dataSrc, value) {
+    // Check if dataSrc is undefined
+    // TODO: Memoize this?
+    // TODO: Arguments are always the same
+    // TODO: Escape value, breaks regex
+    return dataSrc
+      ? dataSrc
+          .map(tag => tag.match(new RegExp(value, "i")))
+          .filter(tag => tag !== null)
+      : [];
   }
 
   render() {
-    // TODO: This is messy, clean it up
-    // Check if dataSrc is undefined
-    const data = this.props.dataSrc
-      ? this.props.dataSrc
-          .map(tag => tag.match(new RegExp(this.props.value, "i")))
-          .filter(tag => tag !== null)
-      : [];
-    let { index } = this.state;
+    const data = this.filterDataSrcByValue(
+      this.props.dataSrc,
+      this.props.value
+    );
 
     // TODO: add a suggestion when filtered data is empty
-    const suggestions = data.map((d, i, data) => {
-      const active = this.isActive(index, i, data);
+    const suggestions = data.map((d, i) => {
       const tag = d.input;
       const formattedTag = (
         <React.Fragment>
@@ -111,70 +107,38 @@ class AutoSuggest extends Component {
         <Suggestion
           key={d.input}
           value={tag}
-          handleClick={this.handleClick}
-          active={active}
-          updateSuggestion={this.updateSuggestion}
+          onClick={this.handleClick}
+          active={i === this.state.active ? true : false}
         >
           {formattedTag}
         </Suggestion>
       );
     });
 
-    return (
-      <React.Fragment>
-        <div className="input-group">
-          <input
-            className="form-control bg-light border-0"
-            type="text"
-            placeholder="Search by tag"
-            value={this.props.value}
-            onChange={e => {
-              this.handleChange(e.target.value);
-            }}
-            onBlur={() => {
-              //this.setVisibility(false);
-            }}
-            onKeyDown={this.handleKeyDown}
-          />
-          <div className="input-group-append">
-            <button className="btn bg-light">
-              <i className="fa fa-search text-muted" aria-hidden="true" />
-            </button>
-          </div>
+    return suggestions.length ? (
+      <div className="dropdown">
+        <div
+          className="dropdown-menu d-block col-12 py-0"
+          style={{ maxHeight: 200, overflowY: "scroll" }}
+        >
+          {suggestions}
         </div>
-        {this.state.visible && suggestions.length ? (
-          <div className="dropdown">
-            <div
-              className="dropdown-menu d-block col-12 py-0"
-              style={{ maxHeight: 200, overflowY: "scroll" }}
-            >
-              {suggestions}
-            </div>
-          </div>
-        ) : null}
-      </React.Fragment>
-    );
+      </div>
+    ) : null;
   }
 }
 
 class Suggestion extends Component {
-  componentDidUpdate(prevProps) {
-    const { active, value } = this.props;
-
-    if (active && !prevProps.active) {
-      this.props.updateSuggestion(value);
-    }
-  }
-
   render() {
-    const { children, value, active } = this.props;
+    const { children, value, active, onClick } = this.props;
 
     return (
       <button
         className={"dropdown-item py-2 " + (active ? " active" : " text-muted")}
-        onClick={this.props.handleClick}
+        onClick={onClick}
+        onMouseDown={e => e.preventDefault()} // Needed because onBlur is fired before onClick
         value={value}
-        data-testid="suggestion"
+        data-testid={"suggestion" + (active ? "-active" : "")}
       >
         {children}
       </button>

@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  render,
-  cleanup,
-  fireEvent,
-  waitForElement
-} from "react-testing-library";
-import { MemoryRouter } from "react-router-dom";
+import { render, cleanup, fireEvent } from "react-testing-library";
 import SearchForm from "./SearchForm";
 
 afterEach(() => {
