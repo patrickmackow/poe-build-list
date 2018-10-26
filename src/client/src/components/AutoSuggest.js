@@ -27,35 +27,32 @@ class AutoSuggest extends Component {
   }
 
   handleKeyDown(e) {
-    // TODO: Clean this up
-    if (e.keyCode === 13) {
-      // Enter key
-      if (this.state.active !== undefined) {
+    switch (e.keyCode) {
+      case 13: // Enter key
+        if (this.state.active !== undefined) {
+          e.preventDefault();
+          this.props.onChange(
+            "button",
+            this.filterDataSrcByValue(this.props.dataSrc, this.props.value)[
+              this.state.active
+            ].input
+          );
+        }
+        break;
+      case 38: // Up arrow
         e.preventDefault();
-        this.props.onChange(
-          "button",
-          this.filterDataSrcByValue(this.props.dataSrc, this.props.value)[
-            this.state.active
-          ].input
-        );
-      }
-    } else if (e.keyCode === 38) {
-      // Arrow up
-      e.preventDefault();
+        this.changeActiveBy(-1);
+        break;
+      case 40: // Down arrow
+        e.preventDefault();
+        this.changeActiveBy(1);
+        break;
+    }
+  }
 
-      if (this.state.active === undefined || this.state.active <= 0) {
-        this.setState({
-          active:
-            this.filterDataSrcByValue(this.props.dataSrc, this.props.value)
-              .length - 1
-        });
-      } else {
-        this.setState({ active: this.state.active - 1 });
-      }
-    } else if (e.keyCode === 40) {
-      // Arrow down
-      e.preventDefault();
-
+  changeActiveBy(value) {
+    if (value === 1) {
+      // Down Arrow
       if (this.state.active === undefined) {
         this.setState({ active: 0 }); // TODO: what if dataSrc is empty?
       } else if (
@@ -66,6 +63,17 @@ class AutoSuggest extends Component {
         this.setState({ active: 0 }); // TODO: what if dataSrc is empty?
       } else {
         this.setState({ active: this.state.active + 1 });
+      }
+    } else if (value === -1) {
+      // Up Arrow
+      if (this.state.active === undefined || this.state.active <= 0) {
+        this.setState({
+          active:
+            this.filterDataSrcByValue(this.props.dataSrc, this.props.value)
+              .length - 1
+        });
+      } else {
+        this.setState({ active: this.state.active - 1 });
       }
     }
   }
@@ -96,6 +104,11 @@ class AutoSuggest extends Component {
       this.props.value
     );
 
+    // Return early if there is no data
+    if (data.length === 0) {
+      return null;
+    }
+
     // TODO: add a suggestion when filtered data is empty
     const suggestions = data.map((d, i) => {
       const tag = d.input;
@@ -118,7 +131,7 @@ class AutoSuggest extends Component {
       );
     });
 
-    return suggestions.length ? (
+    return (
       <div className="dropdown">
         <div
           className="dropdown-menu d-block col-12 py-0"
@@ -127,7 +140,7 @@ class AutoSuggest extends Component {
           {suggestions}
         </div>
       </div>
-    ) : null;
+    );
   }
 }
 
