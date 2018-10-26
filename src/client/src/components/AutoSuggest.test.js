@@ -50,12 +50,29 @@ test("<AutoSuggest />", () => {
   expect(onChange).toHaveBeenCalledWith("button", tags[3]);
 });
 
+test("<AutoSuggest /> should display when no suggestions were found", () => {
+  const { queryByTestId, queryAllByTestId } = render(
+    <AutoSuggest dataSrc={tags} onChange={onChange} value="Not Found" />
+  );
+
+  expect(queryAllByTestId("suggestion").length).toBe(1);
+  expect(queryByTestId("suggestion").textContent).toBe("No suggestions found");
+  fireEvent.click(queryByTestId("suggestion"));
+  expect(onChange).toHaveBeenCalledTimes(0);
+});
+
 const regexChars = ["[", "\\", "^", "$", ".", "|", "?", "*", "+", "(", ")"];
 
 test.each(regexChars)(
   "<AutoSuggest value='%s' /> regex special char %s should render",
   s => {
-    const { queryByTestId } = render(<AutoSuggest dataSrc={tags} value={s} />);
-    expect(queryByTestId(/suggestion/)).toBeFalsy();
+    const { queryByTestId, queryAllByTestId } = render(
+      <AutoSuggest dataSrc={tags} value={s} />
+    );
+
+    expect(queryAllByTestId("suggestion").length).toBe(1);
+    expect(queryByTestId("suggestion").textContent).toBe(
+      "No suggestions found"
+    );
   }
 );

@@ -47,6 +47,8 @@ class AutoSuggest extends Component {
         e.preventDefault();
         this.changeActiveBy(1);
         break;
+      default:
+        break;
     }
   }
 
@@ -99,39 +101,45 @@ class AutoSuggest extends Component {
   }
 
   render() {
-    const data = this.filterDataSrcByValue(
-      this.props.dataSrc,
-      this.props.value
-    );
+    const { dataSrc, value } = this.props;
 
     // Return early if there is no data
-    if (data.length === 0) {
+    if (!dataSrc || dataSrc.length === 0) {
       return null;
     }
 
-    // TODO: add a suggestion when filtered data is empty
-    const suggestions = data.map((d, i) => {
-      const tag = d.input;
-      const formattedTag = (
-        <React.Fragment>
-          {tag.substring(0, d.index)}
-          <span className="font-weight-bold">{d[0]}</span>
-          {tag.substring(d.index + d[0].length)}
-        </React.Fragment>
-      );
-      return (
-        <Suggestion
-          key={d.input}
-          value={tag}
-          onClick={this.handleClick}
-          active={i === this.state.active ? true : false}
-        >
-          {formattedTag}
-        </Suggestion>
-      );
-    });
+    const filtered = this.filterDataSrcByValue(dataSrc, value);
 
-    return (
+    let suggestions;
+    if (filtered.length) {
+      suggestions = filtered.map((d, i) => {
+        const tag = d.input;
+        const formattedTag = (
+          <React.Fragment>
+            {tag.substring(0, d.index)}
+            <span className="font-weight-bold">{d[0]}</span>
+            {tag.substring(d.index + d[0].length)}
+          </React.Fragment>
+        );
+        return (
+          <Suggestion
+            key={d.input}
+            value={tag}
+            onClick={this.handleClick}
+            active={i === this.state.active ? true : false}
+          >
+            {formattedTag}
+          </Suggestion>
+        );
+      });
+    } else {
+      // Add a suggestion when filtered data is empty
+      suggestions = (
+        <Suggestion disabled="true">No suggestions found</Suggestion>
+      );
+    }
+
+    return suggestions ? (
       <div className="dropdown">
         <div
           className="dropdown-menu d-block col-12 py-0"
@@ -140,18 +148,22 @@ class AutoSuggest extends Component {
           {suggestions}
         </div>
       </div>
-    );
+    ) : null;
   }
 }
 
 class Suggestion extends Component {
   render() {
-    const { children, value, active, onClick } = this.props;
+    const { children, value, active, onClick, disabled } = this.props;
 
     return (
       <button
-        className={"dropdown-item py-2 " + (active ? " active" : " text-muted")}
-        onClick={onClick}
+        className={
+          "dropdown-item py-2 " +
+          (active ? " active" : " text-muted") +
+          (disabled ? " disabled" : "")
+        }
+        onClick={!disabled ? onClick : e => e.preventDefault()}
         onMouseDown={e => e.preventDefault()} // Needed because onBlur is fired before onClick
         value={value}
         data-testid={"suggestion" + (active ? "-active" : "")}
