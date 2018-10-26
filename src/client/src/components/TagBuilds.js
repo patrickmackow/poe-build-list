@@ -11,7 +11,7 @@ class TagBuilds extends Component {
       loading: true,
       builds: [],
       version: "", // TODO: Determine latest version within this component
-      class: "all"
+      class: "All"
     };
 
     this.handleVersionChange = this.handleVersionChange.bind(this);
@@ -40,7 +40,10 @@ class TagBuilds extends Component {
 
   filterBuilds(builds) {
     return builds.filter(build => {
-      if (build.gameClass === this.state.class || this.state.class === "all") {
+      if (
+        build.gameClass === this.state.class.toLowerCase() ||
+        this.state.class === "All"
+      ) {
         if (build.version === this.state.version) {
           return true;
         }
@@ -60,25 +63,31 @@ class TagBuilds extends Component {
     } else {
       const filteredBuilds = this.filterBuilds(builds);
       buildsView = (
-        <div>
-          <VersionFilter
-            value={this.state.version}
-            builds={builds}
-            onChange={this.handleVersionChange}
-          />
-          <ClassFilter
-            value={this.state.class}
-            onChange={this.handleClassChange}
-          />
+        <React.Fragment>
+          <div className="row">
+            <div className="col-sm-auto">
+              <VersionFilter
+                value={this.state.version}
+                builds={builds}
+                onChange={this.handleVersionChange}
+              />
+            </div>
+            <div className="col-sm-auto">
+              <ClassFilter
+                value={this.state.class}
+                onChange={this.handleClassChange}
+              />
+            </div>
+          </div>
           <BuildsTable builds={filteredBuilds} />
-        </div>
+        </React.Fragment>
       );
     }
 
     return (
       <div>
         <Link to="/">Back to Home</Link>
-        <h1>{tag}</h1>
+        <h1 className="text-capitalize">{tag}</h1>
         {buildsView}
       </div>
     );
@@ -87,20 +96,30 @@ class TagBuilds extends Component {
 
 const ClassFilter = props => {
   const classes = [
-    "all",
-    "duelist",
-    "marauder",
-    "ranger",
-    "scion",
-    "shadow",
-    "templar",
-    "witch"
+    "All",
+    "Duelist",
+    "Marauder",
+    "Ranger",
+    "Scion",
+    "Shadow",
+    "Templar",
+    "Witch"
   ];
 
   return (
-    <React.Fragment>
-      <label htmlFor="class-filter">Class</label>
-      <select id="class-filter" value={props.value} onChange={props.onChange}>
+    <div className="form-inline mb-2">
+      <label
+        className="col-form-label col-form-label-sm text-muted text-uppercase mr-2"
+        htmlFor="class-filter"
+      >
+        Class
+      </label>
+      <select
+        id="class-filter"
+        className="col-auto form-control form-control-sm custom-select border-0 bg-light"
+        value={props.value}
+        onChange={props.onChange}
+      >
         {classes.map(c => {
           return (
             <option key={c} value={c}>
@@ -109,7 +128,7 @@ const ClassFilter = props => {
           );
         })}
       </select>
-    </React.Fragment>
+    </div>
   );
 };
 

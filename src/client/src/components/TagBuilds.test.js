@@ -79,15 +79,15 @@ test("<TagBuilds />", async () => {
   expect(queryByTestId("loading")).toBeTruthy();
   await waitForElement(() => getByTestId("build-table"));
   expect(queryByTestId("loading")).toBeFalsy();
-  expect(getByLabelText("Class").value).toBe("all");
+  expect(getByLabelText("Class").value).toBe("All");
   expect(getByTestId("build-table").childElementCount).toBe(3);
 
-  fireEvent.change(getByLabelText("Class"), { target: { value: "duelist" } });
-  expect(getByLabelText("Class").value).toBe("duelist");
+  fireEvent.change(getByLabelText("Class"), { target: { value: "Duelist" } });
+  expect(getByLabelText("Class").value).toBe("Duelist");
   expect(getByTestId("build-table").childElementCount).toBe(2);
 
-  fireEvent.change(getByLabelText("Class"), { target: { value: "marauder" } });
-  expect(getByLabelText("Class").value).toBe("marauder");
+  fireEvent.change(getByLabelText("Class"), { target: { value: "Marauder" } });
+  expect(getByLabelText("Class").value).toBe("Marauder");
   expect(getByTestId("build-table").childElementCount).toBe(1);
 });
 
