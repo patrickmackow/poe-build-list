@@ -42,7 +42,11 @@ class SearchForm extends Component {
 
   render() {
     return (
-      <form onSubmit={this.handleSubmit} autoComplete="off">
+      <form
+        onSubmit={this.handleSubmit}
+        autoComplete="off"
+        className={this.props.className}
+      >
         <div className="input-group">
           <SearchInput
             value={this.state.value}

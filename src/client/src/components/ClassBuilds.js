@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import BuildsTable from "./BuildsTable";
 import VersionFilter from "./VersionFilter";
+import NavBar from "./NavBar";
 
 class ClassBuilds extends Component {
   constructor(props) {
@@ -13,6 +13,7 @@ class ClassBuilds extends Component {
     };
 
     this.handleVersionChange = this.handleVersionChange.bind(this);
+    this.handleSearchSubmit = this.handleSearchSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -28,6 +29,10 @@ class ClassBuilds extends Component {
 
   handleVersionChange(e) {
     this.setState({ version: e.target.value });
+  }
+
+  handleSearchSubmit(value) {
+    this.props.history.push("/tag/" + value.toLowerCase());
   }
 
   filterBuilds(builds) {
@@ -61,8 +66,6 @@ class ClassBuilds extends Component {
             builds={builds}
             onChange={this.handleVersionChange}
           />
-          <p>{this.state.builds.length} builds loaded</p>
-          <p>{filteredBuilds.length} builds displayed</p>
           <BuildsTable builds={filteredBuilds} />
         </div>
       );
@@ -70,8 +73,8 @@ class ClassBuilds extends Component {
 
     return (
       <div>
-        <Link to="/">Back to Home</Link>
-        <h1>{this.props.match.params.gameClass}</h1>
+        <NavBar onSubmit={this.handleSearchSubmit} />
+        <h1 className="text-capitalize">{this.props.match.params.gameClass}</h1>
         {buildsView}
       </div>
     );
