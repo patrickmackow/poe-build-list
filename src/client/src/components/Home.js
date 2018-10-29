@@ -35,12 +35,12 @@ class Home extends Component {
     return (
       <div>
         <div className="row justify-content-center">
-          <div className="col-5">
+          <div className="col-6 text-center">
             <h1>Path of Exile Build List</h1>
           </div>
         </div>
         <div className="row justify-content-center">
-          <div className="col-12 col-sm-10 mb-3">
+          <div className="col-12 col-md-10 mb-3">
             <SearchForm
               onSubmit={this.handleSubmit}
               dataSrc={this.state.tags}
