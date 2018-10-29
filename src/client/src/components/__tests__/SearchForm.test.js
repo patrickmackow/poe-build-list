@@ -1,6 +1,6 @@
 import React from "react";
 import { render, cleanup, fireEvent } from "react-testing-library";
-import SearchForm from "./SearchForm";
+import SearchForm from "../SearchForm";
 
 afterEach(() => {
   cleanup();

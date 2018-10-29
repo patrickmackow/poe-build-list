@@ -1,15 +1,15 @@
 import React from "react";
 import { render, cleanup, fireEvent } from "react-testing-library";
-import AutoSuggest from "./AutoSuggest";
+import AutoSuggest from "../AutoSuggest";
 
 afterEach(() => {
   cleanup();
   onChange.mockClear();
 });
 
-const onChange = jest.fn();
-
 const tags = ["Caustic Arrow", "Cleave", "Cyclone", "Double Strike"];
+
+const onChange = jest.fn();
 
 test("<AutoSuggest />", () => {
   const {

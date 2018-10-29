@@ -6,7 +6,7 @@ import {
   waitForElement
 } from "react-testing-library";
 import { MemoryRouter } from "react-router-dom";
-import TagBuilds from "./TagBuilds";
+import TagBuilds from "../TagBuilds";
 
 const fetchMock = require("fetch-mock");
 

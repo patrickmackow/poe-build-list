@@ -1,15 +1,23 @@
 import React from "react";
 import { render, cleanup } from "react-testing-library";
-import BuildRow from "./BuildRow";
+import BuildRow from "../BuildRow";
 
 afterEach(cleanup);
 
 const build = {
-  url: "https://example.com",
-  title: "test",
-  generatedTags: ["tag", "tag2"],
-  views: 1000,
-  replies: 10
+  generatedTags: ["consecrated path", "cyclone"],
+  _id: "5bc0f66ba53ff0234c20132c",
+  title:
+    "[3.4] For Slayer / Champion - Ngamahu Cyclone / Consecrated Path Build (Uber Lab Runner + End Game)",
+  author: "kira1414",
+  url: "https://www.pathofexile.com/forum/view-thread/1819239",
+  views: 3155260,
+  replies: 4444,
+  createdOn: "2017-01-15T08:00:30.000Z",
+  latestPost: "2018-10-11T15:29:12.000Z",
+  gameClass: "duelist",
+  version: "3.4",
+  updatedOn: "2018-10-17T03:03:13.043Z"
 };
 
 test("<BuildRow />", () => {
