@@ -8,10 +8,11 @@ import {
 import { MemoryRouter } from "react-router-dom";
 import TagBuilds from "./TagBuilds";
 
-global.fetch = require("jest-fetch-mock");
+const fetchMock = require("fetch-mock");
 
 afterEach(() => {
   cleanup();
+  fetchMock.restore();
 });
 
 const match = {
@@ -69,7 +70,7 @@ const builds = [
 ];
 
 test("<TagBuilds />", async () => {
-  fetch.mockResponseOnce(JSON.stringify(builds));
+  fetchMock.get("glob:/api/tags/*", JSON.stringify(builds));
   const { debug, queryByTestId, getByTestId, getByLabelText } = render(
     <MemoryRouter>
       <TagBuilds match={match} />
@@ -109,7 +110,7 @@ test("<TagBuilds /> with build lower than default version filter", async () => {
       updatedOn: "2018-10-17T03:03:13.050Z"
     }
   ];
-  fetch.mockResponseOnce(JSON.stringify(builds));
+  fetchMock.get("glob:/api/tags/*", JSON.stringify(builds));
 
   const { debug, queryByTestId, getByTestId, getByLabelText } = render(
     <MemoryRouter>

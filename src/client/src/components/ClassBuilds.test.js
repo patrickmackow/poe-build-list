@@ -8,10 +8,16 @@ import {
 import { MemoryRouter } from "react-router-dom";
 import ClassBuilds from "./ClassBuilds";
 
-global.fetch = require("jest-fetch-mock");
+const fetchMock = require("fetch-mock");
+
+beforeEach(() => {
+  const tags = ["Caustic Arrow", "Cleave", "Cyclone", "Double Strike"];
+  fetchMock.get("/api/tags", JSON.stringify(tags));
+});
 
 afterEach(() => {
   cleanup();
+  fetchMock.restore();
 });
 
 const match = {
@@ -69,7 +75,7 @@ const builds = [
 ];
 
 test("<ClassBuilds />", async () => {
-  fetch.mockResponseOnce(JSON.stringify(builds));
+  fetchMock.get("glob:/api/builds/*", JSON.stringify(builds));
 
   const { debug, queryByTestId, getByTestId, getByLabelText } = render(
     <MemoryRouter>
@@ -110,7 +116,7 @@ test("<ClassBuilds /> with build lower than default version filter", async () =>
       updatedOn: "2018-10-17T03:03:13.050Z"
     }
   ];
-  fetch.mockResponseOnce(JSON.stringify(builds));
+  fetchMock.get("glob:/api/builds/*", JSON.stringify(builds));
 
   const { debug, queryByTestId, getByTestId, getByLabelText } = render(
     <MemoryRouter>
