@@ -11,7 +11,12 @@ class BuildsTable extends Component {
   }
 
   render() {
-    const builds = this.sortBuilds(this.props.builds);
+    let builds;
+    if (this.props.sort) {
+      builds = this.sortBuilds(this.props.builds);
+    } else {
+      builds = this.props.builds;
+    }
 
     const buildRows = builds.map(build => (
       <BuildRow key={build._id} build={build} data-testid="build-row" />
@@ -19,6 +24,10 @@ class BuildsTable extends Component {
 
     return <div data-testid="build-table">{buildRows}</div>;
   }
+
+  static defaultProps = {
+    sort: true
+  };
 }
 
 export default BuildsTable;
