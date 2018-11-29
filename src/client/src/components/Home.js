@@ -1,13 +1,16 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import SearchForm from "./SearchForm";
+import BuildsTable from "./BuildsTable";
 
 class Home extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      tags: []
+      loading: true,
+      tags: [],
+      builds: []
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -25,6 +28,15 @@ class Home extends Component {
         );
         this.setState({ tags: formattedTags });
       });
+
+    fetch("/api/builds")
+      .then(res => res.json())
+      .then(data => {
+        this.setState({
+          loading: false,
+          builds: data.slice(0, 10)
+        });
+      });
   }
 
   handleSubmit(value) {
@@ -32,6 +44,13 @@ class Home extends Component {
   }
 
   render() {
+    let builds;
+    if (this.state.loading) {
+      builds = <p>Loading...</p>;
+    } else {
+      builds = <BuildsTable builds={this.state.builds} sort={false} />;
+    }
+
     return (
       <div>
         <div className="row justify-content-center">
@@ -57,6 +76,8 @@ class Home extends Component {
           <ClassCard href="templar">Templar</ClassCard>
           <ClassCard href="witch">Witch</ClassCard>
         </div>
+        <h4>Top 10 Builds</h4>
+        {builds}
       </div>
     );
   }
