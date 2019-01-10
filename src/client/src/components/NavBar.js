@@ -172,32 +172,6 @@ const ClassLabel = styled(Label)`
 const ClassDrawer = styled(Drawer)`
   display: ${props => (props.isClassOpen ? "block" : "none")};
 
-  > * + * {
-    margin: 0;
-  }
-
-  a {
-    display: inline-block;
-    width: 100%;
-    color: white;
-    padding: 0.5em 1em;
-    transition: background-color 0.2s linear;
-  }
-
-  a:visited {
-    color: white;
-  }
-
-  a:hover,
-  a:active {
-    text-decoration: none;
-    background-color: #444;
-  }
-
-  ul {
-    margin: 0;
-  }
-
   @media (min-width: 40em) {
     display: none;
 
@@ -234,6 +208,25 @@ const SearchDrawer = styled(Drawer)`
 const StyledClassNav = styled(ClassNav)`
   list-style: none;
   padding: 0;
+  margin: 0;
+
+  a {
+    display: inline-block;
+    width: 100%;
+    color: white;
+    padding: 0.5em 1em;
+    transition: background-color 0.2s linear;
+  }
+
+  a:visited {
+    color: white;
+  }
+
+  a:hover,
+  a:active {
+    text-decoration: none;
+    background-color: #444;
+  }
 
   @media (min-width: 40em) {
     display: flex;
