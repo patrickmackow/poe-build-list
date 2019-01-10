@@ -5,6 +5,7 @@ import styled from "styled-components";
 import SearchForm from "./SearchForm";
 import BuildsTable from "./BuildsTable";
 import Container from "./common/Container";
+import ClassNav from "./ClassNav";
 
 class Home extends Component {
   constructor(props) {
@@ -72,29 +73,7 @@ class Home extends Component {
         <ClassListToggle open={this.state.open} onClick={this.toggleDropdown}>
           Explore by class
         </ClassListToggle>
-        <ClassList open={this.state.open}>
-          <ClassItem>
-            <ClassItemLink to="/class/duelist">Duelist</ClassItemLink>
-          </ClassItem>
-          <ClassItem>
-            <ClassItemLink to="/class/marauder">Marauder</ClassItemLink>
-          </ClassItem>
-          <ClassItem>
-            <ClassItemLink to="/class/ranger">Ranger</ClassItemLink>
-          </ClassItem>
-          <ClassItem>
-            <ClassItemLink to="/class/scion">Scion</ClassItemLink>
-          </ClassItem>
-          <ClassItem>
-            <ClassItemLink to="/class/shadow">Shadow</ClassItemLink>
-          </ClassItem>
-          <ClassItem>
-            <ClassItemLink to="/class/templar">Templar</ClassItemLink>
-          </ClassItem>
-          <ClassItem>
-            <ClassItemLink to="/class/witch">Witch</ClassItemLink>
-          </ClassItem>
-        </ClassList>
+        <StyledClassNav open={this.state.open} />
         <h4>Most Popular Builds</h4>
         {builds}
       </Container>
@@ -110,18 +89,6 @@ const Search = styled.div`
   margin: 0 auto;
   max-width: 800px;
   box-shadow: 0 2px 4px hsl(0, 0%, 80%);
-`;
-
-const ClassList = styled.ul`
-  display: ${props => (props.open ? "block" : "none")};
-  list-style: none;
-  padding-left: 0;
-  margin-top: 0;
-
-  @media (min-width: 40em) {
-    display: flex;
-    justify-content: space-between;
-  }
 `;
 
 const ClassListToggle = styled.button`
@@ -151,35 +118,42 @@ const ClassListToggle = styled.button`
   }
 `;
 
-const ClassItem = styled.li`
-  flex: 1;
-`;
+const StyledClassNav = styled(ClassNav)`
+  display: ${props => (props.open ? "block" : "none")};
+  list-style: none;
+  padding: 0;
+  margin: 0;
 
-const ClassItemLink = styled(Link)`
-  display: block;
-  padding: 0.5em 1em;
-  background-color: #333;
-  color: white;
-  transition: background-color 0.2s linear;
+  a {
+    display: inline-block;
+    width: 100%;
+    padding: 0.5em 1em;
+    background-color: #333;
+    color: white;
+    transition: background-color 0.2s linear;
+  }
 
-  &:visited {
+  a:visited {
     color: white;
   }
 
-  &:hover,
-  &:active {
+  a:hover,
+  a:active {
     text-decoration: none;
     background-color: #444;
   }
 
   @media (min-width: 40em) {
-    text-align: center;
-  }
-`;
+    display: flex;
 
-const ClassItemLinkImage = styled.img`
-  display: none;
-  width: 100%;
+    li {
+      flex: 1;
+    }
+
+    a {
+      text-align: center;
+    }
+  }
 `;
 
 export default Home;
