@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import AutoSuggest from "./AutoSuggest";
+import styled from "styled-components";
 
 class SearchForm extends Component {
   constructor(props) {
@@ -42,24 +43,25 @@ class SearchForm extends Component {
 
   render() {
     return (
-      <form
+      <Form
         onSubmit={this.handleSubmit}
         autoComplete="off"
         className={this.props.className}
       >
-        <div className="input-group">
+        <InputGroup>
           <SearchInput
+            type="text"
+            placeholder="Search by tag"
             value={this.state.value}
-            onChange={this.handleChange}
+            onChange={e => this.handleChange("input", e.target.value)}
             onKeyDown={this.handleKeyDown}
             onBlur={() => this.setState({ autoSuggestVisible: false })}
           />
-          <div className="input-group-append">
-            <button className="btn bg-light">
-              <i className="fa fa-search text-muted" aria-hidden="true" />
-            </button>
-          </div>
-        </div>
+          <SearchButton>
+            <I className="fa fa-search text-muted" aria-hidden="true" />
+            <SearchButtonText>Search</SearchButtonText>
+          </SearchButton>
+        </InputGroup>
         {this.state.autoSuggestVisible ? (
           <AutoSuggest
             dataSrc={this.props.dataSrc}
@@ -67,12 +69,12 @@ class SearchForm extends Component {
             onChange={this.handleChange}
           />
         ) : null}
-      </form>
+      </Form>
     );
   }
 }
 
-const SearchInput = props => {
+/*const SearchInput = props => {
   return (
     <input
       className="form-control bg-light border-0"
@@ -86,6 +88,50 @@ const SearchInput = props => {
       onBlur={props.onBlur}
     />
   );
-};
+};*/
+
+const Form = styled.form`
+  position: relative;
+  width: 100%;
+`;
+
+const InputGroup = styled.div`
+  display: flex;
+
+  input {
+    flex: 1;
+  }
+
+  button {
+    flex: initial;
+  }
+`;
+
+const SearchInput = styled.input`
+  border: 0;
+  padding-left: 1em;
+`;
+
+const SearchButton = styled.button`
+  background-color: white;
+  border: 0;
+  display: block;
+  overflow: hidden;
+  position: relative;
+  padding: 0.5em 1em;
+`;
+
+const SearchButtonText = styled.span`
+  position: absolute;
+  left: 1000px;
+`;
+
+const I = styled.i`
+  transition: transform 0.2s ease-out;
+
+  ${SearchButton}:hover & {
+    transform: scale(1.1);
+  }
+`;
 
 export default SearchForm;

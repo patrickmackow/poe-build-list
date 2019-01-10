@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import styled from "styled-components";
+
 import SearchForm from "./SearchForm";
 import BuildsTable from "./BuildsTable";
+import Container from "./common/Container";
 
 class Home extends Component {
   constructor(props) {
@@ -10,10 +13,12 @@ class Home extends Component {
     this.state = {
       loading: true,
       tags: [],
-      builds: []
+      builds: [],
+      open: false
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.toggleDropdown = this.toggleDropdown.bind(this);
   }
 
   componentDidMount() {
@@ -39,6 +44,11 @@ class Home extends Component {
       });
   }
 
+  toggleDropdown(e) {
+    e.preventDefault();
+    this.setState({ open: !this.state.open });
+  }
+
   handleSubmit(value) {
     this.props.history.push("/tag/" + value.toLowerCase());
   }
@@ -52,45 +62,124 @@ class Home extends Component {
     }
 
     return (
-      <div>
-        <div className="row justify-content-center">
-          <div className="col-6 text-center">
-            <h1>Path of Exile Build List</h1>
-          </div>
-        </div>
-        <div className="row justify-content-center">
-          <div className="col-12 col-md-10 mb-3">
-            <SearchForm
-              onSubmit={this.handleSubmit}
-              dataSrc={this.state.tags}
-            />
-          </div>
-        </div>
-        <p className="text-muted">Explore by class</p>
-        <div className="row">
-          <ClassCard href="duelist">Duelist</ClassCard>
-          <ClassCard href="marauder">Marauder</ClassCard>
-          <ClassCard href="ranger">Ranger</ClassCard>
-          <ClassCard href="scion">Scion</ClassCard>
-          <ClassCard href="shadow">Shadow</ClassCard>
-          <ClassCard href="templar">Templar</ClassCard>
-          <ClassCard href="witch">Witch</ClassCard>
-        </div>
-        <h4>Top 10 Builds</h4>
+      <Container>
+        <Title>
+          Path of Exile<br />Build List
+        </Title>
+        <Search>
+          <SearchForm onSubmit={this.handleSubmit} dataSrc={this.state.tags} />
+        </Search>
+        <ClassListToggle open={this.state.open} onClick={this.toggleDropdown}>
+          Explore by class
+        </ClassListToggle>
+        <ClassList open={this.state.open}>
+          <ClassItem>
+            <ClassItemLink to="/class/duelist">Duelist</ClassItemLink>
+          </ClassItem>
+          <ClassItem>
+            <ClassItemLink to="/class/marauder">Marauder</ClassItemLink>
+          </ClassItem>
+          <ClassItem>
+            <ClassItemLink to="/class/ranger">Ranger</ClassItemLink>
+          </ClassItem>
+          <ClassItem>
+            <ClassItemLink to="/class/scion">Scion</ClassItemLink>
+          </ClassItem>
+          <ClassItem>
+            <ClassItemLink to="/class/shadow">Shadow</ClassItemLink>
+          </ClassItem>
+          <ClassItem>
+            <ClassItemLink to="/class/templar">Templar</ClassItemLink>
+          </ClassItem>
+          <ClassItem>
+            <ClassItemLink to="/class/witch">Witch</ClassItemLink>
+          </ClassItem>
+        </ClassList>
+        <h4>Most Popular Builds</h4>
         {builds}
-      </div>
+      </Container>
     );
   }
 }
 
-const ClassCard = props => {
-  return (
-    <div className="card col-12 col-sm">
-      <div className="card-body">
-        <Link to={`/class/${props.href}`}>{props.children}</Link>
-      </div>
-    </div>
-  );
-};
+const Title = styled.h1`
+  text-align: center;
+`;
+
+const Search = styled.div`
+  margin: 0 auto;
+  max-width: 800px;
+  box-shadow: 0 2px 4px hsl(0, 0%, 80%);
+`;
+
+const ClassList = styled.ul`
+  display: ${props => (props.open ? "block" : "none")};
+  list-style: none;
+  padding-left: 0;
+  margin-top: 0;
+
+  @media (min-width: 40em) {
+    display: flex;
+    justify-content: space-between;
+  }
+`;
+
+const ClassListToggle = styled.button`
+  position: relative;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  padding: 0.5em 1em;
+  margin-top: 1em;
+  background-color: inherit;
+
+  @media (max-width: 39.99em) {
+    background-color: hsl(0, 0%, 95%);
+    cursor: pointer;
+
+    ::after {
+      position: absolute;
+      right: 1em;
+      top: ${props => (props.open ? "0.6em" : "1em")};
+      content: "";
+      border: 5px solid #111;
+      border-color: ${props =>
+        props.open
+          ? "transparent transparent black"
+          : "black transparent transparent"};
+    }
+  }
+`;
+
+const ClassItem = styled.li`
+  flex: 1;
+`;
+
+const ClassItemLink = styled(Link)`
+  display: block;
+  padding: 0.5em 1em;
+  background-color: #333;
+  color: white;
+  transition: background-color 0.2s linear;
+
+  &:visited {
+    color: white;
+  }
+
+  &:hover,
+  &:active {
+    text-decoration: none;
+    background-color: #444;
+  }
+
+  @media (min-width: 40em) {
+    text-align: center;
+  }
+`;
+
+const ClassItemLinkImage = styled.img`
+  display: none;
+  width: 100%;
+`;
 
 export default Home;

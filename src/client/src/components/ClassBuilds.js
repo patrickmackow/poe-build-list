@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import BuildsTable from "./BuildsTable";
 import VersionFilter from "./VersionFilter";
 import NavBar from "./NavBar";
+import Container from "./common/Container";
 
 class ClassBuilds extends Component {
   constructor(props) {
@@ -72,11 +73,15 @@ class ClassBuilds extends Component {
     }
 
     return (
-      <div>
+      <React.Fragment>
         <NavBar onSubmit={this.handleSearchSubmit} />
-        <h1 className="text-capitalize">{this.props.match.params.gameClass}</h1>
-        {buildsView}
-      </div>
+        <Container>
+          <h1 className="text-capitalize">
+            {this.props.match.params.gameClass}
+          </h1>
+          {buildsView}
+        </Container>
+      </React.Fragment>
     );
   }
 }

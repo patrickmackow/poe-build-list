@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import BuildsTable from "./BuildsTable";
 import VersionFilter from "./VersionFilter";
+import NavBar from "./NavBar";
+import Container from "./common/Container";
 
 class TagBuilds extends Component {
   constructor(props) {
@@ -16,6 +18,7 @@ class TagBuilds extends Component {
 
     this.handleVersionChange = this.handleVersionChange.bind(this);
     this.handleClassChange = this.handleClassChange.bind(this);
+    this.handleSearchSubmit = this.handleSearchSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -53,6 +56,10 @@ class TagBuilds extends Component {
     });
   }
 
+  handleSearchSubmit(value) {
+    this.props.history.push("/tag/" + value.toLowerCase());
+  }
+
   render() {
     const { loading, builds } = this.state;
     const { tag } = this.props.match.params;
@@ -85,11 +92,13 @@ class TagBuilds extends Component {
     }
 
     return (
-      <div>
-        <Link to="/">Back to Home</Link>
-        <h1 className="text-capitalize">{tag}</h1>
-        {buildsView}
-      </div>
+      <React.Fragment>
+        <NavBar onSubmit={this.handleSearchSubmit} />
+        <Container>
+          <h1 className="text-capitalize">{tag}</h1>
+          {buildsView}
+        </Container>
+      </React.Fragment>
     );
   }
 }

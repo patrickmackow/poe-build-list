@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import styled from "styled-components";
 
 class AutoSuggest extends Component {
   constructor(props) {
@@ -113,11 +114,12 @@ class AutoSuggest extends Component {
     let suggestions;
     if (filtered.length) {
       suggestions = filtered.map((d, i) => {
+        const active = i === this.state.active;
         const tag = d.input;
         const formattedTag = (
           <React.Fragment>
             {tag.substring(0, d.index)}
-            <span className="font-weight-bold">{d[0]}</span>
+            <span style={{ fontWeight: "bold" }}>{d[0]}</span>
             {tag.substring(d.index + d[0].length)}
           </React.Fragment>
         );
@@ -125,34 +127,79 @@ class AutoSuggest extends Component {
           <Suggestion
             key={d.input}
             value={tag}
+            active={active}
             onClick={this.handleClick}
-            active={i === this.state.active ? true : false}
+            onMouseDown={e => e.preventDefault()}
+            data-testid={"suggestion" + (active ? "-active" : "")}
           >
             {formattedTag}
           </Suggestion>
+          /*<Suggestion
+            key={d.input}
+            value={tag}
+            onClick={this.handleClick}
+            active={i === this.state.active ? true : false}
+
+            onClick={!disabled ? onClick : e => e.preventDefault()}
+        onMouseDown={e => e.preventDefault()} // Needed because onBlur is fired before onClick
+        value={value}
+        data-testid={"suggestion" + (active ? "-active" : "")}
+          >
+            {formattedTag}
+          </Suggestion>*/
         );
       });
     } else {
       // Add a suggestion when filtered data is empty
       suggestions = (
-        <Suggestion disabled="true">No suggestions found</Suggestion>
+        <Suggestion
+          data-testid="suggestion"
+          disabled
+          onClick={e => e.preventDefault()}
+        >
+          No suggestions found
+        </Suggestion>
       );
     }
 
     return suggestions ? (
-      <div className="dropdown">
-        <div
-          className="dropdown-menu d-block col-12 py-0"
-          style={{ maxHeight: 200, overflowY: "scroll" }}
-        >
-          {suggestions}
-        </div>
-      </div>
+      <Dropdown>
+        <DropdownDrawer>{suggestions}</DropdownDrawer>
+      </Dropdown>
     ) : null;
   }
 }
 
-class Suggestion extends Component {
+const Dropdown = styled.div`
+  position: absolute;
+  z-index: 10;
+  min-width: 100%;
+  background-color: white;
+  box-shadow: 0 2px 4px hsl(0, 0%, 80%);
+`;
+
+const DropdownDrawer = styled.div`
+  max-height: 200px;
+  overflow-y: scroll;
+`;
+
+const Suggestion = styled.button`
+  width: 100%;
+  text-align: left;
+  border: 0;
+  padding: 0.5em 1em;
+  /* color: hsl(27.5, 25%, 35%); */
+  background-color: ${props =>
+    props.active ? "hsl(27.5, 25%, 35%)" : "white"};
+  color: ${props => (props.active ? "white" : "inherit")};
+
+  &:hover {
+    background-color: ${props => (props.disabled ? "" : "silver")};
+    color: inherit;
+  }
+`;
+
+/*class Suggestion extends Component {
   render() {
     const { children, value, active, onClick, disabled } = this.props;
 
@@ -172,6 +219,6 @@ class Suggestion extends Component {
       </button>
     );
   }
-}
+}*/
 
 export default AutoSuggest;
