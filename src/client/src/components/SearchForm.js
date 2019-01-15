@@ -90,22 +90,6 @@ class SearchForm extends Component {
   }
 }
 
-/*const SearchInput = props => {
-  return (
-    <input
-      className="form-control bg-light border-0"
-      type="text"
-      placeholder="Search by tag"
-      value={props.value}
-      onChange={e => {
-        props.onChange("input", e.target.value);
-      }}
-      onKeyDown={props.onKeyDown}
-      onBlur={props.onBlur}
-    />
-  );
-};*/
-
 const Form = styled.form`
   position: relative;
   width: 100%;

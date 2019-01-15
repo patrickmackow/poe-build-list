@@ -134,19 +134,6 @@ class AutoSuggest extends Component {
           >
             {formattedTag}
           </Suggestion>
-          /*<Suggestion
-            key={d.input}
-            value={tag}
-            onClick={this.handleClick}
-            active={i === this.state.active ? true : false}
-
-            onClick={!disabled ? onClick : e => e.preventDefault()}
-        onMouseDown={e => e.preventDefault()} // Needed because onBlur is fired before onClick
-        value={value}
-        data-testid={"suggestion" + (active ? "-active" : "")}
-          >
-            {formattedTag}
-          </Suggestion>*/
         );
       });
     } else {
@@ -188,7 +175,6 @@ const Suggestion = styled.button`
   text-align: left;
   border: 0;
   padding: 0.5em 1em;
-  /* color: hsl(27.5, 25%, 35%); */
   background-color: ${props =>
     props.active ? "hsl(27.5, 25%, 35%)" : "white"};
   color: ${props => (props.active ? "white" : "inherit")};
@@ -198,27 +184,5 @@ const Suggestion = styled.button`
     color: inherit;
   }
 `;
-
-/*class Suggestion extends Component {
-  render() {
-    const { children, value, active, onClick, disabled } = this.props;
-
-    return (
-      <button
-        className={
-          "dropdown-item py-2 " +
-          (active ? " active" : " text-muted") +
-          (disabled ? " disabled" : "")
-        }
-        onClick={!disabled ? onClick : e => e.preventDefault()}
-        onMouseDown={e => e.preventDefault()} // Needed because onBlur is fired before onClick
-        value={value}
-        data-testid={"suggestion" + (active ? "-active" : "")}
-      >
-        {children}
-      </button>
-    );
-  }
-}*/
 
 export default AutoSuggest;

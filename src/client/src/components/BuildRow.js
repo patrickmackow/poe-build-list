@@ -7,7 +7,6 @@ class BuildRow extends Component {
 
     return (
       <Build {...rest}>
-        {/* <BuildImage src="/images/slayer.png" /> */}
         <BuildLeft>
           <BuildTitle rel="external" href={build.url} data-testid="build-link">
             {build.title}
@@ -43,10 +42,6 @@ const Build = styled.div`
   @media (min-width: 35em) {
     display: flex;
   }
-`;
-
-const BuildImage = styled.img`
-  flex: initial;
 `;
 
 const BuildLeft = styled.div`
