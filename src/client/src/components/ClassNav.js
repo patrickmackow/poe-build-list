@@ -1,29 +1,29 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 function ClassNav(props) {
   return (
     <ul className={props.className}>
       <li>
-        <Link to="/class/duelist">Duelist</Link>
+        <NavLink to="/class/duelist">Duelist</NavLink>
       </li>
       <li>
-        <Link to="/class/marauder">Marauder</Link>
+        <NavLink to="/class/marauder">Marauder</NavLink>
       </li>
       <li>
-        <Link to="/class/ranger">Ranger</Link>
+        <NavLink to="/class/ranger">Ranger</NavLink>
       </li>
       <li>
-        <Link to="/class/scion">Scion</Link>
+        <NavLink to="/class/scion">Scion</NavLink>
       </li>
       <li>
-        <Link to="/class/shadow">Shadow</Link>
+        <NavLink to="/class/shadow">Shadow</NavLink>
       </li>
       <li>
-        <Link to="/class/templar">Templar</Link>
+        <NavLink to="/class/templar">Templar</NavLink>
       </li>
       <li>
-        <Link to="/class/witch">Witch</Link>
+        <NavLink to="/class/witch">Witch</NavLink>
       </li>
     </ul>
   );

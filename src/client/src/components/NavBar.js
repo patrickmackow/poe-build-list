@@ -205,7 +205,8 @@ const StyledClassNav = styled(ClassNav)`
   }
 
   a:hover,
-  a:active {
+  a:active,
+  a.active {
     text-decoration: none;
     background-color: #444;
   }
