@@ -68,7 +68,7 @@ const StyledNavBar = styled.nav`
   padding: 0.2em 0;
 
   & + * {
-    margin-top: 3.5em;
+    margin-top: 4em;
   }
 
   a,

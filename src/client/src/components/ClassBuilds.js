@@ -3,6 +3,7 @@ import BuildsTable from "./BuildsTable";
 import VersionFilter from "./VersionFilter";
 import NavBar from "./NavBar";
 import Container from "./common/Container";
+import styled from "styled-components";
 
 class ClassBuilds extends Component {
   constructor(props) {
@@ -71,14 +72,16 @@ class ClassBuilds extends Component {
       <React.Fragment>
         <NavBar />
         <Container>
-          <h1 className="text-capitalize">
-            {this.props.match.params.gameClass}
-          </h1>
+          <Title>{this.props.match.params.gameClass}</Title>
           {buildsView}
         </Container>
       </React.Fragment>
     );
   }
 }
+
+const Title = styled.h1`
+  text-transform: capitalize;
+`;
 
 export default ClassBuilds;

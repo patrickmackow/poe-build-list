@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import BuildsTable from "./BuildsTable";
 import VersionFilter from "./VersionFilter";
 import NavBar from "./NavBar";
 import Container from "./common/Container";
+import styled from "styled-components";
 
 class TagBuilds extends Component {
   constructor(props) {
@@ -18,7 +18,6 @@ class TagBuilds extends Component {
 
     this.handleVersionChange = this.handleVersionChange.bind(this);
     this.handleClassChange = this.handleClassChange.bind(this);
-    this.handleSearchSubmit = this.handleSearchSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -56,10 +55,6 @@ class TagBuilds extends Component {
     });
   }
 
-  handleSearchSubmit(value) {
-    this.props.history.push("/tag/" + value.toLowerCase());
-  }
-
   render() {
     const { loading, builds } = this.state;
     const { tag } = this.props.match.params;
@@ -71,21 +66,17 @@ class TagBuilds extends Component {
       const filteredBuilds = this.filterBuilds(builds);
       buildsView = (
         <React.Fragment>
-          <div className="row">
-            <div className="col-sm-auto">
-              <VersionFilter
-                value={this.state.version}
-                builds={builds}
-                onChange={this.handleVersionChange}
-              />
-            </div>
-            <div className="col-sm-auto">
-              <ClassFilter
-                value={this.state.class}
-                onChange={this.handleClassChange}
-              />
-            </div>
-          </div>
+          <Filters>
+            <VersionFilter
+              value={this.state.version}
+              builds={builds}
+              onChange={this.handleVersionChange}
+            />
+            <ClassFilter
+              value={this.state.class}
+              onChange={this.handleClassChange}
+            />
+          </Filters>
           <BuildsTable builds={filteredBuilds} />
         </React.Fragment>
       );
@@ -93,9 +84,9 @@ class TagBuilds extends Component {
 
     return (
       <React.Fragment>
-        <NavBar onSubmit={this.handleSearchSubmit} />
+        <NavBar />
         <Container>
-          <h1 className="text-capitalize">{tag}</h1>
+          <Title>{tag}</Title>
           {buildsView}
         </Container>
       </React.Fragment>
@@ -116,19 +107,9 @@ const ClassFilter = props => {
   ];
 
   return (
-    <div className="form-inline mb-2">
-      <label
-        className="col-form-label col-form-label-sm text-muted text-uppercase mr-2"
-        htmlFor="class-filter"
-      >
-        Class
-      </label>
-      <select
-        id="class-filter"
-        className="col-auto form-control form-control-sm custom-select border-0 bg-light"
-        value={props.value}
-        onChange={props.onChange}
-      >
+    <StyledClassFilter>
+      <Label htmlFor="class-filter">Class</Label>
+      <Select id="class-filter" value={props.value} onChange={props.onChange}>
         {classes.map(c => {
           return (
             <option key={c} value={c}>
@@ -136,9 +117,34 @@ const ClassFilter = props => {
             </option>
           );
         })}
-      </select>
-    </div>
+      </Select>
+    </StyledClassFilter>
   );
 };
+
+const Title = styled.h1`
+  text-transform: capitalize;
+`;
+
+const Filters = styled.div`
+  margin-bottom: 0.5em;
+
+  > * + * {
+    margin-left: 0.5em;
+  }
+`;
+
+const StyledClassFilter = styled.div`
+  display: inline-block;
+`;
+
+const Label = styled.label`
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  color: #555;
+  margin-right: 0.5em;
+`;
+
+const Select = styled.select``;
 
 export default TagBuilds;

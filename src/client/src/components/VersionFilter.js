@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import styled from "styled-components";
 
 const MINIMUM_VERSION = "3.0";
 
@@ -31,24 +32,31 @@ class VersionFilter extends Component {
     ));
 
     return (
-      <div className="form-inline mb-2">
-        <label
-          className="col-form-label col-form-label-sm text-muted text-uppercase mr-2"
-          htmlFor="version-filter"
-        >
-          Patch
-        </label>
-        <select
+      <StyledVersionFilter>
+        <Label htmlFor="version-filter">Patch</Label>
+        <Select
           id="version-filter"
-          className="col-auto form-control form-control-sm custom-select border-0 bg-light"
           value={this.props.value}
           onChange={this.props.onChange}
         >
           {patches}
-        </select>
-      </div>
+        </Select>
+      </StyledVersionFilter>
     );
   }
 }
+
+const StyledVersionFilter = styled.div`
+  display: inline-block;
+`;
+
+const Label = styled.label`
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  color: #555;
+  margin-right: 0.5em;
+`;
+
+const Select = styled.select``;
 
 export default VersionFilter;
