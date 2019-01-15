@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import AutoSuggest from "./AutoSuggest";
 import styled from "styled-components";
+import { withRouter } from "react-router-dom";
 
 class SearchForm extends Component {
   constructor(props) {
@@ -8,12 +9,27 @@ class SearchForm extends Component {
 
     this.state = {
       value: "",
-      autoSuggestVisible: false
+      autoSuggestVisible: false,
+      tags: []
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
+  }
+
+  componentDidMount() {
+    fetch("/api/tags")
+      .then(res => res.json())
+      .then(data => {
+        const formattedTags = data.map(d =>
+          d
+            .split(" ")
+            .map(tag => tag[0].toUpperCase() + tag.substr(1))
+            .join(" ")
+        );
+        this.setState({ tags: formattedTags });
+      });
   }
 
   handleChange(element, value) {
@@ -32,7 +48,7 @@ class SearchForm extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    this.props.onSubmit(this.state.value);
+    this.props.history.push("/tag/" + this.state.value.toLowerCase());
   }
 
   handleKeyDown(e) {
@@ -64,7 +80,7 @@ class SearchForm extends Component {
         </InputGroup>
         {this.state.autoSuggestVisible ? (
           <AutoSuggest
-            dataSrc={this.props.dataSrc}
+            dataSrc={this.state.tags}
             value={this.state.value}
             onChange={this.handleChange}
           />
@@ -134,4 +150,4 @@ const I = styled.i`
   }
 `;
 
-export default SearchForm;
+export default withRouter(SearchForm);

@@ -14,7 +14,6 @@ class ClassBuilds extends Component {
     };
 
     this.handleVersionChange = this.handleVersionChange.bind(this);
-    this.handleSearchSubmit = this.handleSearchSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -30,10 +29,6 @@ class ClassBuilds extends Component {
 
   handleVersionChange(e) {
     this.setState({ version: e.target.value });
-  }
-
-  handleSearchSubmit(value) {
-    this.props.history.push("/tag/" + value.toLowerCase());
   }
 
   filterBuilds(builds) {
@@ -74,7 +69,7 @@ class ClassBuilds extends Component {
 
     return (
       <React.Fragment>
-        <NavBar onSubmit={this.handleSearchSubmit} />
+        <NavBar />
         <Container>
           <h1 className="text-capitalize">
             {this.props.match.params.gameClass}

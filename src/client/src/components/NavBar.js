@@ -9,27 +9,12 @@ class NavBar extends Component {
     super(props);
 
     this.state = {
-      tags: [],
       isClassOpen: false,
       isSearchOpen: false
     };
 
     this.toggleClass = this.toggleClass.bind(this);
     this.toggleSearch = this.toggleSearch.bind(this);
-  }
-
-  componentDidMount() {
-    fetch("/api/tags")
-      .then(res => res.json())
-      .then(data => {
-        const formattedTags = data.map(d =>
-          d
-            .split(" ")
-            .map(tag => tag[0].toUpperCase() + tag.substr(1))
-            .join(" ")
-        );
-        this.setState({ tags: formattedTags });
-      });
   }
 
   toggleClass() {
@@ -66,10 +51,7 @@ class NavBar extends Component {
         <SearchContainer>
           <SearchLabel onClick={this.toggleSearch}>Search</SearchLabel>
           <SearchDrawer isSearchOpen={this.state.isSearchOpen}>
-            <SearchForm
-              onSubmit={this.props.onSubmit}
-              dataSrc={this.state.tags}
-            />
+            <SearchForm />
           </SearchDrawer>
         </SearchContainer>
       </StyledNavBar>

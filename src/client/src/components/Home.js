@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 import SearchForm from "./SearchForm";
@@ -13,28 +12,14 @@ class Home extends Component {
 
     this.state = {
       loading: true,
-      tags: [],
       builds: [],
       open: false
     };
 
-    this.handleSubmit = this.handleSubmit.bind(this);
     this.toggleDropdown = this.toggleDropdown.bind(this);
   }
 
   componentDidMount() {
-    fetch("/api/tags")
-      .then(res => res.json())
-      .then(data => {
-        const formattedTags = data.map(d =>
-          d
-            .split(" ")
-            .map(tag => tag[0].toUpperCase() + tag.substr(1))
-            .join(" ")
-        );
-        this.setState({ tags: formattedTags });
-      });
-
     fetch("/api/builds")
       .then(res => res.json())
       .then(data => {
@@ -48,10 +33,6 @@ class Home extends Component {
   toggleDropdown(e) {
     e.preventDefault();
     this.setState({ open: !this.state.open });
-  }
-
-  handleSubmit(value) {
-    this.props.history.push("/tag/" + value.toLowerCase());
   }
 
   render() {
@@ -68,7 +49,7 @@ class Home extends Component {
           Path of Exile<br />Build List
         </Title>
         <Search>
-          <SearchForm onSubmit={this.handleSubmit} dataSrc={this.state.tags} />
+          <SearchForm />
         </Search>
         <ClassListToggle open={this.state.open} onClick={this.toggleDropdown}>
           Explore by class
