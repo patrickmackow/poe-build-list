@@ -10,6 +10,10 @@ import TagBuilds from "../TagBuilds";
 
 const fetchMock = require("fetch-mock");
 
+beforeEach(() => {
+  fetchMock.get("/api/tags", JSON.stringify([]));
+});
+
 afterEach(() => {
   cleanup();
   fetchMock.restore();
