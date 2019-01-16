@@ -74,7 +74,7 @@ class SearchForm extends Component {
             onBlur={() => this.setState({ autoSuggestVisible: false })}
           />
           <SearchButton>
-            <I className="fa fa-search text-muted" aria-hidden="true" />
+            <I className="fa fa-search" aria-hidden="true" />
             <SearchButtonText>Search</SearchButtonText>
           </SearchButton>
         </InputGroup>
@@ -128,6 +128,7 @@ const SearchButtonText = styled.span`
 
 const I = styled.i`
   transition: transform 0.2s ease-out;
+  color: #666;
 
   ${SearchButton}:hover & {
     transform: scale(1.1);

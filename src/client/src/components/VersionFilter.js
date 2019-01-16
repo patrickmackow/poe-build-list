@@ -52,8 +52,8 @@ const StyledVersionFilter = styled.div`
 
 const Label = styled.label`
   text-transform: uppercase;
-  font-size: 0.8rem;
-  color: #555;
+  font-size: 0.9rem;
+  color: #666;
   margin-right: 0.5em;
 `;
 
