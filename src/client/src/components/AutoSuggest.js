@@ -4,6 +4,7 @@ import styled from "styled-components";
 class AutoSuggest extends Component {
   constructor(props) {
     super(props);
+    this.activeRef = React.createRef();
 
     this.state = {
       active: undefined
@@ -43,10 +44,12 @@ class AutoSuggest extends Component {
       case 38: // Up arrow
         e.preventDefault();
         this.changeActiveBy(-1);
+        this.scrollDrawer();
         break;
       case 40: // Down arrow
         e.preventDefault();
         this.changeActiveBy(1);
+        this.scrollDrawer();
         break;
       default:
         break;
@@ -78,6 +81,21 @@ class AutoSuggest extends Component {
       } else {
         this.setState({ active: this.state.active - 1 });
       }
+    }
+  }
+
+  scrollDrawer() {
+    const active = this.activeRef.current;
+    const parent = active.parentElement;
+
+    if (active.offsetTop < parent.scrollTop) {
+      parent.scrollTop = active.offsetTop;
+    } else if (
+      active.offsetTop + active.offsetHeight >
+      parent.scrollTop + parent.offsetHeight
+    ) {
+      parent.scrollTop =
+        active.offsetTop + active.offsetHeight - parent.offsetHeight;
     }
   }
 
@@ -128,6 +146,7 @@ class AutoSuggest extends Component {
             key={d.input}
             value={tag}
             active={active}
+            ref={active ? this.activeRef : undefined}
             onClick={this.handleClick}
             onMouseDown={e => e.preventDefault()}
             data-testid={"suggestion" + (active ? "-active" : "")}
