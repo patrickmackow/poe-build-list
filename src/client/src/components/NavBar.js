@@ -70,9 +70,11 @@ const StyledNavBar = styled.nav`
   & + * {
     margin-top: 4em;
   }
+`;
 
-  a,
-  button {
+const Container = styled.div`
+  > a,
+  > button {
     transition: background-color 0.2s linear;
   }
 `;
@@ -101,7 +103,7 @@ const Drawer = styled.div`
   padding: 0;
 `;
 
-const LinkContainer = styled.div``;
+const LinkContainer = styled(Container)``;
 
 const StyledLink = styled(Link)`
   display: inline-block;
@@ -120,7 +122,7 @@ const StyledLink = styled(Link)`
   }
 `;
 
-const ClassContainer = styled.div``;
+const ClassContainer = styled(Container)``;
 
 const ClassLabel = styled(Label)`
   position: relative;
@@ -163,7 +165,7 @@ const ClassDrawer = styled(Drawer)`
   }
 `;
 
-const SearchContainer = styled.div`
+const SearchContainer = styled(Container)`
   margin-left: auto;
 `;
 
