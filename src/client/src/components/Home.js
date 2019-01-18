@@ -10,6 +10,8 @@ class Home extends Component {
   constructor(props) {
     super(props);
 
+    this.abortController = new AbortController();
+
     this.state = {
       loading: true,
       builds: [],
@@ -20,7 +22,7 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    fetch("/api/builds")
+    fetch("/api/builds", { signal: this.abortController.signal })
       .then(res => res.json())
       .then(data => {
         this.setState({
@@ -28,6 +30,10 @@ class Home extends Component {
           builds: data.slice(0, 10)
         });
       });
+  }
+
+  componentWillUnmount() {
+    this.abortController.abort();
   }
 
   toggleDropdown(e) {

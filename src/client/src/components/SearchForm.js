@@ -7,6 +7,8 @@ class SearchForm extends Component {
   constructor(props) {
     super(props);
 
+    this.abortController = new AbortController();
+
     this.state = {
       value: "",
       autoSuggestVisible: false,
@@ -16,10 +18,11 @@ class SearchForm extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.focusSearchInput = this.focusSearchInput.bind(this);
   }
 
   componentDidMount() {
-    fetch("/api/tags")
+    fetch("/api/tags", { signal: this.abortController.signal })
       .then(res => res.json())
       .then(data => {
         const formattedTags = data.map(d =>
@@ -30,6 +33,10 @@ class SearchForm extends Component {
         );
         this.setState({ tags: formattedTags });
       });
+  }
+
+  componentWillUnmount() {
+    this.abortController.abort();
   }
 
   handleChange(element, value) {
@@ -48,6 +55,9 @@ class SearchForm extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
+    if (this.state.value === "") {
+      return;
+    }
     this.props.history.push("/tag/" + this.state.value.toLowerCase());
   }
 
@@ -55,6 +65,10 @@ class SearchForm extends Component {
     if (e.key === "Escape" && this.state.autoSuggestVisible) {
       this.setState({ autoSuggestVisible: false });
     }
+  }
+
+  focusSearchInput() {
+    this.searchInputRef.current.focus();
   }
 
   render() {
@@ -72,6 +86,7 @@ class SearchForm extends Component {
             onChange={e => this.handleChange("input", e.target.value)}
             onKeyDown={this.handleKeyDown}
             onBlur={() => this.setState({ autoSuggestVisible: false })}
+            ref={this.props.searchInputRef}
           />
           <SearchButton>
             <I className="fa fa-search" aria-hidden="true" />

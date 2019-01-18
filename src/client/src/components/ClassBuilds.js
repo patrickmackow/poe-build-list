@@ -8,6 +8,9 @@ import styled from "styled-components";
 class ClassBuilds extends Component {
   constructor(props) {
     super(props);
+
+    this.abortController = new AbortController();
+
     this.state = {
       loading: true,
       builds: [],
@@ -18,7 +21,9 @@ class ClassBuilds extends Component {
   }
 
   componentDidMount() {
-    fetch("/api/builds/" + this.props.match.params.gameClass)
+    fetch("/api/builds/" + this.props.match.params.gameClass, {
+      signal: this.abortController.signal
+    })
       .then(res => res.json())
       .then(builds => {
         this.setState({
@@ -26,6 +31,10 @@ class ClassBuilds extends Component {
           builds
         });
       });
+  }
+
+  componentWillUnmount() {
+    this.abortController.abort();
   }
 
   handleVersionChange(e) {

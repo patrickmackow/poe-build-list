@@ -13,6 +13,8 @@ class NavBar extends Component {
       isSearchOpen: false
     };
 
+    this.searchInputRef = React.createRef();
+
     this.toggleClass = this.toggleClass.bind(this);
     this.toggleSearch = this.toggleSearch.bind(this);
   }
@@ -29,6 +31,11 @@ class NavBar extends Component {
       isSearchOpen: !this.state.isSearchOpen,
       isClassOpen: false
     });
+
+    // Input won't focus until it is visible, so timeout is used
+    setTimeout(() => {
+      this.searchInputRef.current.focus();
+    }, 0);
   }
 
   render() {
@@ -51,7 +58,7 @@ class NavBar extends Component {
         <SearchContainer>
           <SearchLabel onClick={this.toggleSearch}>Search</SearchLabel>
           <SearchDrawer isSearchOpen={this.state.isSearchOpen}>
-            <SearchForm />
+            <SearchForm searchInputRef={this.searchInputRef} />
           </SearchDrawer>
         </SearchContainer>
       </StyledNavBar>
