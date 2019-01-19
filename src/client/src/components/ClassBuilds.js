@@ -21,6 +21,19 @@ class ClassBuilds extends Component {
   }
 
   componentDidMount() {
+    this.fetchData();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.match.params.gameClass !== this.props.match.params.gameClass
+    ) {
+      this.setState({ loading: true });
+      this.fetchData();
+    }
+  }
+
+  fetchData() {
     fetch("/api/builds/" + this.props.match.params.gameClass, {
       signal: this.abortController.signal
     })

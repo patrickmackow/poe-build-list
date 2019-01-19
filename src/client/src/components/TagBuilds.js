@@ -22,8 +22,18 @@ class TagBuilds extends Component {
   }
 
   componentDidMount() {
-    const { tag } = this.props.match.params;
-    fetch("/api/tags/" + tag)
+    this.fetchData();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.match.params.tag !== this.props.match.params.tag) {
+      this.setState({ loading: true });
+      this.fetchData();
+    }
+  }
+
+  fetchData() {
+    fetch("/api/tags/" + this.props.match.params.tag)
       .then(res => res.json())
       .then(builds =>
         this.setState({
