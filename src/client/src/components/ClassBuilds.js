@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import BuildsTable from "./BuildsTable";
-import VersionFilter from "./VersionFilter";
+import VersionFilter from "./filters/VersionFilter";
 import NavBar from "./NavBar";
 import Container from "./common/Container";
 import styled from "styled-components";

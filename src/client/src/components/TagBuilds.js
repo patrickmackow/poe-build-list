@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import BuildsTable from "./BuildsTable";
-import VersionFilter from "./VersionFilter";
+import VersionFilter from "./filters/VersionFilter";
+import ClassFilter from "./filters/ClassFilter";
 import NavBar from "./NavBar";
 import Container from "./common/Container";
 import styled from "styled-components";
@@ -94,34 +95,6 @@ class TagBuilds extends Component {
   }
 }
 
-const ClassFilter = props => {
-  const classes = [
-    "All",
-    "Duelist",
-    "Marauder",
-    "Ranger",
-    "Scion",
-    "Shadow",
-    "Templar",
-    "Witch"
-  ];
-
-  return (
-    <StyledClassFilter>
-      <Label htmlFor="class-filter">Class</Label>
-      <Select id="class-filter" value={props.value} onChange={props.onChange}>
-        {classes.map(c => {
-          return (
-            <option key={c} value={c}>
-              {c}
-            </option>
-          );
-        })}
-      </Select>
-    </StyledClassFilter>
-  );
-};
-
 const Title = styled.h1`
   text-transform: capitalize;
 `;
@@ -133,18 +106,5 @@ const Filters = styled.div`
     margin-left: 0.5em;
   }
 `;
-
-const StyledClassFilter = styled.div`
-  display: inline-block;
-`;
-
-const Label = styled.label`
-  text-transform: uppercase;
-  font-size: 0.9rem;
-  color: #666;
-  margin-right: 0.5em;
-`;
-
-const Select = styled.select``;
 
 export default TagBuilds;

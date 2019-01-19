@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import styled from "styled-components";
+import { Filter, Label, Select } from "./FilterStyles";
 
 const MINIMUM_VERSION = "3.0";
 
@@ -32,7 +32,7 @@ class VersionFilter extends Component {
     ));
 
     return (
-      <StyledVersionFilter>
+      <Filter>
         <Label htmlFor="version-filter">Patch</Label>
         <Select
           id="version-filter"
@@ -41,22 +41,9 @@ class VersionFilter extends Component {
         >
           {patches}
         </Select>
-      </StyledVersionFilter>
+      </Filter>
     );
   }
 }
-
-const StyledVersionFilter = styled.div`
-  display: inline-block;
-`;
-
-const Label = styled.label`
-  text-transform: uppercase;
-  font-size: 0.9rem;
-  color: #666;
-  margin-right: 0.5em;
-`;
-
-const Select = styled.select``;
 
 export default VersionFilter;
