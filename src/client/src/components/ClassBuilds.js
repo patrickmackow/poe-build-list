@@ -5,6 +5,7 @@ import NavBar from "./NavBar";
 import Container from "./common/Container";
 import styled from "styled-components";
 import Loader from "./common/Loader";
+import FilterContainer from "./filters/FilterContainer";
 
 class ClassBuilds extends Component {
   constructor(props) {
@@ -81,11 +82,13 @@ class ClassBuilds extends Component {
 
       buildsView = (
         <StyledClassBuilds>
-          <VersionFilter
-            value={this.state.version}
-            builds={builds}
-            onChange={this.handleVersionChange}
-          />
+          <FilterContainer>
+            <VersionFilter
+              value={this.state.version}
+              builds={builds}
+              onChange={this.handleVersionChange}
+            />
+          </FilterContainer>
           <BuildsTable builds={filteredBuilds} />
         </StyledClassBuilds>
       );

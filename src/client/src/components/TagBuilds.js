@@ -6,6 +6,7 @@ import NavBar from "./NavBar";
 import Container from "./common/Container";
 import styled from "styled-components";
 import Loader from "./common/Loader";
+import FilterContainer from "./filters/FilterContainer";
 
 class TagBuilds extends Component {
   constructor(props) {
@@ -82,7 +83,7 @@ class TagBuilds extends Component {
       const filteredBuilds = this.filterBuilds(builds);
       buildsView = (
         <React.Fragment>
-          <Filters>
+          <FilterContainer>
             <VersionFilter
               value={this.state.version}
               builds={builds}
@@ -92,7 +93,7 @@ class TagBuilds extends Component {
               value={this.state.class}
               onChange={this.handleClassChange}
             />
-          </Filters>
+          </FilterContainer>
           <BuildsTable builds={filteredBuilds} />
         </React.Fragment>
       );
@@ -112,14 +113,6 @@ class TagBuilds extends Component {
 
 const Title = styled.h1`
   text-transform: capitalize;
-`;
-
-const Filters = styled.div`
-  margin-bottom: 0.5em;
-
-  > * + * {
-    margin-left: 0.5em;
-  }
 `;
 
 const LoaderContainer = styled.div`
