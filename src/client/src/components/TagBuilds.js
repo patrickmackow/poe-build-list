@@ -12,6 +12,8 @@ class TagBuilds extends Component {
   constructor(props) {
     super(props);
 
+    this.abortController = new AbortController();
+
     this.state = {
       loading: true,
       builds: [],
@@ -35,7 +37,9 @@ class TagBuilds extends Component {
   }
 
   fetchData() {
-    fetch("/api/tags/" + this.props.match.params.tag)
+    fetch("/api/tags/" + this.props.match.params.tag, {
+      signal: this.abortController.signal
+    })
       .then(res => res.json())
       .then(builds =>
         this.setState({
@@ -43,6 +47,10 @@ class TagBuilds extends Component {
           loading: false
         })
       );
+  }
+
+  componentWillUnmount() {
+    this.abortController.abort();
   }
 
   handleVersionChange(e) {
