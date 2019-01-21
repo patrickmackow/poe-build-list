@@ -79,14 +79,14 @@ class ClassBuilds extends Component {
       const filteredBuilds = this.filterBuilds(builds);
 
       buildsView = (
-        <div>
+        <StyledClassBuilds>
           <VersionFilter
             value={this.state.version}
             builds={builds}
             onChange={this.handleVersionChange}
           />
           <BuildsTable builds={filteredBuilds} />
-        </div>
+        </StyledClassBuilds>
       );
     }
 
@@ -104,6 +104,12 @@ class ClassBuilds extends Component {
 
 const Title = styled.h1`
   text-transform: capitalize;
+`;
+
+const StyledClassBuilds = styled.div`
+  .game-class {
+    display: none;
+  }
 `;
 
 export default ClassBuilds;

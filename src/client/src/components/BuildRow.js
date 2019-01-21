@@ -4,13 +4,16 @@ import styled from "styled-components";
 class BuildRow extends Component {
   render() {
     const { build, ...rest } = this.props;
-
+    const cssClass = "game-class " + build.gameClass;
     return (
       <Build {...rest}>
         <BuildLeft>
           <BuildTitle rel="external" href={build.url} data-testid="build-link">
             {build.title}
           </BuildTitle>
+          <Tag key={build.gameClass} className={cssClass}>
+            {build.gameClass}
+          </Tag>
           {build.generatedTags.map(tag => (
             <Tag key={tag} data-testid="build-tag">
               {tag}
@@ -83,11 +86,6 @@ const BuildMetaInfo = styled.span`
 
 const Tag = styled.span`
   display: inline-block;
-  // background-image: linear-gradient(
-  //   to bottom,
-  //   hsl(210, 75%, 50%),
-  //   hsl(210, 75%, 47%)
-  // );
   background-color: hsl(210, 75%, 50%);
   box-shadow: 0 2px 4px hsl(0, 0%, 70%);
   padding: 0.2em 0.5em;
@@ -98,6 +96,28 @@ const Tag = styled.span`
   text-transform: uppercase;
   font-size: 0.775rem;
   font-weight: bold;
+
+  &.duelist {
+    background-color: hsl(30, 90%, 15%);
+  }
+  &.marauder {
+    background-color: hsl(0, 90%, 15%);
+  }
+  &.ranger {
+    background-color: hsl(120, 90%, 15%);
+  }
+  &.scion {
+    background-color: hsl(0, 0%, 15%);
+  }
+  &.shadow {
+    background-color: hsl(200, 90%, 15%);
+  }
+  &.templar {
+    background-color: hsl(300, 90%, 15%);
+  }
+  &.witch {
+    background-color: hsl(230, 90%, 15%);
+  }
 `;
 
 export default BuildRow;
