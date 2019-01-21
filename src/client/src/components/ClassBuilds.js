@@ -4,6 +4,7 @@ import VersionFilter from "./filters/VersionFilter";
 import NavBar from "./NavBar";
 import Container from "./common/Container";
 import styled from "styled-components";
+import Loader from "./common/Loader";
 
 class ClassBuilds extends Component {
   constructor(props) {
@@ -71,9 +72,9 @@ class ClassBuilds extends Component {
 
     if (loading) {
       buildsView = (
-        <div data-testid="loading">
-          <p>Loading...</p>
-        </div>
+        <LoaderContainer data-testid="loading">
+          <Loader />
+        </LoaderContainer>
       );
     } else {
       const filteredBuilds = this.filterBuilds(builds);
@@ -109,6 +110,18 @@ const Title = styled.h1`
 const StyledClassBuilds = styled.div`
   .game-class {
     display: none;
+  }
+`;
+
+const LoaderContainer = styled.div`
+  margin-top: 7em;
+
+  @media (min-width: 40em) {
+    margin-top: 10em;
+  }
+
+  div {
+    margin: 0 auto;
   }
 `;
 

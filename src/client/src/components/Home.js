@@ -5,6 +5,7 @@ import SearchForm from "./SearchForm";
 import BuildsTable from "./BuildsTable";
 import Container from "./common/Container";
 import ClassNav from "./ClassNav";
+import Loader from "./common/Loader";
 
 class Home extends Component {
   constructor(props) {
@@ -44,9 +45,18 @@ class Home extends Component {
   render() {
     let builds;
     if (this.state.loading) {
-      builds = <p>Loading...</p>;
+      builds = (
+        <LoaderContainer>
+          <Loader />;
+        </LoaderContainer>
+      );
     } else {
-      builds = <BuildsTable builds={this.state.builds} sort={false} />;
+      builds = (
+        <React.Fragment>
+          <StyledSubTitle>Most Popular Builds</StyledSubTitle>
+          <BuildsTable builds={this.state.builds} sort={false} />
+        </React.Fragment>
+      );
     }
 
     return (
@@ -61,7 +71,6 @@ class Home extends Component {
           Explore by class
         </ClassListToggle>
         <StyledClassNav open={this.state.open} />
-        <h4>Most Popular Builds</h4>
         {builds}
       </Container>
     );
@@ -70,6 +79,22 @@ class Home extends Component {
 
 const Title = styled.h1`
   text-align: center;
+`;
+
+const StyledSubTitle = styled.h3`
+  color: #222;
+`;
+
+const LoaderContainer = styled.div`
+  margin-top: 7em;
+
+  @media (min-width: 40em) {
+    margin-top: 10em;
+  }
+
+  div {
+    margin: 0 auto;
+  }
 `;
 
 const Search = styled.div`

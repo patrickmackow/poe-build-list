@@ -5,6 +5,7 @@ import ClassFilter from "./filters/ClassFilter";
 import NavBar from "./NavBar";
 import Container from "./common/Container";
 import styled from "styled-components";
+import Loader from "./common/Loader";
 
 class TagBuilds extends Component {
   constructor(props) {
@@ -72,7 +73,11 @@ class TagBuilds extends Component {
 
     let buildsView;
     if (loading) {
-      buildsView = <p data-testid="loading">Loading...</p>;
+      buildsView = (
+        <LoaderContainer data-testid="loading">
+          <Loader />;
+        </LoaderContainer>
+      );
     } else {
       const filteredBuilds = this.filterBuilds(builds);
       buildsView = (
@@ -114,6 +119,18 @@ const Filters = styled.div`
 
   > * + * {
     margin-left: 0.5em;
+  }
+`;
+
+const LoaderContainer = styled.div`
+  margin-top: 7em;
+
+  @media (min-width: 40em) {
+    margin-top: 10em;
+  }
+
+  div {
+    margin: 0 auto;
   }
 `;
 
