@@ -47,19 +47,45 @@ function scrapeTags(body) {
   const tags = {};
 
   $("table tbody tr").each(function(i, el) {
-    tag = $("a", el)
+    const tag = $("a", el)
       .eq(1)
       .text()
       .toLowerCase();
-    tags[tag] = [tag];
+
+    const type = (function() {
+      t = $("a", el)
+        .eq(1)
+        .attr("class");
+      switch (t) {
+        case "gem_green":
+          return "dex";
+        case "gem_red":
+          return "str";
+        case "gem_blue":
+          return "int";
+        default:
+          return "";
+      }
+    })();
+
+    tags[tag] = {
+      tags: [tag],
+      type
+    };
   });
 
   return tags;
 }
 
-function sortJSON(json) {
-  const sorted = JSON.stringify(json, Object.keys(json).sort(), 2);
-  return prettier.format(sorted, { parser: "json" });
+function sortJSON(unordered) {
+  const ordered = {};
+  Object.keys(unordered)
+    .sort()
+    .forEach(function(key) {
+      ordered[key] = unordered[key];
+    });
+
+  return prettier.format(JSON.stringify(ordered, 2), { parser: "json" });
 }
 
 function handleErrors(error) {
@@ -81,6 +107,18 @@ function handleErrors(error) {
   console.log(error.config);
 }
 
+function mergeFiles(oldFile, newFile) {
+  const merged = Object.assign({}, oldFile);
+
+  Object.keys(newFile).forEach(key => {
+    if (!merged.hasOwnProperty(key)) {
+      merged[key] = newFile[key];
+    }
+  });
+
+  return merged;
+}
+
 axios
   .get(URL, config)
   .then(response => {
@@ -90,9 +128,9 @@ axios
       : undefined;
 
     const oldFile = jsonToObject(readFile(filePath));
-    const newFile = Object.assign(tags, oldFile);
-    const sortedJSON = sortJSON(newFile);
+    const newFile = mergeFiles(oldFile, tags);
 
+    const sortedJSON = sortJSON(newFile);
     writeFile(filePath, sortedJSON);
   })
   .catch(error => {
