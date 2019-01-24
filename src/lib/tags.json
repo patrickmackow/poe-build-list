@@ -84,6 +84,7 @@
   "frostbolt": { "tags": ["frostbolt"], "type": "int" },
   "glacial cascade": { "tags": ["glacial cascade"], "type": "int" },
   "glacial hammer": { "tags": ["glacial hammer"], "type": "str" },
+  "golem": { "tags": ["golem"], "type": "" },
   "grace": { "tags": ["grace"], "type": "dex" },
   "ground slam": { "tags": ["ground slam"], "type": "str" },
   "haste": { "tags": ["haste"], "type": "dex" },
@@ -179,6 +180,7 @@
   "tempest shield": { "tags": ["tempest shield"], "type": "int" },
   "temporal chains": { "tags": ["temporal chains"], "type": "dex" },
   "tornado shot": { "tags": ["tornado shot", "ts"], "type": "dex" },
+  "totem": { "tags": ["totem"], "type": "" },
   "toxic rain": { "tags": ["toxic rain", "tr"], "type": "dex" },
   "unearth": { "tags": ["unearth"], "type": "dex" },
   "vaal ancestral warchief": {
