@@ -6,7 +6,7 @@ afterEach(cleanup);
 
 const builds = [
   {
-    generatedTags: ["double strike"],
+    generatedTags: [{ tag: "double strike", type: "dex" }],
     _id: "5bc0f66ba53ff0234c201320",
     title:
       "[3.4] FACETANK THE WORLD | Instant Leech! 9k life, 2m+ Shaper DPS Double Strike",
@@ -21,7 +21,7 @@ const builds = [
     updatedOn: "2018-10-17T03:03:13.041Z"
   },
   {
-    generatedTags: ["reave"],
+    generatedTags: [{ tag: "reave", type: "dex" }],
     _id: "5bc0f66ba53ff0234c201322",
     title:
       "[3.4] KissMeQuick's Gladiator Reave || Beginner Friendly || 101% IIQ 347% IIR MF || HC & Uber Elder",

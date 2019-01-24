@@ -5,7 +5,10 @@ import BuildRow from "../BuildRow";
 afterEach(cleanup);
 
 const build = {
-  generatedTags: ["consecrated path", "cyclone"],
+  generatedTags: [
+    { tag: "consecrated path", type: "str" },
+    { tag: "cyclone", type: "dex" }
+  ],
   _id: "5bc0f66ba53ff0234c20132c",
   title:
     "[3.4] For Slayer / Champion - Ngamahu Cyclone / Consecrated Path Build (Uber Lab Runner + End Game)",

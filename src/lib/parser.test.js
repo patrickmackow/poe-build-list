@@ -116,18 +116,18 @@ describe("testing generateTags", () => {
   const expectedTags = [
     [
       "Patch 3.3 4.7m Shaper dps - Max Block Blade Flurry - Gladiator",
-      ["blade flurry"]
+      [{ tag: "blade flurry", type: "dex" }]
     ],
     [
       "[3.3] From League Starter to Shaper – Cheap, Tanky, Fast and Fun Physical ST – Very Detailed Guide",
-      ["spectral throw"]
+      [{ tag: "spectral throw", type: "dex" }]
     ],
     ["[3.3] Vision of the Divine - DW Dagger Crit Gladiator", []],
     [
       "[3.3] SonicSunder, 2M+ DPS, SSF, HC, BEGINNER LEAGUE STARTER, UBER LAB/ELDER, SHAPER, FAST ]",
-      ["sunder"]
+      [{ tag: "sunder", type: "str" }]
     ],
-    ["Blade vortexhypothetical", ["blade vortex"]]
+    ["Blade vortexhypothetical", [{ tag: "blade vortex", type: "dex" }]]
   ];
 
   it.each(expectedTags)("generateTags parses '%s' into '%s'", (s, expected) => {
@@ -138,14 +138,20 @@ describe("testing generateTags", () => {
     const unexpectedTags = [
       [
         "[3.3] From League Starter to Shaper – Cheap, Tanky, Fast and Fun Physical ST – Very Detailed Guide",
-        "essence drain"
+        { tag: "essence drain", type: "int" }
       ],
       [
         "[3.3] SonicSunder, 2M+ DPS, SSF, HC, BEGINNER LEAGUE STARTER, UBER LAB/ELDER, SHAPER, FAST ]",
         "spectral throw"
       ],
-      ["[3.3] Lifting's Uber Lab Warchief Totem Champion", "arc"],
-      ["[3.4] Triple Herald Blade Vortex Elementalist", "vortex"]
+      [
+        "[3.3] Lifting's Uber Lab Warchief Totem Champion",
+        { tag: "arc", type: "int" }
+      ],
+      [
+        "[3.4] Triple Herald Blade Vortex Elementalist",
+        { tag: "vortex", type: "int" }
+      ]
     ];
 
     it.each(unexpectedTags)('"%s" shouldn\'t contain "%s"', (s, unexpected) => {

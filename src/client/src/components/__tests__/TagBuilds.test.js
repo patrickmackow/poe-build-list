@@ -27,7 +27,7 @@ const match = {
 
 const builds = [
   {
-    generatedTags: ["cyclone"],
+    generatedTags: [{ tag: "cyclone", type: "dex" }],
     _id: "5bc0f66ba53ff0234c201323",
     title:
       '[3.4] "Delve Terrorizer" by Jessica - 10k life budget Cyclone Slayer, Everything viable (videos up)',
@@ -42,7 +42,10 @@ const builds = [
     updatedOn: "2018-10-17T03:03:13.042Z"
   },
   {
-    generatedTags: ["consecrated path", "cyclone"],
+    generatedTags: [
+      { tag: "consecrated path", type: "str" },
+      { tag: "cyclone", type: "dex" }
+    ],
     _id: "5bc0f66ba53ff0234c20132c",
     title:
       "[3.4] For Slayer / Champion - Ngamahu Cyclone / Consecrated Path Build (Uber Lab Runner + End Game)",
@@ -57,7 +60,7 @@ const builds = [
     updatedOn: "2018-10-17T03:03:13.043Z"
   },
   {
-    generatedTags: ["cyclone"],
+    generatedTags: [{ tag: "cyclone", type: "dex" }],
     _id: "5bc0f66ba53ff0234c2013dc",
     title:
       "[3.4] Cyclone-tank Juggernaut / Best Cyclone Build / Full Video-Guide (eng) + DEMO The Shaper",
@@ -99,7 +102,10 @@ test("<TagBuilds />", async () => {
 test("<TagBuilds /> with build lower than default version filter", async () => {
   const builds = [
     {
-      generatedTags: ["animate guardian", "righteous fire"],
+      generatedTags: [
+        { tag: "animate guardian", type: "str" },
+        { tag: "righteous fire", type: "int" }
+      ],
       _id: "5bc0f66ba53ff0234c201404",
       title:
         "[3.2] TRIPLE your Righteous Fire Damage w/ ANIMATE GUARDIAN - Juggernaut",
