@@ -8,7 +8,12 @@ class BuildRow extends Component {
     return (
       <Build {...rest}>
         <BuildLeft>
-          <BuildTitle rel="external" href={build.url} data-testid="build-link">
+          <BuildTitle
+            rel="external"
+            target="_blank"
+            href={build.url}
+            data-testid="build-link"
+          >
             {build.title}
           </BuildTitle>
           <Tag key={build.gameClass} className={cssClass}>
