@@ -11,7 +11,22 @@ function arrayEquals(a, b) {
 
   // Array isn't sorted but this doesn't matter
   for (let i = 0; i < a.length; i++) {
-    if (a[i] !== b[i]) return false;
+    let aProps = Object.getOwnPropertyNames(a[i]);
+    let bProps = Object.getOwnPropertyNames(b[i]);
+
+    // Check amount of properties is equal
+    if (aProps.length !== bProps.length) {
+      return false;
+    }
+
+    // Check property values are equal
+    for (let j = 0; j < aProps.length; j++) {
+      let prop = aProps[j];
+
+      if (a[i][prop] !== b[i][prop]) {
+        return false;
+      }
+    }
   }
   return true;
 }
@@ -39,7 +54,7 @@ async function updateBuildTags() {
       const tags = generateTags(build.title);
 
       // Save builds back to db
-      if (arrayEquals(tags, build.generatedTags)) return;
+      if (arrayEquals(tags, build.toObject().generatedTags)) return;
 
       console.log(build.title, tags, build.generatedTags);
       build.generatedTags = tags;
@@ -59,11 +74,17 @@ async function updateBuildTags() {
 
 (function testArrayEquals() {
   assert(arrayEquals([], []));
-  assert(arrayEquals(["a"], ["a"]));
-  assert(arrayEquals(["a", "b"], ["a", "b"]));
-  assert(!arrayEquals(["a"], ["b"]));
-  assert(!arrayEquals([], ["b"]));
-  assert(!arrayEquals(["a"], []));
+  assert(arrayEquals([{}], [{}]));
+  assert(arrayEquals([{ tag: "a", type: "" }], [{ tag: "a", type: "" }]));
+  assert(
+    arrayEquals(
+      [{ tag: "a", type: "" }, { tag: "b", type: "" }],
+      [{ tag: "a", type: "" }, { tag: "b", type: "" }]
+    )
+  );
+  assert(!arrayEquals([{ tag: "a", type: "" }], [{ tag: "b", type: "" }]));
+  assert(!arrayEquals([], [{ tag: "b", type: "" }]));
+  assert(!arrayEquals([{ tag: "a", type: "" }], []));
 })();
 
 updateBuildTags();
