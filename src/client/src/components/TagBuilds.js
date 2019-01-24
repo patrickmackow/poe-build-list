@@ -84,7 +84,7 @@ class TagBuilds extends Component {
     if (loading) {
       buildsView = (
         <LoaderContainer data-testid="loading">
-          <Loader />;
+          <Loader />
         </LoaderContainer>
       );
     } else {

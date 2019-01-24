@@ -11,7 +11,7 @@ const buildSchema = new Schema({
   latestPost: { type: Date },
   gameClass: { type: String },
   version: { type: String },
-  generatedTags: [{ type: String }],
+  generatedTags: [{ tag: { type: String }, type: { type: String } }],
   updatedOn: { type: Date, default: Date.now }
 });
 

@@ -84,6 +84,16 @@ const extractVersion = title => {
 
 // Automatically generate tags from title
 const generateTags = title => {
+  const format = function(t) {
+    if (t.length === 0) {
+      return [];
+    }
+
+    return t.map(tag => {
+      return { tag, type: TAGS[tag].type ? TAGS[tag].type : "" };
+    });
+  };
+
   const lowerCaseTitle = title.toLowerCase();
 
   /*  Tags priority:
@@ -98,7 +108,7 @@ const generateTags = title => {
   const exclude = { vortex: ["blade vortex"] };
 
   const regexTags = Object.keys(TAGS).filter(key => {
-    const foundTag = TAGS[key].find(tag => {
+    const foundTag = TAGS[key].tags.find(tag => {
       const tagRegex = new RegExp(`\\b${tag}\\b`);
 
       const result = tagRegex.test(lowerCaseTitle);
@@ -124,7 +134,7 @@ const generateTags = title => {
   });
 
   if (regexTags.length) {
-    return regexTags;
+    return format(regexTags);
   }
 
   // No tags found, check again for tag key anywhere in the string,
@@ -144,7 +154,7 @@ const generateTags = title => {
     return true;
   });
 
-  return includeTags;
+  return format(includeTags);
 };
 
 // Parse HTTP request body and extract data

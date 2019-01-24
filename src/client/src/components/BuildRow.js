@@ -15,8 +15,8 @@ class BuildRow extends Component {
             {build.gameClass}
           </Tag>
           {build.generatedTags.map(tag => (
-            <Tag key={tag} data-testid="build-tag">
-              {tag}
+            <Tag key={tag.tag} data-testid="build-tag" className={tag.type}>
+              {tag.tag}
             </Tag>
           ))}
         </BuildLeft>
@@ -86,8 +86,8 @@ const BuildMetaInfo = styled.span`
 
 const Tag = styled.span`
   display: inline-block;
-  background-color: hsl(210, 75%, 50%);
   box-shadow: 0 2px 4px hsl(0, 0%, 70%);
+  background-color: #444;
   padding: 0.2em 0.5em;
   margin-top: 0.4em;
   margin-right: 0.3em;
@@ -96,6 +96,16 @@ const Tag = styled.span`
   text-transform: uppercase;
   font-size: 0.775rem;
   font-weight: bold;
+
+  &.dex {
+    background-color: hsl(120, 50%, 50%);
+  }
+  &.str {
+    background-color: hsl(0, 50%, 50%);
+  }
+  &.int {
+    background-color: hsl(220, 50%, 50%);
+  }
 
   &.duelist {
     background-color: hsl(30, 90%, 15%);

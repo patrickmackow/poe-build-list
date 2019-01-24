@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
+const tags = require("../lib/tags.json");
+
 // Require models
 const Build = require("../models/Build");
 
@@ -16,14 +18,12 @@ router.get("/builds/:class", (req, res) => {
 });
 
 router.get("/tags", (req, res) => {
-  Build.distinct("generatedTags").then(tags => {
-    res.json(tags.sort());
-  });
+  res.json(Object.keys(tags).sort());
 });
 
 router.get("/tags/:tags", (req, res) => {
   const tags = req.params.tags.split(",");
-  Build.find({ generatedTags: { $all: tags } }).then(builds => {
+  Build.find({ "generatedTags.tag": { $all: tags } }).then(builds => {
     res.json(builds);
   });
 });
