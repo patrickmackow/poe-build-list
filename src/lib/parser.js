@@ -3,7 +3,8 @@ const url = require("url");
 
 const TAGS = require("./tags");
 
-const LATEST_VERSION = "3.4";
+const latestVersion = require("../config.json").latestVersion;
+
 const GAME_CLASSES = [
   "duelist",
   "marauder",
@@ -75,7 +76,7 @@ const extractVersion = title => {
   const version = versionRegExp.exec(title);
 
   // Return empty string if found string is greater than current patch version
-  if (version && parseFloat(LATEST_VERSION) >= parseFloat(version[0])) {
+  if (version && parseFloat(latestVersion) >= parseFloat(version[0])) {
     return version[0];
   } else {
     return "";
