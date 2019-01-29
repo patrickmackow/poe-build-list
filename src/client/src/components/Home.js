@@ -6,6 +6,8 @@ import BuildsTable from "./BuildsTable";
 import Container from "./common/Container";
 import ClassNav from "./ClassNav";
 import Loader from "./common/Loader";
+import Error from "./common/Error";
+import fetchWithTimeout from "../fetchWithTimeout";
 
 class Home extends Component {
   constructor(props) {
@@ -16,19 +18,27 @@ class Home extends Component {
     this.state = {
       loading: true,
       builds: [],
-      open: false
+      open: false,
+      error: false
     };
 
     this.toggleDropdown = this.toggleDropdown.bind(this);
   }
 
   componentDidMount() {
-    fetch("/api/builds", { signal: this.abortController.signal })
+    fetchWithTimeout("/api/builds", this.abortController, 5000)
       .then(res => res.json())
       .then(data => {
         this.setState({
           loading: false,
+          error: false,
           builds: data.slice(0, 10)
+        });
+      })
+      .catch(err => {
+        this.setState({
+          loading: false,
+          error: true
         });
       });
   }
@@ -49,6 +59,10 @@ class Home extends Component {
         <LoaderContainer>
           <Loader />;
         </LoaderContainer>
+      );
+    } else if (this.state.error) {
+      builds = (
+        <StyledError>Failed to load builds, refresh to try again.</StyledError>
       );
     } else {
       builds = (
@@ -166,6 +180,10 @@ const StyledClassNav = styled(ClassNav)`
       text-align: center;
     }
   }
+`;
+
+const StyledError = styled(Error)`
+  margin: 1em;
 `;
 
 export default Home;

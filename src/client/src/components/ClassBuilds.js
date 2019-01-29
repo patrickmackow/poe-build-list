@@ -6,6 +6,8 @@ import Container from "./common/Container";
 import styled from "styled-components";
 import Loader from "./common/Loader";
 import FilterContainer from "./filters/FilterContainer";
+import fetchWithTimeout from "../fetchWithTimeout";
+import Error from "./common/Error";
 
 class ClassBuilds extends Component {
   constructor(props) {
@@ -16,7 +18,8 @@ class ClassBuilds extends Component {
     this.state = {
       loading: true,
       builds: [],
-      version: "" // TODO: Determine latest version within this component
+      version: "", // TODO: Determine latest version within this component
+      error: false
     };
 
     this.handleVersionChange = this.handleVersionChange.bind(this);
@@ -36,14 +39,23 @@ class ClassBuilds extends Component {
   }
 
   fetchData() {
-    fetch("/api/builds/" + this.props.match.params.gameClass, {
-      signal: this.abortController.signal
-    })
+    fetchWithTimeout(
+      "/api/builds/" + this.props.match.params.gameClass,
+      this.abortController,
+      5000
+    )
       .then(res => res.json())
       .then(builds => {
         this.setState({
           loading: false,
+          error: false,
           builds
+        });
+      })
+      .catch(err => {
+        this.setState({
+          loading: false,
+          error: true
         });
       });
   }
@@ -67,7 +79,7 @@ class ClassBuilds extends Component {
   }
 
   render() {
-    const { loading, builds } = this.state;
+    const { loading, builds, error } = this.state;
 
     let buildsView;
 
@@ -77,6 +89,8 @@ class ClassBuilds extends Component {
           <Loader />
         </LoaderContainer>
       );
+    } else if (error) {
+      buildsView = <Error>Failed to load builds, refresh to try again.</Error>;
     } else {
       const filteredBuilds = this.filterBuilds(builds);
 

@@ -7,6 +7,8 @@ import Container from "./common/Container";
 import styled from "styled-components";
 import Loader from "./common/Loader";
 import FilterContainer from "./filters/FilterContainer";
+import fetchWithTimeout from "../fetchWithTimeout";
+import Error from "./common/Error";
 
 class TagBuilds extends Component {
   constructor(props) {
@@ -18,7 +20,8 @@ class TagBuilds extends Component {
       loading: true,
       builds: [],
       version: "", // TODO: Determine latest version within this component
-      class: "All"
+      class: "All",
+      error: false
     };
 
     this.handleVersionChange = this.handleVersionChange.bind(this);
@@ -37,16 +40,25 @@ class TagBuilds extends Component {
   }
 
   fetchData() {
-    fetch("/api/tags/" + this.props.match.params.tag, {
-      signal: this.abortController.signal
-    })
+    fetchWithTimeout(
+      "/api/tags/" + this.props.match.params.tag,
+      this.abortController,
+      5000
+    )
       .then(res => res.json())
       .then(builds =>
         this.setState({
           builds,
-          loading: false
+          loading: false,
+          error: false
         })
-      );
+      )
+      .catch(err => {
+        this.setState({
+          loading: false,
+          error: true
+        });
+      });
   }
 
   componentWillUnmount() {
@@ -77,7 +89,7 @@ class TagBuilds extends Component {
   }
 
   render() {
-    const { loading, builds } = this.state;
+    const { loading, builds, error } = this.state;
     const { tag } = this.props.match.params;
 
     let buildsView;
@@ -87,6 +99,8 @@ class TagBuilds extends Component {
           <Loader />
         </LoaderContainer>
       );
+    } else if (error) {
+      buildsView = <Error>Failed to load builds, refresh to try again.</Error>;
     } else {
       const filteredBuilds = this.filterBuilds(builds);
       buildsView = (

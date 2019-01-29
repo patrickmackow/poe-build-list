@@ -32,7 +32,8 @@ class SearchForm extends Component {
             .join(" ")
         );
         this.setState({ tags: formattedTags });
-      });
+      })
+      .catch();
   }
 
   componentWillUnmount() {
