@@ -26,6 +26,8 @@ class Home extends Component {
   }
 
   componentDidMount() {
+    document.title = "PoE Build List";
+
     fetchWithTimeout("/api/builds", this.abortController, 5000)
       .then(res => res.json())
       .then(data => {

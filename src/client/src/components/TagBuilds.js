@@ -29,14 +29,29 @@ class TagBuilds extends Component {
   }
 
   componentDidMount() {
+    this.setTitle(this.props.match.params.tag);
     this.fetchData();
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.match.params.tag !== this.props.match.params.tag) {
+      this.setTitle(this.props.match.params.tag);
       this.setState({ loading: true });
       this.fetchData();
     }
+  }
+
+  setTitle(title) {
+    const transformedTitle = (title => {
+      return title
+        .split(" ")
+        .map(t => {
+          return t[0].toUpperCase() + t.slice(1);
+        })
+        .join(" ");
+    })(title);
+
+    document.title = transformedTitle + " | PoE Build List";
   }
 
   fetchData() {

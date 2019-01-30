@@ -26,6 +26,7 @@ class ClassBuilds extends Component {
   }
 
   componentDidMount() {
+    this.setTitle(this.props.match.params.gameClass);
     this.fetchData();
   }
 
@@ -33,9 +34,23 @@ class ClassBuilds extends Component {
     if (
       prevProps.match.params.gameClass !== this.props.match.params.gameClass
     ) {
+      this.setTitle(this.props.match.params.gameClass);
       this.setState({ loading: true });
       this.fetchData();
     }
+  }
+
+  setTitle(title) {
+    const transformedTitle = (title => {
+      return title
+        .split(" ")
+        .map(t => {
+          return t[0].toUpperCase() + t.slice(1);
+        })
+        .join(" ");
+    })(title);
+
+    document.title = transformedTitle + " | PoE Build List";
   }
 
   fetchData() {
