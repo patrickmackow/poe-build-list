@@ -36,7 +36,12 @@ class TagBuilds extends Component {
   componentDidUpdate(prevProps) {
     if (prevProps.match.params.tag !== this.props.match.params.tag) {
       this.setTitle(this.props.match.params.tag);
-      this.setState({ loading: true });
+      this.setState({
+        loading: true,
+        class: "All",
+        version: "",
+        builds: []
+      });
       this.fetchData();
     }
   }
@@ -89,18 +94,49 @@ class TagBuilds extends Component {
   }
 
   filterBuilds(builds) {
-    return builds.filter(build => {
+    const filter = (builds, ignoreVersion = false) => {
+      if (ignoreVersion) {
+        return this.filterBuildsByClass(builds);
+      } else {
+        const filtered = this.filterBuildsByVersion(builds);
+        return this.filterBuildsByClass(filtered);
+      }
+    };
+
+    let filteredBuilds = filter(builds);
+
+    if (filteredBuilds.length) {
+      return filteredBuilds;
+    } else {
+      return filter(builds, true);
+    }
+  }
+
+  filterBuildsByClass(builds) {
+    const filtered = builds.filter(build => {
       if (
         build.gameClass === this.state.class.toLowerCase() ||
         this.state.class === "All"
       ) {
-        if (build.version === this.state.version) {
-          return true;
-        }
+        return true;
       }
 
       return false;
     });
+
+    return filtered;
+  }
+
+  filterBuildsByVersion(builds) {
+    const filtered = builds.filter(build => {
+      if (build.version === this.state.version) {
+        return true;
+      }
+
+      return false;
+    });
+
+    return filtered;
   }
 
   render() {
@@ -128,6 +164,7 @@ class TagBuilds extends Component {
             />
             <ClassFilter
               value={this.state.class}
+              builds={this.filterBuildsByVersion(builds)}
               onChange={this.handleClassChange}
             />
           </FilterContainer>
