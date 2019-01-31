@@ -31,18 +31,22 @@ class VersionFilter extends Component {
       </option>
     ));
 
-    return (
-      <Filter>
-        <Label htmlFor="version-filter">Patch</Label>
-        <Select
-          id="version-filter"
-          value={this.props.value}
-          onChange={this.props.onChange}
-        >
-          {patches}
-        </Select>
-      </Filter>
-    );
+    if (patches.length) {
+      return (
+        <Filter>
+          <Label htmlFor="version-filter">Patch</Label>
+          <Select
+            id="version-filter"
+            value={this.props.value}
+            onChange={this.props.onChange}
+          >
+            {patches}
+          </Select>
+        </Filter>
+      );
+    } else {
+      return null;
+    }
   }
 }
 
