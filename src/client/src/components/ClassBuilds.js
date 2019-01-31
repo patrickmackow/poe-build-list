@@ -35,7 +35,11 @@ class ClassBuilds extends Component {
       prevProps.match.params.gameClass !== this.props.match.params.gameClass
     ) {
       this.setTitle(this.props.match.params.gameClass);
-      this.setState({ loading: true });
+      this.setState({
+        loading: true,
+        version: "",
+        builds: []
+      });
       this.fetchData();
     }
   }
