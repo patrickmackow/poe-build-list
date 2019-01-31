@@ -154,6 +154,14 @@ class TagBuilds extends Component {
       buildsView = <Error>Failed to load builds, refresh to try again.</Error>;
     } else {
       const filteredBuilds = this.filterBuilds(builds);
+
+      let table;
+      if (filteredBuilds.length) {
+        table = <BuildsTable builds={filteredBuilds} />;
+      } else {
+        table = <Error>No builds found</Error>;
+      }
+
       buildsView = (
         <React.Fragment>
           <FilterContainer>
@@ -168,7 +176,7 @@ class TagBuilds extends Component {
               onChange={this.handleClassChange}
             />
           </FilterContainer>
-          <BuildsTable builds={filteredBuilds} />
+          {table}
         </React.Fragment>
       );
     }

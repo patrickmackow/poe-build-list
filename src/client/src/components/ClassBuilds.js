@@ -113,6 +113,13 @@ class ClassBuilds extends Component {
     } else {
       const filteredBuilds = this.filterBuilds(builds);
 
+      let table;
+      if (filteredBuilds.length) {
+        table = <BuildsTable builds={filteredBuilds} />;
+      } else {
+        table = <Error>No builds found</Error>;
+      }
+
       buildsView = (
         <StyledClassBuilds>
           <FilterContainer>
@@ -122,7 +129,7 @@ class ClassBuilds extends Component {
               onChange={this.handleVersionChange}
             />
           </FilterContainer>
-          <BuildsTable builds={filteredBuilds} />
+          {table}
         </StyledClassBuilds>
       );
     }
