@@ -20,7 +20,13 @@ class App extends Component {
           </Wrapper>
           <Footer>
             <p>This is a fan site not associated with Grinding Gear Games.</p>
-            <a href="">View source</a>
+            <a
+              href="https://github.com/patrickmackow/poe-build-list"
+              rel="noopener"
+              target="_blank"
+            >
+              View source on GitHub
+            </a>
           </Footer>
         </React.Fragment>
       </BrowserRouter>

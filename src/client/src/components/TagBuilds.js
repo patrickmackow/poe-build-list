@@ -86,7 +86,10 @@ class TagBuilds extends Component {
   }
 
   handleVersionChange(e) {
-    this.setState({ version: e.target.value });
+    this.setState({
+      version: e.target.value,
+      class: "All"
+    });
   }
 
   handleClassChange(e) {

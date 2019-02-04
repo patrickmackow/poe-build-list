@@ -4,9 +4,9 @@ import { Filter, Label, Select } from "./FilterStyles";
 class ClassFilter extends Component {
   render() {
     const classSet = new Set();
-    this.props.builds.map(b => {
-      classSet.add(b.gameClass[0].toUpperCase() + b.gameClass.slice(1));
-    });
+    this.props.builds.map(b =>
+      classSet.add(b.gameClass[0].toUpperCase() + b.gameClass.slice(1))
+    );
 
     const classes = ["All"].concat(Array.from(classSet).sort());
 
