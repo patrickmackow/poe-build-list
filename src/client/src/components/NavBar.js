@@ -73,6 +73,7 @@ const StyledNavBar = styled.nav`
   background-color: #333;
   display: flex;
   padding: 0.2em 0;
+  z-index: 5;
 
   & + * {
     margin-top: 4em;
