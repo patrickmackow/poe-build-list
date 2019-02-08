@@ -9,7 +9,7 @@ class BuildRow extends Component {
       <Build {...rest}>
         <BuildLeft>
           <BuildTitle
-            rel="noopener"
+            rel="noopener noreferrer"
             target="_blank"
             href={build.url}
             data-testid="build-link"

@@ -22,7 +22,7 @@ class App extends Component {
             <p>This is a fan site not associated with Grinding Gear Games.</p>
             <a
               href="https://github.com/patrickmackow/poe-build-list"
-              rel="noopener"
+              rel="noopener noreferrer"
               target="_blank"
             >
               View source on GitHub
