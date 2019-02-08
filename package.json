@@ -11,7 +11,9 @@
     "client": "npm start --prefix src/client",
     "server": "nodemon src/index.js",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "generate-tags": "node ./scripts/generateTags.js"
+    "generate-tags": "node ./scripts/generateTags.js",
+    "install-all": "npm install && npm install --prefix src/client",
+    "prod": "npm run install-all && npm run build --prefix src/client"
   },
   "author": "Patrick Mackow",
   "license": "ISC",
