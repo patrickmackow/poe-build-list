@@ -6,7 +6,8 @@ services:
     ports:
       - 3000:3000
     restart: always
-    depends-on: mongo
+    depends_on:
+      - mongo
   mongo:
     image: mongo
     volumes:
