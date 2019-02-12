@@ -70,7 +70,7 @@ class Home extends Component {
       builds = (
         <React.Fragment>
           <StyledSubTitle>Most Popular Builds</StyledSubTitle>
-          <BuildsTable builds={this.state.builds} sort={false} />
+          <BuildsTable builds={this.state.builds} />
         </React.Fragment>
       );
     }

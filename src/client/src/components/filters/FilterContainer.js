@@ -46,6 +46,7 @@ const FilterLabel = styled.button`
   font-weight: bold;
   color: #555;
   padding: 0.5em 1em;
+  padding-left: 0;
   border: 0;
   background: inherit;
 
@@ -56,11 +57,15 @@ const FilterLabel = styled.button`
     content: "${props => (props.isOpen ? "-" : "+")}";
     transform: scale(1.3);
   }
+
+  @media (min-width: 40em) {
+    padding-left: 1em;
+  }
 `;
 
 const FilterDrawer = styled.div`
   display: ${props => (props.isOpen ? "block" : "none")};
-  padding: 0.5em 1em;
+  padding: 0.5em 1em 0.5em 0;
 
   > * + * {
     margin-left: 0.5em;

@@ -8,6 +8,7 @@ import Loader from "./common/Loader";
 import FilterContainer from "./filters/FilterContainer";
 import fetchWithTimeout from "../fetchWithTimeout";
 import Error from "./common/Error";
+import SortSelect from "./SortSelect";
 
 class ClassBuilds extends Component {
   constructor(props) {
@@ -19,10 +20,12 @@ class ClassBuilds extends Component {
       loading: true,
       builds: [],
       version: "", // TODO: Determine latest version within this component
-      error: false
+      error: false,
+      sort: "latest"
     };
 
     this.handleVersionChange = this.handleVersionChange.bind(this);
+    this.handleSortChange = this.handleSortChange.bind(this);
   }
 
   componentDidMount() {
@@ -38,7 +41,8 @@ class ClassBuilds extends Component {
       this.setState({
         loading: true,
         version: "",
-        builds: []
+        builds: [],
+        sort: "latest"
       });
       this.fetchData();
     }
@@ -97,6 +101,10 @@ class ClassBuilds extends Component {
     });
   }
 
+  handleSortChange(e) {
+    this.setState({ sort: e.target.value });
+  }
+
   render() {
     const { loading, builds, error } = this.state;
 
@@ -115,20 +123,26 @@ class ClassBuilds extends Component {
 
       let table;
       if (filteredBuilds.length) {
-        table = <BuildsTable builds={filteredBuilds} />;
+        table = <BuildsTable builds={filteredBuilds} sort={this.state.sort} />;
       } else {
         table = <Error>No builds found</Error>;
       }
 
       buildsView = (
         <StyledClassBuilds>
-          <FilterContainer>
-            <VersionFilter
-              value={this.state.version}
-              builds={builds}
-              onChange={this.handleVersionChange}
+          <FlexboxRow>
+            <FilterContainer>
+              <VersionFilter
+                value={this.state.version}
+                builds={builds}
+                onChange={this.handleVersionChange}
+              />
+            </FilterContainer>
+            <SortSelect
+              value={this.state.sort}
+              onChange={this.handleSortChange}
             />
-          </FilterContainer>
+          </FlexboxRow>
           {table}
         </StyledClassBuilds>
       );
@@ -165,6 +179,15 @@ const LoaderContainer = styled.div`
 
   div {
     margin: 0 auto;
+  }
+`;
+
+const FlexboxRow = styled.div`
+  position: relative;
+
+  @media (min-width: 40em) {
+    display: flex;
+    justify-content: space-between;
   }
 `;
 

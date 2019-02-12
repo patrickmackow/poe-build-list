@@ -9,6 +9,7 @@ import Loader from "./common/Loader";
 import FilterContainer from "./filters/FilterContainer";
 import fetchWithTimeout from "../fetchWithTimeout";
 import Error from "./common/Error";
+import SortSelect from "./SortSelect";
 
 class TagBuilds extends Component {
   constructor(props) {
@@ -21,11 +22,13 @@ class TagBuilds extends Component {
       builds: [],
       version: "", // TODO: Determine latest version within this component
       class: "All",
-      error: false
+      error: false,
+      sort: "latest"
     };
 
     this.handleVersionChange = this.handleVersionChange.bind(this);
     this.handleClassChange = this.handleClassChange.bind(this);
+    this.handleSortChange = this.handleSortChange.bind(this);
   }
 
   componentDidMount() {
@@ -40,7 +43,8 @@ class TagBuilds extends Component {
         loading: true,
         class: "All",
         version: "",
-        builds: []
+        builds: [],
+        sort: "latest"
       });
       this.fetchData();
     }
@@ -94,6 +98,10 @@ class TagBuilds extends Component {
 
   handleClassChange(e) {
     this.setState({ class: e.target.value });
+  }
+
+  handleSortChange(e) {
+    this.setState({ sort: e.target.value });
   }
 
   filterBuilds(builds) {
@@ -167,18 +175,24 @@ class TagBuilds extends Component {
 
       buildsView = (
         <React.Fragment>
-          <FilterContainer>
-            <VersionFilter
-              value={this.state.version}
-              builds={builds}
-              onChange={this.handleVersionChange}
+          <FlexboxRow>
+            <FilterContainer>
+              <VersionFilter
+                value={this.state.version}
+                builds={builds}
+                onChange={this.handleVersionChange}
+              />
+              <ClassFilter
+                value={this.state.class}
+                builds={this.filterBuildsByVersion(builds)}
+                onChange={this.handleClassChange}
+              />
+            </FilterContainer>
+            <SortSelect
+              value={this.state.sort}
+              onChange={this.handleSortChange}
             />
-            <ClassFilter
-              value={this.state.class}
-              builds={this.filterBuildsByVersion(builds)}
-              onChange={this.handleClassChange}
-            />
-          </FilterContainer>
+          </FlexboxRow>
           {table}
         </React.Fragment>
       );
@@ -209,6 +223,15 @@ const LoaderContainer = styled.div`
 
   div {
     margin: 0 auto;
+  }
+`;
+
+const FlexboxRow = styled.div`
+  position: relative;
+
+  @media (min-width: 40em) {
+    display: flex;
+    justify-content: space-between;
   }
 `;
 

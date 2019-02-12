@@ -3,11 +3,27 @@ import BuildRow from "./BuildRow";
 
 class BuildsTable extends Component {
   sortBuilds(builds) {
-    const newArray = builds.slice();
-    newArray.sort((a, b) => {
-      return new Date(b.latestPost) - new Date(a.latestPost);
-    });
-    return newArray;
+    const sortedBuilds = builds.slice();
+
+    if (sortedBuilds.length === 0 || !this.props.sort) {
+      return sortedBuilds;
+    }
+
+    if (this.props.sort === "latest") {
+      const compareLatest = (a, b) => {
+        return new Date(b.latestPost) - new Date(a.latestPost);
+      };
+
+      sortedBuilds.sort(compareLatest);
+    } else if (this.props.sort === "views") {
+      const compareViews = (a, b) => {
+        return b.views - a.views;
+      };
+
+      sortedBuilds.sort(compareViews);
+    }
+
+    return sortedBuilds;
   }
 
   render() {
