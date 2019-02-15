@@ -11,7 +11,7 @@ const config = {
     "User-Agent":
       "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0"
   },
-  timeout: 0
+  timeout: 60000 // 1 minute
 };
 
 // Format urls to be used in scraper
