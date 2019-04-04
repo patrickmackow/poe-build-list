@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { BrowserRouter, Route } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import styled from "styled-components";
 
 // import "./App.css";
@@ -14,9 +14,16 @@ class App extends Component {
       <BrowserRouter>
         <React.Fragment>
           <Wrapper>
-            <Route exact path="/" component={Home} />
-            <Route exact path="/class/:gameClass" component={ClassBuilds} />
-            <Route exact path="/tag/:tag" component={TagBuilds} />
+            <Switch>
+              <Route exact path="/" component={Home} />
+              <Route exact path="/class/:gameClass" component={ClassBuilds} />
+              <Route exact path="/tag/:tag" component={TagBuilds} />
+              <Route
+                render={() => (
+                  <h1 style={{ marginLeft: "1em" }}>404 not found</h1>
+                )}
+              />
+            </Switch>
           </Wrapper>
           <Footer>
             <p>This is a fan site not associated with Grinding Gear Games.</p>
