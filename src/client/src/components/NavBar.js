@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import SearchForm from "./SearchForm";
 import styled from "styled-components";
 import ClassNav from "./ClassNav";
@@ -36,6 +36,19 @@ class NavBar extends Component {
     setTimeout(() => {
       this.searchInputRef.current.focus();
     }, 0);
+  }
+
+  closeDrawers() {
+    this.setState({
+      isSearchOpen: false,
+      isClassOpen: false
+    });
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.location.pathname !== this.props.location.pathname) {
+      this.closeDrawers();
+    }
   }
 
   render() {
@@ -226,4 +239,4 @@ const StyledClassNav = styled(ClassNav)`
   }
 `;
 
-export default NavBar;
+export default withRouter(NavBar);
