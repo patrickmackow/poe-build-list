@@ -168,7 +168,7 @@ class TagBuilds extends Component {
 
       let table;
       if (filteredBuilds.length) {
-        table = <BuildsTable builds={filteredBuilds} />;
+        table = <BuildsTable builds={filteredBuilds} sort={this.state.sort} />;
       } else {
         table = <Error>No builds found</Error>;
       }
