@@ -45,6 +45,7 @@ const Build = styled.div`
   margin: 0 0 0.6em;
   background-color: white;
   box-shadow: 0 2px 4px hsl(0, 0%, 80%);
+  border-radius: 2px;
   // border-bottom: 1px solid #000;
 
   @media (min-width: 35em) {
@@ -71,6 +72,7 @@ const BuildRight = styled.div`
 
 const BuildTitle = styled.a`
   font-size: 1.1rem;
+  letter-spacing: 0.3px;
 `;
 
 const BuildMetaInfo = styled.span`
@@ -91,47 +93,56 @@ const BuildMetaInfo = styled.span`
 
 const Tag = styled.span`
   display: inline-block;
-  box-shadow: 0 2px 4px hsl(0, 0%, 70%);
-  background-color: #444;
+  background-color: #e1e1e1;
+  color: #111;
   padding: 0.2em 0.5em;
   margin-top: 0.4em;
   margin-right: 0.3em;
   border-radius: 1em;
-  color: white;
   text-transform: uppercase;
   font-size: 0.775rem;
   font-weight: bold;
 
   &.dex {
-    background-color: hsl(120, 50%, 50%);
+    background-color: hsl(120, 50%, 90%);
+    color: hsl(120, 50%, 30%);
   }
   &.str {
-    background-color: hsl(0, 50%, 50%);
+    background-color: hsl(350, 50%, 90%);
+    color: hsl(350, 50%, 30%);
   }
   &.int {
-    background-color: hsl(220, 50%, 50%);
+    background-color: hsl(220, 50%, 90%);
+    color: hsl(220, 50%, 30%);
   }
 
   &.duelist {
-    background-color: hsl(30, 90%, 15%);
+    background-color: hsl(30, 90%, 90%);
+    color: hsl(30, 90%, 20%);
   }
   &.marauder {
-    background-color: hsl(0, 90%, 15%);
+    background-color: hsl(0, 90%, 90%);
+    color: hsl(0, 90%, 20%);
   }
   &.ranger {
-    background-color: hsl(120, 90%, 15%);
+    background-color: hsl(120, 90%, 90%);
+    color: hsl(120, 90%, 20%);
   }
   &.scion {
-    background-color: hsl(0, 0%, 15%);
+    background-color: hsl(0, 0%, 90%);
+    color: hsl(0, 0%, 20%);
   }
   &.shadow {
-    background-color: hsl(200, 90%, 15%);
+    background-color: hsl(200, 90%, 90%);
+    color: hsl(200, 90%, 20%);
   }
   &.templar {
-    background-color: hsl(300, 90%, 15%);
+    background-color: hsl(300, 90%, 90%);
+    color: hsl(300, 90%, 20%);
   }
   &.witch {
-    background-color: hsl(230, 90%, 15%);
+    background-color: hsl(230, 90%, 90%);
+    color: hsl(230, 90%, 20%);
   }
 `;
 
