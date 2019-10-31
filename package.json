@@ -28,7 +28,7 @@
     "concurrently": "^4.0.1",
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
-    "mongoose": "^5.2.16",
+    "mongoose": "^5.7.5",
     "prettier": "^1.13.7"
   },
   "jest": {
