@@ -94,6 +94,7 @@
   "frostbite": { "tags": ["frostbite"], "type": "int" },
   "frostblink": { "tags": ["frostblink"], "type": "int" },
   "frostbolt": { "tags": ["frostbolt"], "type": "int" },
+  "galvanic arrow": { "tags": ["galvanic arrow"], "type": "dex" },
   "glacial cascade": { "tags": ["glacial cascade"], "type": "int" },
   "glacial hammer": { "tags": ["glacial hammer"], "type": "str" },
   "golem": { "tags": ["golem", "golems"], "type": "" },
