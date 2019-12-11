@@ -1,6 +1,6 @@
 {
   "name": "poe-build-list",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "private": true,
   "main": "index.js",
@@ -12,6 +12,7 @@
     "server": "nodemon src/index.js",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "generate-tags": "node ./scripts/generateTags.js",
+    "generate-tags-save": "node ./scripts/generateTags.js ./src/lib/tags.json",
     "install-all": "npm install && npm install --prefix src/client",
     "prod": "npm run install-all && npm run build --prefix src/client"
   },
