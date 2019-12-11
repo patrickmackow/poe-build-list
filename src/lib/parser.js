@@ -106,7 +106,7 @@ const generateTags = title => {
 
       Simplest fix is to add an object to exclude tags that match
   */
-  const exclude = { vortex: ["blade vortex"] };
+  const exclude = { vortex: ["blade vortex"], berserk: ["berserker"] };
 
   const regexTags = Object.keys(TAGS).filter(key => {
     const foundTag = TAGS[key].tags.find(tag => {
