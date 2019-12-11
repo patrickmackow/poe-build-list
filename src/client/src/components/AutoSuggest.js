@@ -86,6 +86,10 @@ class AutoSuggest extends Component {
 
   scrollDrawer() {
     const active = this.activeRef.current;
+    if (!active) {
+      return;
+    }
+
     const parent = active.parentElement;
 
     if (active.offsetTop < parent.scrollTop) {
