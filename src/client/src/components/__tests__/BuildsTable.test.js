@@ -1,5 +1,5 @@
 import React from "react";
-import { render, cleanup } from "react-testing-library";
+import { render, cleanup } from "@testing-library/react";
 import BuildsTable from "../BuildsTable";
 
 afterEach(cleanup);
@@ -37,14 +37,30 @@ const builds = [
   }
 ];
 
-test("<BuildsTable />", () => {
+test("<BuildsTable /> sorted by latest", () => {
   const { debug, getAllByTestId, getByTestId } = render(
-    <BuildsTable builds={builds} />
+    <BuildsTable builds={builds} sort={"latest"} />
   );
 
   expect(getAllByTestId("build-row").length).toBe(builds.length);
 
   // Build table is sorted by descending latestPost
-  expect(getByTestId("build-link").textContent).toContain(builds[1].title);
+  expect(getAllByTestId("build-link")[0].textContent).toContain(
+    builds[1].title
+  );
+  //   debug();
+});
+
+test("<BuildsTable /> sorted by views", () => {
+  const { debug, getAllByTestId, getByTestId } = render(
+    <BuildsTable builds={builds} sort={"views"} />
+  );
+
+  expect(getAllByTestId("build-row").length).toBe(builds.length);
+
+  // Build table is sorted by descending latestPost
+  expect(getAllByTestId("build-link")[0].textContent).toContain(
+    builds[1].title
+  );
   //   debug();
 });

@@ -4,7 +4,7 @@ import {
   cleanup,
   fireEvent,
   waitForElement
-} from "react-testing-library";
+} from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import ClassBuilds from "../ClassBuilds";
 

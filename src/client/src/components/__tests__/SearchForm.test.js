@@ -4,7 +4,7 @@ import {
   cleanup,
   fireEvent,
   waitForElement
-} from "react-testing-library";
+} from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import SearchForm from "../SearchForm";
 
@@ -37,7 +37,7 @@ test("<SearchForm />", async () => {
 
   fireEvent.change(searchInput, { target: { value: "c" } });
 
-  await waitForElement(() => getByTestId(/^suggestion/));
+  await waitForElement(() => getAllByTestId(/^suggestion/));
 
   fireEvent.keyDown(container, { keyCode: 40 });
   expect(getAllByTestId(/^suggestion/).length).toBe(3);
