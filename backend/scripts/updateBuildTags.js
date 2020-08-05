@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
-const Build = require("../src/models/Build");
+const Build = require("../models/Build");
 const assert = require("assert");
 require("dotenv").config();
 
-const { generateTags } = require("../src/lib/parser");
+const { generateTags } = require("../lib/parser");
 
 function arrayEquals(a, b) {
   if (a == null || b == null) return false;
@@ -33,13 +33,10 @@ function arrayEquals(a, b) {
 
 async function updateBuildTags() {
   // Connect to db
-  await mongoose.connect(
-    process.env.MONGO_URL,
-    {
-      useNewUrlParser: true,
-      dbName: process.env.MONGO_DB_NAME
-    }
-  );
+  await mongoose.connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    dbName: process.env.MONGO_DB_NAME,
+  });
 
   console.log(`Connected to db ${process.env.MONGO_URL} successfully`);
 
@@ -50,7 +47,7 @@ async function updateBuildTags() {
   // If tags are unchanged don't update
   let updated = 0;
   await Promise.all(
-    builds.map(build => {
+    builds.map((build) => {
       const tags = generateTags(build.title);
 
       // Save builds back to db
@@ -60,8 +57,8 @@ async function updateBuildTags() {
       build.generatedTags = tags;
       return build
         .save()
-        .then(result => updated++)
-        .catch(err => {
+        .then((result) => updated++)
+        .catch((err) => {
           if (err) throw new Error("Error saving to db");
         });
     })
@@ -78,8 +75,14 @@ async function updateBuildTags() {
   assert(arrayEquals([{ tag: "a", type: "" }], [{ tag: "a", type: "" }]));
   assert(
     arrayEquals(
-      [{ tag: "a", type: "" }, { tag: "b", type: "" }],
-      [{ tag: "a", type: "" }, { tag: "b", type: "" }]
+      [
+        { tag: "a", type: "" },
+        { tag: "b", type: "" },
+      ],
+      [
+        { tag: "a", type: "" },
+        { tag: "b", type: "" },
+      ]
     )
   );
   assert(!arrayEquals([{ tag: "a", type: "" }], [{ tag: "b", type: "" }]));

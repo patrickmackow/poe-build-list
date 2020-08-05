@@ -9,8 +9,8 @@ const URL = "http://poedb.tw/us/gem.php?cn=Active+Skill+Gem";
 const config = {
   headers: {
     "User-Agent":
-      "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0"
-  }
+      "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0",
+  },
 };
 
 function readFile(filePath) {
@@ -70,7 +70,7 @@ function scrapeTags(body) {
 
     tags[tag] = {
       tags: [tag],
-      type
+      type,
     };
   });
 
@@ -110,7 +110,7 @@ function handleErrors(error) {
 function mergeFiles(oldFile, newFile) {
   const merged = Object.assign({}, oldFile);
 
-  Object.keys(newFile).forEach(key => {
+  Object.keys(newFile).forEach((key) => {
     if (!merged.hasOwnProperty(key)) {
       merged[key] = newFile[key];
     }
@@ -121,7 +121,7 @@ function mergeFiles(oldFile, newFile) {
 
 axios
   .get(URL, config)
-  .then(response => {
+  .then((response) => {
     const tags = scrapeTags(response.data);
     const filePath = process.argv[2]
       ? path.resolve(process.argv[2])
@@ -133,6 +133,6 @@ axios
     const sortedJSON = sortJSON(newFile);
     writeFile(filePath, sortedJSON);
   })
-  .catch(error => {
+  .catch((error) => {
     handleErrors(error);
   });

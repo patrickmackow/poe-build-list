@@ -1,18 +1,37 @@
 version: "3"
 
 services:
-  app:
-    build: .
-    ports:
-      - 127.0.0.1:3000:3000
+  frontend:
+    image: node:alpine
     restart: always
     depends_on:
-      - mongo
-  mongo:
-    image: mongo
+      - backend
+    ports:
+      - 3000:3000
+    working_dir: /app
     volumes:
-      - mongodata:/data/db
+      - ./frontend/:/app
+    command: "npm start"
+
+  backend:
+    image: node:alpine
     restart: always
+    depends_on:
+      - mongodb
+    ports:
+      - 3001:3001
+    working_dir: /app
+    volumes:
+      - ./backend/:/app
+    command: "npm run server"
+
+  mongodb:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb:/data/db
 
 volumes:
-  mongodata:
+  mongodb:

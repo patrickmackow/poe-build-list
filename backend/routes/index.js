@@ -11,16 +11,16 @@ router.get("/builds", (req, res) => {
   Build.find({ version: latestVersion })
     .sort({ views: "desc" })
     .limit(100)
-    .then(builds => res.json(builds))
-    .catch(err => {
+    .then((builds) => res.json(builds))
+    .catch((err) => {
       res.status(500).json({ error: err ? err : "Server Error" });
     });
 });
 
 router.get("/builds/:class", (req, res) => {
   Build.find({ gameClass: req.params.class })
-    .then(builds => res.json(builds))
-    .catch(err => {
+    .then((builds) => res.json(builds))
+    .catch((err) => {
       res.status(500).json({ error: err ? err : "Server Error" });
     });
 });
@@ -32,10 +32,10 @@ router.get("/tags", (req, res) => {
 router.get("/tags/:tags", (req, res) => {
   const tags = req.params.tags.split(",");
   Build.find({ "generatedTags.tag": { $all: tags } })
-    .then(builds => {
+    .then((builds) => {
       res.json(builds);
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(500).json({ error: err ? err : "Server Error" });
     });
 });
