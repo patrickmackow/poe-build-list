@@ -2,13 +2,17 @@ const express = require("express");
 const router = express.Router();
 
 const tags = require("../lib/tags.json");
-const latestVersion = require("../config.json").latestVersion;
 
 // Require models
 const Build = require("../models/Build");
+const Config = require("../models/Config");
 
-router.get("/builds", (req, res) => {
-  Build.find({ version: latestVersion })
+router.get("/builds", async (req, res) => {
+  const version = (await Config.findOne({ key: "version" }).exec()) || {
+    value: "3.11",
+  };
+
+  Build.find({ version: version.value })
     .sort({ views: "desc" })
     .limit(100)
     .then((builds) => res.json(builds))

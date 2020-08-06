@@ -3,8 +3,6 @@ const url = require("url");
 
 const TAGS = require("./tags");
 
-const latestVersion = require("../config.json").latestVersion;
-
 const GAME_CLASSES = [
   "duelist",
   "marauder",
@@ -12,7 +10,7 @@ const GAME_CLASSES = [
   "scion",
   "shadow",
   "templar",
-  "witch"
+  "witch",
 ];
 
 const extractTitle = (el, $) => {
@@ -52,12 +50,12 @@ const extractLatestPost = (el, $) => {
     .trim();
 };
 
-const extractGameClass = $ => {
+const extractGameClass = ($) => {
   title = $("head title")
     .text()
     .trim()
     .toLowerCase();
-  return GAME_CLASSES.find(gameClass => {
+  return GAME_CLASSES.find((gameClass) => {
     if (title.includes(gameClass)) {
       return gameClass;
     }
@@ -71,12 +69,12 @@ const extractReplies = (el, $) => {
 };
 
 // Extract the game version the build is meant for
-const extractVersion = title => {
+const extractVersion = (title) => {
   const versionRegExp = /(\d+\.\d+)/; // Look for #.#, this will only match the first instance
   const version = versionRegExp.exec(title);
 
   // Return empty string if found string is greater than current patch version
-  if (version && parseFloat(latestVersion) >= parseFloat(version[0])) {
+  if (version && parseFloat(version[0])) {
     return version[0];
   } else {
     return "";
@@ -84,13 +82,13 @@ const extractVersion = title => {
 };
 
 // Automatically generate tags from title
-const generateTags = title => {
+const generateTags = (title) => {
   const format = function(t) {
     if (t.length === 0) {
       return [];
     }
 
-    return t.map(tag => {
+    return t.map((tag) => {
       return { tag, type: TAGS[tag].type ? TAGS[tag].type : "" };
     });
   };
@@ -108,8 +106,8 @@ const generateTags = title => {
   */
   const exclude = { vortex: ["blade vortex"], berserk: ["berserker"] };
 
-  const regexTags = Object.keys(TAGS).filter(key => {
-    const foundTag = TAGS[key].tags.find(tag => {
+  const regexTags = Object.keys(TAGS).filter((key) => {
+    const foundTag = TAGS[key].tags.find((tag) => {
       const tagRegex = new RegExp(`\\b${tag}\\b`);
 
       const result = tagRegex.test(lowerCaseTitle);
@@ -123,11 +121,11 @@ const generateTags = title => {
         return true;
       }
 
-      const excludeRegexes = exclude[tag].map(e => new RegExp(`\\b${e}\\b`));
+      const excludeRegexes = exclude[tag].map((e) => new RegExp(`\\b${e}\\b`));
       // Tag has a match inside the exclude object
       // Each excluded regex must not match in order for the tag to be valid
       return excludeRegexes.every(
-        exclude => exclude.test(lowerCaseTitle) === false
+        (exclude) => exclude.test(lowerCaseTitle) === false
       );
     });
 
@@ -140,13 +138,13 @@ const generateTags = title => {
 
   // No tags found, check again for tag key anywhere in the string,
   // also checking for exclusions
-  const includeTags = Object.keys(TAGS).filter(key => {
+  const includeTags = Object.keys(TAGS).filter((key) => {
     if (!lowerCaseTitle.includes(key)) {
       // Tag key not found in string
       return false;
     } else if (
       exclude.hasOwnProperty(key) &&
-      exclude[key].some(e => lowerCaseTitle.includes(e))
+      exclude[key].some((e) => lowerCaseTitle.includes(e))
     ) {
       // Tag key found, but is excluded
       return false;
@@ -159,7 +157,7 @@ const generateTags = title => {
 };
 
 // Parse HTTP request body and extract data
-const parser = body => {
+const parser = (body) => {
   const $ = cheerio.load(body);
 
   const gameClass = extractGameClass($);
@@ -173,7 +171,7 @@ const parser = body => {
         replies: parseInt(extractReplies(el, $)),
         createdOn: new Date(extractCreationDate(el, $)),
         latestPost: new Date(extractLatestPost(el, $)),
-        gameClass
+        gameClass,
       };
       row.version = extractVersion(row.title);
       row.generatedTags = generateTags(row.title);
@@ -188,5 +186,5 @@ module.exports = {
   parser,
   GAME_CLASSES,
   extractVersion,
-  generateTags
+  generateTags,
 };

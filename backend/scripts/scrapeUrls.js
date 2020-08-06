@@ -1,8 +1,10 @@
 const mongoose = require("mongoose");
 const Build = require("../models/Build");
+const Config = require("../models/Config");
 require("dotenv").config();
 
 const { scraper } = require("../lib/scraper");
+const e = require("express");
 
 const urls = [
   "https://www.pathofexile.com/forum/view-forum/40",
@@ -39,8 +41,25 @@ async function writeToDb(builds) {
 
   console.log(`Connected to db (${process.env.MONGO_URL}) successfully`);
 
+  versions = {};
+  latest_version = "";
+
   const bulk = Build.collection.initializeUnorderedBulkOp();
   builds.map((build) => {
+    // Latest patch is determined by the total number of builds using the patch number
+    // TODO: Only count patch numbers from the front page
+    if (versions[build.version]) {
+      versions[build.version]++;
+    } else {
+      versions[build.version] = 1;
+    }
+
+    if (!latest_version) {
+      latest_version = build.version;
+    } else if (versions[build.version] > versions[latest_version]) {
+      latest_version = build.version;
+    }
+
     build.updatedOn = new Date();
     bulk
       .find({ url: build.url })
@@ -62,7 +81,14 @@ async function writeToDb(builds) {
     )
     .catch((err) => console.log(JSON.stringify(err)));
 
-  mongoose.disconnect();
+  // Save latest version to mongodb
+  const version = new Config({ key: "version", value: latest_version });
+  version.save(function(err, doc) {
+    if (err) return console.error(err);
+    console.log("Latest version updated to ", latest_version);
+  });
+
+  mongoose.mongoose.disconnect();
 }
 
 async function runScraper() {
