@@ -19,13 +19,11 @@ services:
     working_dir: /app
     volumes:
       - ./backend/:/app
-    command: /bin/sh -c "npm install && node ./scripts/scrapeUrls.js && npm start"
+    command: /bin/sh -c "npm install && npm start"
 
   mongodb:
     image: mongo
     restart: always
-    ports:
-      - 27017:27017
     volumes:
       - mongodb:/data/db
 
