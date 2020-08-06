@@ -11,7 +11,7 @@ services:
     working_dir: /app
     volumes:
       - ./frontend/:/app
-    command: "npm start"
+    command: "npm install && npm run build"
     stdin_open: true # This is need for react-scripts to working inside docker
 
   backend:
@@ -24,7 +24,7 @@ services:
     working_dir: /app
     volumes:
       - ./backend/:/app
-    command: "npm run server"
+    command: "npm install && npm start"
 
   mongodb:
     image: mongo
