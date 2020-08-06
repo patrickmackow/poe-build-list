@@ -8,14 +8,28 @@ class VersionFilter extends Component {
     super(props);
 
     const versionSet = new Set();
-    this.props.builds.map(
-      build =>
-        build.version && build.version >= MINIMUM_VERSION
-          ? versionSet.add(build.version)
-          : null
+    this.props.builds.map((build) =>
+      build.version && build.version >= MINIMUM_VERSION
+        ? versionSet.add(build.version)
+        : null
     );
 
-    this.patches = Array.from(versionSet).sort((a, b) => b - a);
+    this.patches = Array.from(versionSet).sort((a, b) => {
+      const aSplit = a.split(".");
+      const bSplit = b.split(".");
+
+      for (let i = 0; i < bSplit.length; i++) {
+        if (bSplit[i] === undefined) {
+          return 1;
+        } else if (aSplit[i] === undefined) {
+          return -1;
+        }
+
+        if (i + 1 >= bSplit.length || bSplit[i] - aSplit[i] !== 0) {
+          return bSplit[i] - aSplit[i];
+        }
+      }
+    });
   }
 
   componentDidMount() {
@@ -25,7 +39,7 @@ class VersionFilter extends Component {
   }
 
   render() {
-    const patches = this.patches.map(version => (
+    const patches = this.patches.map((version) => (
       <option key={version} value={version}>
         {version}
       </option>
