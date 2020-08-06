@@ -3,11 +3,6 @@ version: "3"
 services:
   frontend:
     image: node:alpine
-    restart: always
-    depends_on:
-      - backend
-    ports:
-      - 3000:3000
     working_dir: /app
     volumes:
       - ./frontend/:/app
@@ -24,7 +19,7 @@ services:
     working_dir: /app
     volumes:
       - ./backend/:/app
-    command: "npm install && npm start"
+    command: "npm install && node ./scripts/scrapeUrls.js && npm start"
 
   mongodb:
     image: mongo
