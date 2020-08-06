@@ -7,14 +7,12 @@
   "scripts": {
     "test": "jest",
     "test-watch": "npm run test -- --watch",
-    "test-client": "npm test --prefix src/client",
-    "client": "npm start --prefix src/client",
+    "test-client": "npm test --prefix ../frontend",
+    "client": "npm start --prefix ../frontend",
     "server": "nodemon src/index.js",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "generate-tags": "node ./scripts/generateTags.js",
-    "generate-tags-save": "node ./scripts/generateTags.js ./src/lib/tags.json",
-    "install-all": "npm install && npm install --prefix src/client",
-    "prod": "npm run install-all && npm run build --prefix src/client"
+    "generate-tags-save": "node ./scripts/generateTags.js ./lib/tags.json"
   },
   "author": "Patrick Mackow",
   "license": "ISC",
