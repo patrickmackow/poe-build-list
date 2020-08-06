@@ -67,7 +67,7 @@ async function writeToDb(builds) {
       .updateOne({ ...build });
   });
 
-  bulk
+  await bulk
     .execute()
     .then(({ result }) =>
       console.log(
@@ -83,12 +83,10 @@ async function writeToDb(builds) {
 
   // Save latest version to mongodb
   const version = new Config({ key: "version", value: latest_version });
-  version.save(function(err, doc) {
-    if (err) return console.error(err);
-    console.log("Latest version updated to ", latest_version);
-  });
+  await version.save();
+  console.log("Latest version: ", latest_version);
 
-  await mongoose.disconnect();
+  mongoose.connection.close();
 }
 
 async function runScraper() {
