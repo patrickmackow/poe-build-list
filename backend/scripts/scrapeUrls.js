@@ -88,7 +88,7 @@ async function writeToDb(builds) {
     console.log("Latest version updated to ", latest_version);
   });
 
-  mongoose.mongoose.disconnect();
+  await mongoose.disconnect();
 }
 
 async function runScraper() {
