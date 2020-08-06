@@ -6,14 +6,14 @@ A live version of the app can be found at [poebuildlist.com](https://poebuildlis
 
 ## Usage
 
-This app consists of an express backend that serves the api and react app.
+This app consists of an express backend that serves the api and a react app.
 
-Copy the the .env.sample and rename it to .env filling it out with correct information.
+Copy the the .env.sample in the backend folder and rename it to .env filling it out with correct information.
 
-For development run (a mongo installation is needed)
+For development a mongo installation is needed
 
 ```
-npm run install-all
+cd backend/
 npm run dev
 ```
 
@@ -22,6 +22,8 @@ docker-compose is used for hosting the app in production
 ```
 docker-compose up
 ```
+
+The react app must be served from the frontend/build folder using a static server
 
 ## Scripts
 
