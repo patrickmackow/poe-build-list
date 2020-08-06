@@ -12,6 +12,7 @@ services:
     volumes:
       - ./frontend/:/app
     command: "npm start"
+    stdin_open: true # This is need for react-scripts to working inside docker
 
   backend:
     image: node:alpine
