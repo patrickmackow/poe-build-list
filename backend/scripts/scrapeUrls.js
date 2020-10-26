@@ -82,8 +82,11 @@ async function writeToDb(builds) {
     .catch((err) => console.log(JSON.stringify(err)));
 
   // Save latest version to mongodb
-  const version = new Config({ key: "version", value: latest_version });
-  await version.save();
+  await Config.findOneAndUpdate(
+    { key: "version" },
+    { value: latest_version },
+    { upsert: true }
+  );
   console.log("Latest version: ", latest_version);
 
   mongoose.connection.close();
