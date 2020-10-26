@@ -35,6 +35,7 @@ async function writeToDb(builds) {
   await mongoose.connect(process.env.MONGO_URL, {
     dbName: process.env.MONGO_DB_NAME,
     useNewUrlParser: true,
+    useFindAndModify: false,
   });
 
   mongoose.Promise = Promise;
