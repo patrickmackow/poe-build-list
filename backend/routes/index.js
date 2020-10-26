@@ -44,4 +44,10 @@ router.get("/tags/:tags", (req, res) => {
     });
 });
 
+router.get("/version", (req, res) => {
+  Config.findOne({ key: "version" }).then(({ value }) => {
+    res.json({ version: value });
+  });
+});
+
 module.exports = router;

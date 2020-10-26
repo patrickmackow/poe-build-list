@@ -1,20 +1,49 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { Filter, Label, Select } from "./FilterStyles";
 
 const MINIMUM_VERSION = "3.0";
 
-class VersionFilter extends Component {
-  constructor(props) {
-    super(props);
+function versionBetween(version, min, max) {
+  const versionSplit = version.split(".");
+  const minSplit = min ? min.split(".") : undefined;
+  const maxSplit = max ? max.split(".") : undefined;
 
+  if (minSplit) {
+    if (minSplit[0] > versionSplit[0]) {
+      return false;
+    } else if (
+      minSplit[0] === versionSplit[0] &&
+      parseInt(minSplit[1]) > parseInt(versionSplit[1])
+    ) {
+      return false;
+    }
+  }
+  if (maxSplit) {
+    if (maxSplit[0] < versionSplit[0]) {
+      return false;
+    } else if (
+      maxSplit[0] === versionSplit[0] &&
+      parseInt(maxSplit[1]) < parseInt(versionSplit[1])
+    ) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function VersionFilter({ builds, onChange, value, latestVersion }) {
+  const [patches, setPatches] = useState([]);
+
+  useEffect(() => {
     const versionSet = new Set();
-    this.props.builds.map((build) =>
-      build.version && build.version >= MINIMUM_VERSION
+    builds.map((build) =>
+      build.version &&
+      versionBetween(build.version, MINIMUM_VERSION, latestVersion)
         ? versionSet.add(build.version)
         : null
     );
 
-    this.patches = Array.from(versionSet).sort((a, b) => {
+    const patches = Array.from(versionSet).sort((a, b) => {
       const aSplit = a.split(".");
       const bSplit = b.split(".");
 
@@ -29,39 +58,28 @@ class VersionFilter extends Component {
           return bSplit[i] - aSplit[i];
         }
       }
+
+      return 0;
     });
-  }
 
-  componentDidMount() {
-    if (this.props.value !== this.patches[0]) {
-      this.props.onChange({ target: { value: this.patches[0] } });
-    }
-  }
+    setPatches(patches);
+    onChange({ target: { value: patches[0] } });
+  }, [builds, latestVersion, onChange]);
 
-  render() {
-    const patches = this.patches.map((version) => (
-      <option key={version} value={version}>
-        {version}
-      </option>
-    ));
+  const patchOptions = patches.map((version) => (
+    <option key={version} value={version}>
+      {version}
+    </option>
+  ));
 
-    if (patches.length) {
-      return (
-        <Filter>
-          <Label htmlFor="version-filter">Patch</Label>
-          <Select
-            id="version-filter"
-            value={this.props.value}
-            onChange={this.props.onChange}
-          >
-            {patches}
-          </Select>
-        </Filter>
-      );
-    } else {
-      return null;
-    }
-  }
+  return patchOptions.length ? (
+    <Filter>
+      <Label htmlFor="version-filter">Patch</Label>
+      <Select id="version-filter" value={value} onChange={onChange}>
+        {patchOptions}
+      </Select>
+    </Filter>
+  ) : null;
 }
 
 export default VersionFilter;

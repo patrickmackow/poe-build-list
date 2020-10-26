@@ -20,10 +20,11 @@ class TagBuilds extends Component {
     this.state = {
       loading: true,
       builds: [],
-      version: "", // TODO: Determine latest version within this component
+      version: "",
+      latestVersion: "",
       class: "All",
       error: false,
-      sort: "latest"
+      sort: "latest",
     };
 
     this.handleVersionChange = this.handleVersionChange.bind(this);
@@ -44,17 +45,17 @@ class TagBuilds extends Component {
         class: "All",
         version: "",
         builds: [],
-        sort: "latest"
+        sort: "latest",
       });
       this.fetchData();
     }
   }
 
   setTitle(title) {
-    const transformedTitle = (title => {
+    const transformedTitle = ((title) => {
       return title
         .split(" ")
-        .map(t => {
+        .map((t) => {
           return t[0].toUpperCase() + t.slice(1);
         })
         .join(" ");
@@ -64,23 +65,29 @@ class TagBuilds extends Component {
   }
 
   fetchData() {
+    fetchWithTimeout("/api/version", this.abortController, 5000)
+      .then((res) => res.json())
+      .then(({ version }) => {
+        this.setState({ latestVersion: version, version });
+      });
+
     fetchWithTimeout(
       "/api/tags/" + this.props.match.params.tag,
       this.abortController,
       5000
     )
-      .then(res => res.json())
-      .then(builds =>
+      .then((res) => res.json())
+      .then((builds) =>
         this.setState({
           builds,
           loading: false,
-          error: false
+          error: false,
         })
       )
-      .catch(err => {
+      .catch((err) => {
         this.setState({
           loading: false,
-          error: true
+          error: true,
         });
       });
   }
@@ -92,7 +99,7 @@ class TagBuilds extends Component {
   handleVersionChange(e) {
     this.setState({
       version: e.target.value,
-      class: "All"
+      class: "All",
     });
   }
 
@@ -124,7 +131,7 @@ class TagBuilds extends Component {
   }
 
   filterBuildsByClass(builds) {
-    const filtered = builds.filter(build => {
+    const filtered = builds.filter((build) => {
       if (
         build.gameClass === this.state.class.toLowerCase() ||
         this.state.class === "All"
@@ -139,7 +146,7 @@ class TagBuilds extends Component {
   }
 
   filterBuildsByVersion(builds) {
-    const filtered = builds.filter(build => {
+    const filtered = builds.filter((build) => {
       if (build.version === this.state.version) {
         return true;
       }
@@ -181,6 +188,7 @@ class TagBuilds extends Component {
                 value={this.state.version}
                 builds={builds}
                 onChange={this.handleVersionChange}
+                latestVersion={this.state.latestVersion}
               />
               <ClassFilter
                 value={this.state.class}

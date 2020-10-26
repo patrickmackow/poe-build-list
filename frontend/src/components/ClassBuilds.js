@@ -19,9 +19,10 @@ class ClassBuilds extends Component {
     this.state = {
       loading: true,
       builds: [],
-      version: "", // TODO: Determine latest version within this component
+      version: "",
+      latestVersion: "",
       error: false,
-      sort: "latest"
+      sort: "latest",
     };
 
     this.handleVersionChange = this.handleVersionChange.bind(this);
@@ -42,17 +43,17 @@ class ClassBuilds extends Component {
         loading: true,
         version: "",
         builds: [],
-        sort: "latest"
+        sort: "latest",
       });
       this.fetchData();
     }
   }
 
   setTitle(title) {
-    const transformedTitle = (title => {
+    const transformedTitle = ((title) => {
       return title
         .split(" ")
-        .map(t => {
+        .map((t) => {
           return t[0].toUpperCase() + t.slice(1);
         })
         .join(" ");
@@ -62,23 +63,29 @@ class ClassBuilds extends Component {
   }
 
   fetchData() {
+    fetchWithTimeout("/api/version", this.abortController, 5000)
+      .then((res) => res.json())
+      .then(({ version }) => {
+        this.setState({ latestVersion: version, version });
+      });
+
     fetchWithTimeout(
       "/api/builds/" + this.props.match.params.gameClass,
       this.abortController,
       5000
     )
-      .then(res => res.json())
-      .then(builds => {
+      .then((res) => res.json())
+      .then((builds) => {
         this.setState({
           loading: false,
           error: false,
-          builds
+          builds,
         });
       })
-      .catch(err => {
+      .catch((err) => {
         this.setState({
           loading: false,
-          error: true
+          error: true,
         });
       });
   }
@@ -93,7 +100,7 @@ class ClassBuilds extends Component {
 
   filterBuilds(builds) {
     // Default filter is latest patch and has at least 1 tag
-    return builds.filter(build => {
+    return builds.filter((build) => {
       if (build.version === this.state.version && build.generatedTags.length) {
         return true;
       }
@@ -136,6 +143,7 @@ class ClassBuilds extends Component {
                 value={this.state.version}
                 builds={builds}
                 onChange={this.handleVersionChange}
+                latestVersion={this.state.latestVersion}
               />
             </FilterContainer>
             <SortSelect
