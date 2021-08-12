@@ -4,7 +4,6 @@ const Config = require("../models/Config");
 require("dotenv").config();
 
 const { scraper } = require("../lib/scraper");
-const e = require("express");
 
 const urls = [
   "https://www.pathofexile.com/forum/view-forum/40",
@@ -27,8 +26,7 @@ async function scrape() {
   });
 
   // Merge data into one array
-  const builds = [].concat(...results.map((result) => result.data));
-  return builds;
+  return [].concat(...results.map((result) => result.data));
 }
 
 async function writeToDb(builds) {
@@ -42,8 +40,8 @@ async function writeToDb(builds) {
 
   console.log(`Connected to db (${process.env.MONGO_URL}) successfully`);
 
-  versions = {};
-  latest_version = "";
+  let versions = {};
+  let latest_version = "";
 
   const bulk = Build.collection.initializeUnorderedBulkOp();
   builds.map((build) => {
@@ -65,7 +63,7 @@ async function writeToDb(builds) {
     bulk
       .find({ url: build.url })
       .upsert()
-      .updateOne({ ...build });
+      .updateOne({ $set: { ...build } });
   });
 
   await bulk
@@ -90,12 +88,10 @@ async function writeToDb(builds) {
   );
   console.log("Latest version: ", latest_version);
 
-  mongoose.connection.close();
+  await mongoose.connection.close();
 }
 
-async function runScraper() {
+(async () => {
   const builds = await scrape();
   await writeToDb(builds);
-}
-
-runScraper();
+})();
