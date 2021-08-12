@@ -1,11 +1,10 @@
 const cheerio = require("cheerio");
-const request = require("request");
 const fs = require("fs");
 const path = require("path");
 const prettier = require("prettier");
 const axios = require("axios");
 
-const URL = "http://poedb.tw/us/gem.php?cn=Active+Skill+Gem";
+const URL = "https://poedb.tw/us/Gem#ActiveSkillGemsGem";
 const config = {
   headers: {
     "User-Agent":
@@ -46,16 +45,11 @@ function scrapeTags(body) {
   const $ = cheerio.load(body);
   const tags = {};
 
-  $("table tbody tr").each(function(i, el) {
-    const tag = $("a", el)
-      .eq(1)
-      .text()
-      .toLowerCase();
+  $("table tbody tr").each(function (i, el) {
+    const tag = $("a", el).eq(1).text().toLowerCase();
 
-    const type = (function() {
-      t = $("a", el)
-        .eq(1)
-        .attr("class");
+    const type = (function () {
+      let t = $("a", el).eq(1).attr("class");
       switch (t) {
         case "gem_green":
           return "dex";
@@ -68,10 +62,18 @@ function scrapeTags(body) {
       }
     })();
 
-    tags[tag] = {
-      tags: [tag],
-      type,
-    };
+    if (tag.length && !tag.includes("support")) {
+      let tagName = tag;
+      const tagsArray = [tag];
+      if (tag.includes("summon ")) {
+        tagName = tagName.slice("summon ".length);
+        tagsArray.push(tagName);
+      }
+      tags[tagName] = {
+        tags: tagsArray,
+        type,
+      };
+    }
   });
 
   return tags;
@@ -81,7 +83,7 @@ function sortJSON(unordered) {
   const ordered = {};
   Object.keys(unordered)
     .sort()
-    .forEach(function(key) {
+    .forEach(function (key) {
       ordered[key] = unordered[key];
     });
 
