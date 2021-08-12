@@ -40,8 +40,7 @@ async function writeToDb(builds) {
 
   console.log(`Connected to db (${process.env.MONGO_URL}) successfully`);
 
-  let versions = {};
-  let latest_version = "";
+  const versions = {};
 
   const bulk = Build.collection.initializeUnorderedBulkOp();
   builds.map((build) => {
@@ -50,13 +49,10 @@ async function writeToDb(builds) {
     if (versions[build.version]) {
       versions[build.version]++;
     } else {
-      versions[build.version] = 1;
-    }
-
-    if (!latest_version) {
-      latest_version = build.version;
-    } else if (versions[build.version] > versions[latest_version]) {
-      latest_version = build.version;
+      // Don't count empty string toward version count
+      if (build.version.length) {
+        versions[build.version] = 1;
+      }
     }
 
     build.updatedOn = new Date();
@@ -81,6 +77,16 @@ async function writeToDb(builds) {
     .catch((err) => console.log(JSON.stringify(err)));
 
   // Save latest version to mongodb
+  let latest_version;
+  Object.keys(versions).map((version) => {
+    if (
+      latest_version === undefined ||
+      versions[version] > versions[latest_version]
+    ) {
+      latest_version = version;
+    }
+  });
+
   await Config.findOneAndUpdate(
     { key: "version" },
     { value: latest_version },
