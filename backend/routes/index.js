@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const tags = require("../lib/tags.json");
+const sortedTags = Object.keys(tags).sort();
 
 // Require models
 const Build = require("../models/Build");
@@ -17,7 +18,7 @@ router.get("/builds", async (req, res) => {
     .limit(100)
     .then((builds) => res.json(builds))
     .catch((err) => {
-      res.status(500).json({ error: err ? err : "Server Error" });
+      res.status(500).json({ error: err ?? "Server Error" });
     });
 });
 
@@ -25,12 +26,12 @@ router.get("/builds/:class", (req, res) => {
   Build.find({ gameClass: req.params.class })
     .then((builds) => res.json(builds))
     .catch((err) => {
-      res.status(500).json({ error: err ? err : "Server Error" });
+      res.status(500).json({ error: err ?? "Server Error" });
     });
 });
 
 router.get("/tags", (req, res) => {
-  res.json(Object.keys(tags).sort());
+  res.json(sortedTags);
 });
 
 router.get("/tags/:tags", (req, res) => {
@@ -40,7 +41,7 @@ router.get("/tags/:tags", (req, res) => {
       res.json(builds);
     })
     .catch((err) => {
-      res.status(500).json({ error: err ? err : "Server Error" });
+      res.status(500).json({ error: err ?? "Server Error" });
     });
 });
 
