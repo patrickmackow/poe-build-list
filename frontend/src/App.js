@@ -2,11 +2,9 @@ import React, { Component } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import styled from "styled-components";
 
-// import "./App.css";
-
-import Home from "./components/Home";
-import ClassBuilds from "./components/ClassBuilds";
-import TagBuilds from "./components/TagBuilds";
+import Home from "screens/Home";
+import ClassBuilds from "screens/ClassBuilds";
+import TagBuilds from "screens/TagBuilds";
 
 class App extends Component {
   render() {

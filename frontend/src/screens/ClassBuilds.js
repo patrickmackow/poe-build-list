@@ -1,14 +1,12 @@
 import React, { Component } from "react";
-import BuildsTable from "./BuildsTable";
-import VersionFilter from "./filters/VersionFilter";
-import NavBar from "./NavBar";
-import Container from "./common/Container";
+import BuildsTable from "components/BuildsTable";
+import VersionFilter from "components/filters/VersionFilter";
+import NavBar from "components/NavBar";
 import styled from "styled-components";
-import Loader from "./common/Loader";
-import FilterContainer from "./filters/FilterContainer";
-import fetchWithTimeout from "../fetchWithTimeout";
-import Error from "./common/Error";
-import SortSelect from "./SortSelect";
+import FilterContainer from "components/filters/FilterContainer";
+import fetchWithTimeout from "fetchWithTimeout";
+import SortSelect from "components/SortSelect";
+import { Container, Error, Loader } from "components/lib";
 
 class ClassBuilds extends Component {
   constructor(props) {

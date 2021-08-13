@@ -1,13 +1,11 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 
-import SearchForm from "./SearchForm";
-import BuildsTable from "./BuildsTable";
-import Container from "./common/Container";
-import ClassNav from "./ClassNav";
-import Loader from "./common/Loader";
-import Error from "./common/Error";
-import fetchWithTimeout from "../fetchWithTimeout";
+import SearchForm from "components/SearchForm";
+import BuildsTable from "components/BuildsTable";
+import ClassNav from "components/ClassNav";
+import fetchWithTimeout from "fetchWithTimeout";
+import { Container, Error, Loader } from "components/lib";
 
 class Home extends Component {
   constructor(props) {
@@ -19,7 +17,7 @@ class Home extends Component {
       loading: true,
       builds: [],
       open: false,
-      error: false
+      error: false,
     };
 
     this.toggleDropdown = this.toggleDropdown.bind(this);
@@ -29,18 +27,18 @@ class Home extends Component {
     document.title = "PoE Build List";
 
     fetchWithTimeout("/api/builds", this.abortController, 5000)
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         this.setState({
           loading: false,
           error: false,
-          builds: data.slice(0, 10)
+          builds: data.slice(0, 10),
         });
       })
-      .catch(err => {
+      .catch((err) => {
         this.setState({
           loading: false,
-          error: true
+          error: true,
         });
       });
   }
@@ -78,7 +76,9 @@ class Home extends Component {
     return (
       <Container>
         <Title>
-          Path of Exile<br />Build List
+          Path of Exile
+          <br />
+          Build List
         </Title>
         <Search>
           <SearchForm />
@@ -135,10 +135,10 @@ const ClassListToggle = styled.button`
     ::after {
       position: absolute;
       right: 1em;
-      top: ${props => (props.open ? "0.6em" : "1em")};
+      top: ${(props) => (props.open ? "0.6em" : "1em")};
       content: "";
       border: 5px solid #111;
-      border-color: ${props =>
+      border-color: ${(props) =>
         props.open
           ? "transparent transparent black"
           : "black transparent transparent"};
@@ -147,7 +147,7 @@ const ClassListToggle = styled.button`
 `;
 
 const StyledClassNav = styled(ClassNav)`
-  display: ${props => (props.open ? "block" : "none")};
+  display: ${(props) => (props.open ? "block" : "none")};
   list-style: none;
   padding: 0;
   margin: 0;
