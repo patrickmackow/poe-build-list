@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const { mongooseConfig } = require("../config.json");
+
 const Build = require("../models/Build");
 const Config = require("../models/Config");
 
@@ -33,9 +35,8 @@ async function scrape() {
 
 async function writeToDb(builds) {
   await mongoose.connect(process.env.MONGO_URL, {
+    ...mongooseConfig,
     dbName: process.env.MONGO_DB_NAME,
-    useNewUrlParser: true,
-    useFindAndModify: false,
   });
 
   mongoose.Promise = Promise;

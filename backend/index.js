@@ -1,5 +1,8 @@
 const express = require("express");
+
 const mongoose = require("mongoose");
+const { mongooseConfig } = require("./config.json");
+
 require("dotenv").config();
 
 // Require routes
@@ -8,7 +11,7 @@ const routes = require("./routes");
 // Mongoose setup
 mongoose
   .connect(process.env.MONGO_URL, {
-    useNewUrlParser: true,
+    ...mongooseConfig,
     dbName: process.env.MONGO_DB_NAME,
   })
   .then(() => console.log("MongoDB Connected"))

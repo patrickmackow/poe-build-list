@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const { mongooseConfig } = require("../config.json");
+
 const Build = require("../models/Build");
 const assert = require("assert");
 
@@ -36,7 +38,7 @@ function arrayEquals(a, b) {
 async function updateBuildTags() {
   // Connect to db
   await mongoose.connect(process.env.MONGO_URL, {
-    useNewUrlParser: true,
+    ...mongooseConfig,
     dbName: process.env.MONGO_DB_NAME,
   });
 
