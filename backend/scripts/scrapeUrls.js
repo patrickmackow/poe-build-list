@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Build = require("../models/Build");
 const Config = require("../models/Config");
-require("dotenv").config();
+require("dotenv").config({ path: "../.env" });
 
 const { scraper } = require("../lib/scraper");
 

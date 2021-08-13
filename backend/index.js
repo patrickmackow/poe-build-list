@@ -1,7 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
 require("dotenv").config();
-const path = require("path");
 
 // Require routes
 const routes = require("./routes");
@@ -14,8 +13,6 @@ mongoose
   })
   .then(() => console.log("MongoDB Connected"))
   .catch((err) => console.log(err));
-
-// mongoose.Promise = Promise;
 
 const app = express();
 const port = 3001;
