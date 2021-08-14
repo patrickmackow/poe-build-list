@@ -21,7 +21,6 @@ function Home() {
 
   React.useEffect(() => {
     fetchWithTimeout("builds")
-      .then((res) => res.json())
       .then((data) => {
         setLoading(false);
         setError(false);

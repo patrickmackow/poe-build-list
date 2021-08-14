@@ -12,13 +12,14 @@ function useFetchWithTimeout(ms) {
         }, ms);
 
         fetch(`/api/${url}`, { signal: abortController.signal }).then(
-          (res) => {
+          async (response) => {
             clearTimeout(timeout);
-            resolve(res);
+            const data = await response.json();
+            resolve(data);
           },
-          (err) => {
+          (error) => {
             clearTimeout(timeout);
-            reject(err);
+            reject(error);
           }
         );
       });
