@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import styled from "styled-components";
 
 import SearchForm from "components/SearchForm";
@@ -7,90 +7,74 @@ import ClassNav from "components/ClassNav";
 import fetchWithTimeout from "fetchWithTimeout";
 import { Container, Error, Loader } from "components/lib";
 
-class Home extends Component {
-  constructor(props) {
-    super(props);
+function Home() {
+  const [loading, setLoading] = React.useState(true);
+  const [builds, setBuilds] = React.useState([]);
+  const [open, setOpen] = React.useState(false);
+  const [error, setError] = React.useState(false);
 
-    this.abortController = new AbortController();
+  const { current: abortController } = React.useRef(new AbortController());
 
-    this.state = {
-      loading: true,
-      builds: [],
-      open: false,
-      error: false,
-    };
-
-    this.toggleDropdown = this.toggleDropdown.bind(this);
-  }
-
-  componentDidMount() {
+  React.useEffect(() => {
     document.title = "PoE Build List";
+  }, []);
 
-    fetchWithTimeout("/api/builds", this.abortController, 5000)
+  React.useEffect(() => {
+    fetchWithTimeout("/api/builds", abortController, 5000)
       .then((res) => res.json())
       .then((data) => {
-        this.setState({
-          loading: false,
-          error: false,
-          builds: data.slice(0, 10),
-        });
+        setLoading(false);
+        setError(false);
+        setBuilds(data.slice(0, 10));
       })
       .catch((err) => {
-        this.setState({
-          loading: false,
-          error: true,
-        });
+        setLoading(false);
+        setError(err);
       });
+  }, [abortController, setBuilds, setError, setLoading]);
+
+  function toggleDropdown(event) {
+    event.preventDefault();
+    setOpen(!open);
   }
 
-  componentWillUnmount() {
-    this.abortController.abort();
-  }
-
-  toggleDropdown(e) {
-    e.preventDefault();
-    this.setState({ open: !this.state.open });
-  }
-
-  render() {
-    let builds;
-    if (this.state.loading) {
-      builds = (
-        <LoaderContainer>
-          <Loader />;
-        </LoaderContainer>
-      );
-    } else if (this.state.error) {
-      builds = (
-        <StyledError>Failed to load builds, refresh to try again.</StyledError>
-      );
-    } else {
-      builds = (
-        <React.Fragment>
-          <StyledSubTitle>Most Popular Builds</StyledSubTitle>
-          <BuildsTable builds={this.state.builds} />
-        </React.Fragment>
-      );
-    }
-
-    return (
-      <Container>
-        <Title>
-          Path of Exile
-          <br />
-          Build List
-        </Title>
-        <Search>
-          <SearchForm />
-        </Search>
-        <ClassListToggle open={this.state.open} onClick={this.toggleDropdown}>
-          Explore by class
-        </ClassListToggle>
-        <StyledClassNav open={this.state.open} />
-        {builds}
-      </Container>
+  let children;
+  if (loading) {
+    children = (
+      <LoaderContainer>
+        <Loader />;
+      </LoaderContainer>
+    );
+  } else if (error) {
+    children = (
+      <StyledError>Failed to load builds, refresh to try again.</StyledError>
+    );
+  } else {
+    children = (
+      <React.Fragment>
+        <StyledSubTitle>Most Popular Builds</StyledSubTitle>
+        <BuildsTable builds={builds} />
+      </React.Fragment>
     );
   }
+
+  return (
+    <Container>
+      <Title>
+        Path of Exile
+        <br />
+        Build List
+      </Title>
+      <Search>
+        <SearchForm />
+      </Search>
+      <ClassListToggle open={open} onClick={toggleDropdown}>
+        Explore by class
+      </ClassListToggle>
+      <StyledClassNav open={open} />
+      {children}
+    </Container>
+  );
 }
 
 const Title = styled.h1`
