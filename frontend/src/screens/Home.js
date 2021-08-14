@@ -4,8 +4,8 @@ import styled from "styled-components";
 import SearchForm from "components/SearchForm";
 import BuildsTable from "components/BuildsTable";
 import ClassNav from "components/ClassNav";
-import fetchWithTimeout from "fetchWithTimeout";
 import { Container, Error, Loader } from "components/lib";
+import { useFetchWithTimeout } from "utils/fetch";
 
 function Home() {
   const [loading, setLoading] = React.useState(true);
@@ -13,14 +13,14 @@ function Home() {
   const [open, setOpen] = React.useState(false);
   const [error, setError] = React.useState(false);
 
-  const { current: abortController } = React.useRef(new AbortController());
-
   React.useEffect(() => {
     document.title = "PoE Build List";
   }, []);
 
+  const { fetchWithTimeout } = useFetchWithTimeout(5000);
+
   React.useEffect(() => {
-    fetchWithTimeout("/api/builds", abortController, 5000)
+    fetchWithTimeout("builds")
       .then((res) => res.json())
       .then((data) => {
         setLoading(false);
@@ -31,7 +31,7 @@ function Home() {
         setLoading(false);
         setError(err);
       });
-  }, [abortController, setBuilds, setError, setLoading]);
+  }, [fetchWithTimeout, setBuilds, setError, setLoading]);
 
   function toggleDropdown(event) {
     event.preventDefault();
