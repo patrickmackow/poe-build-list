@@ -1,53 +1,40 @@
-import React, { Component } from "react";
+import React from "react";
 import BuildsTable from "components/BuildsTable";
 import VersionFilter from "components/filters/VersionFilter";
 import NavBar from "components/NavBar";
 import styled from "styled-components";
 import FilterContainer from "components/filters/FilterContainer";
-import fetchWithTimeout from "fetchWithTimeout";
+import { useFetchWithTimeout } from "utils/fetch";
 import SortSelect from "components/SortSelect";
-import { Container, Error, Loader } from "components/lib";
+import { CentredLoader, Container, Error } from "components/lib";
+import { useParams } from "react-router-dom";
 
-class ClassBuilds extends Component {
-  constructor(props) {
-    super(props);
+function ClassBuilds() {
+  const [loading, setLoading] = React.useState(true);
+  const [builds, setBuilds] = React.useState([]);
+  const [error, setError] = React.useState(false);
+  const [version, setVersion] = React.useState("");
+  const [latestVersion, setLatestVersion] = React.useState("");
+  const [sort, setSort] = React.useState("latest");
+  const { gameClass } = useParams();
 
-    this.abortController = new AbortController();
+  const handleVersionChange = React.useCallback((event) => {
+    console.log(event);
+    setVersion(event.target.value);
+  }, []);
 
-    this.state = {
-      loading: true,
-      builds: [],
-      version: "",
-      latestVersion: "",
-      error: false,
-      sort: "latest",
-    };
+  const handleSortChange = React.useCallback((event) => {
+    setSort(event.target.value);
+  }, []);
 
-    this.handleVersionChange = this.handleVersionChange.bind(this);
-    this.handleSortChange = this.handleSortChange.bind(this);
+  function filterBuilds(builds) {
+    // Default filter is latest patch and has at least 1 tag
+    return builds.filter(
+      (build) => build.version === version && build.generatedTags.length
+    );
   }
 
-  componentDidMount() {
-    this.setTitle(this.props.match.params.gameClass);
-    this.fetchData();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (
-      prevProps.match.params.gameClass !== this.props.match.params.gameClass
-    ) {
-      this.setTitle(this.props.match.params.gameClass);
-      this.setState({
-        loading: true,
-        version: "",
-        builds: [],
-        sort: "latest",
-      });
-      this.fetchData();
-    }
-  }
-
-  setTitle(title) {
+  function setTitle(title) {
     const transformedTitle = ((title) => {
       return title
         .split(" ")
@@ -60,110 +47,75 @@ class ClassBuilds extends Component {
     document.title = transformedTitle + " | PoE Build List";
   }
 
-  fetchData() {
-    fetchWithTimeout("/api/version", this.abortController, 5000)
-      .then((res) => res.json())
-      .then(({ version }) => {
-        this.setState({ latestVersion: version, version });
-      });
+  React.useEffect(() => {
+    setTitle(gameClass);
+  }, [gameClass]);
 
-    fetchWithTimeout(
-      "/api/builds/" + this.props.match.params.gameClass,
-      this.abortController,
-      5000
-    )
-      .then((res) => res.json())
+  const { fetchWithTimeout } = useFetchWithTimeout(5000);
+
+  React.useEffect(() => {
+    fetchWithTimeout("version").then(({ version }) => {
+      setVersion(version);
+      setLatestVersion(version);
+    });
+  }, [fetchWithTimeout]);
+
+  React.useEffect(() => {
+    fetchWithTimeout(`builds/${gameClass}`)
       .then((builds) => {
-        this.setState({
-          loading: false,
-          error: false,
-          builds,
-        });
+        setLoading(false);
+        setError(false);
+        setBuilds(builds);
       })
       .catch((err) => {
-        this.setState({
-          loading: false,
-          error: true,
-        });
+        setLoading(false);
+        setError(err);
       });
-  }
+  }, [fetchWithTimeout, gameClass]);
 
-  componentWillUnmount() {
-    this.abortController.abort();
-  }
+  let buildsView;
 
-  handleVersionChange(e) {
-    this.setState({ version: e.target.value });
-  }
+  if (loading) {
+    buildsView = <CentredLoader />;
+  } else if (error) {
+    buildsView = <Error>Failed to load builds, refresh to try again.</Error>;
+  } else {
+    const filteredBuilds = filterBuilds(builds);
 
-  filterBuilds(builds) {
-    // Default filter is latest patch and has at least 1 tag
-    return builds.filter((build) => {
-      if (build.version === this.state.version && build.generatedTags.length) {
-        return true;
-      }
-      return false;
-    });
-  }
-
-  handleSortChange(e) {
-    this.setState({ sort: e.target.value });
-  }
-
-  render() {
-    const { loading, builds, error } = this.state;
-
-    let buildsView;
-
-    if (loading) {
-      buildsView = (
-        <LoaderContainer data-testid="loading">
-          <Loader />
-        </LoaderContainer>
-      );
-    } else if (error) {
-      buildsView = <Error>Failed to load builds, refresh to try again.</Error>;
+    let table;
+    if (filteredBuilds.length) {
+      table = <BuildsTable builds={filteredBuilds} sort={sort} />;
     } else {
-      const filteredBuilds = this.filterBuilds(builds);
-
-      let table;
-      if (filteredBuilds.length) {
-        table = <BuildsTable builds={filteredBuilds} sort={this.state.sort} />;
-      } else {
-        table = <Error>No builds found</Error>;
-      }
-
-      buildsView = (
-        <StyledClassBuilds>
-          <FlexboxRow>
-            <FilterContainer>
-              <VersionFilter
-                value={this.state.version}
-                builds={builds}
-                onChange={this.handleVersionChange}
-                latestVersion={this.state.latestVersion}
-              />
-            </FilterContainer>
-            <SortSelect
-              value={this.state.sort}
-              onChange={this.handleSortChange}
-            />
-          </FlexboxRow>
-          {table}
-        </StyledClassBuilds>
-      );
+      table = <Error>No builds found</Error>;
     }
 
-    return (
-      <React.Fragment>
-        <NavBar />
-        <Container>
-          <Title>{this.props.match.params.gameClass}</Title>
-          {buildsView}
-        </Container>
-      </React.Fragment>
+    buildsView = (
+      <StyledClassBuilds>
+        <FlexboxRow>
+          <FilterContainer>
+            <VersionFilter
+              value={version}
+              builds={builds}
+              onChange={handleVersionChange}
+              latestVersion={latestVersion}
+            />
+          </FilterContainer>
+          <SortSelect value={sort} onChange={handleSortChange} />
+        </FlexboxRow>
+        {table}
+      </StyledClassBuilds>
     );
   }
+
+  return (
+    <React.Fragment>
+      <NavBar />
+      <Container>
+        <Title>{gameClass}</Title>
+        {buildsView}
+      </Container>
+    </React.Fragment>
+  );
 }
 
 const Title = styled.h1`
@@ -173,18 +125,6 @@ const Title = styled.h1`
 const StyledClassBuilds = styled.div`
   .game-class {
     display: none;
-  }
-`;
-
-const LoaderContainer = styled.div`
-  margin-top: 7em;
-
-  @media (min-width: 40em) {
-    margin-top: 10em;
-  }
-
-  div {
-    margin: 0 auto;
   }
 `;
 
