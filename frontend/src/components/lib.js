@@ -29,4 +29,24 @@ const Loader = styled.div`
   animation: ${spin} 1.5s linear infinite;
 `;
 
-export { Container, Error, Loader };
+const LoaderContainer = styled.div`
+  margin-top: 7em;
+
+  @media (min-width: 40em) {
+    margin-top: 10em;
+  }
+
+  div {
+    margin: 0 auto;
+  }
+`;
+
+function CentredLoader() {
+  return (
+    <LoaderContainer>
+      <Loader />
+    </LoaderContainer>
+  );
+}
+
+export { Container, Error, Loader, CentredLoader };

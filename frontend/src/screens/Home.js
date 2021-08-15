@@ -4,7 +4,7 @@ import styled from "styled-components";
 import SearchForm from "components/SearchForm";
 import BuildsTable from "components/BuildsTable";
 import ClassNav from "components/ClassNav";
-import { Container, Error, Loader } from "components/lib";
+import { CentredLoader, Container, Error } from "components/lib";
 import { useFetchWithTimeout } from "utils/fetch";
 
 function Home() {
@@ -30,20 +30,15 @@ function Home() {
         setLoading(false);
         setError(err);
       });
-  }, [fetchWithTimeout, setBuilds, setError, setLoading]);
+  }, [fetchWithTimeout]);
 
-  function toggleDropdown(event) {
-    event.preventDefault();
+  function toggleDropdown() {
     setOpen(!open);
   }
 
   let children;
   if (loading) {
-    children = (
-      <LoaderContainer>
-        <Loader />;
-      </LoaderContainer>
-    );
+    children = <CentredLoader />;
   } else if (error) {
     children = (
       <StyledError>Failed to load builds, refresh to try again.</StyledError>
@@ -82,18 +77,6 @@ const Title = styled.h1`
 
 const StyledSubTitle = styled.h3`
   color: #222;
-`;
-
-const LoaderContainer = styled.div`
-  margin-top: 7em;
-
-  @media (min-width: 40em) {
-    margin-top: 10em;
-  }
-
-  div {
-    margin: 0 auto;
-  }
 `;
 
 const Search = styled.div`
