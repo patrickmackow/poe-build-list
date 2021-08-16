@@ -7,7 +7,7 @@ class AutoSuggest extends Component {
     this.activeRef = React.createRef();
 
     this.state = {
-      active: undefined
+      active: undefined,
     };
 
     this.handleKeyDown = this.handleKeyDown.bind(this);
@@ -76,7 +76,7 @@ class AutoSuggest extends Component {
         this.setState({
           active:
             this.filterDataSrcByValue(this.props.dataSrc, this.props.value)
-              .length - 1
+              .length - 1,
         });
       } else {
         this.setState({ active: this.state.active - 1 });
@@ -105,21 +105,21 @@ class AutoSuggest extends Component {
 
   handleClick(e) {
     e.preventDefault();
-    this.props.onChange("button", e.target.value);
+    this.props.onChange("button", e.currentTarget.value);
   }
 
   filterDataSrcByValue(dataSrc, value) {
     // TODO: Memoize this?
     // TODO: Arguments are always the same
-    const escapeValue = v => {
+    const escapeValue = (v) => {
       return v.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
     };
 
     // Check if dataSrc is undefined
     return dataSrc
       ? dataSrc
-          .map(tag => tag.match(new RegExp(escapeValue(value), "i")))
-          .filter(tag => tag !== null)
+          .map((tag) => tag.match(new RegExp(escapeValue(value), "i")))
+          .filter((tag) => tag !== null)
       : [];
   }
 
@@ -152,7 +152,7 @@ class AutoSuggest extends Component {
             active={active}
             ref={active ? this.activeRef : undefined}
             onClick={this.handleClick}
-            onMouseDown={e => e.preventDefault()}
+            onMouseDown={(e) => e.preventDefault()}
             data-testid={"suggestion" + (active ? "-active" : "")}
           >
             {formattedTag}
@@ -165,7 +165,7 @@ class AutoSuggest extends Component {
         <Suggestion
           data-testid="suggestion"
           disabled
-          onClick={e => e.preventDefault()}
+          onClick={(e) => e.preventDefault()}
         >
           No suggestions found
         </Suggestion>
@@ -198,12 +198,12 @@ const Suggestion = styled.button`
   text-align: left;
   border: 0;
   padding: 0.5em 1em;
-  background-color: ${props =>
+  background-color: ${(props) =>
     props.active ? "hsl(27.5, 25%, 35%)" : "white"};
-  color: ${props => (props.active ? "white" : "inherit")};
+  color: ${(props) => (props.active ? "white" : "inherit")};
 
   &:hover {
-    background-color: ${props => (props.disabled ? "" : "silver")};
+    background-color: ${(props) => (props.disabled ? "" : "silver")};
     color: inherit;
   }
 `;
