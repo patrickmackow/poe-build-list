@@ -1,55 +1,28 @@
-import React, { Component } from "react";
+import React from "react";
 import BuildsTable from "components/BuildsTable";
 import VersionFilter from "components/filters/VersionFilter";
 import ClassFilter from "components/filters/ClassFilter";
 import NavBar from "components/NavBar";
 import styled from "styled-components";
 import FilterContainer from "components/filters/FilterContainer";
-import fetchWithTimeout from "fetchWithTimeout";
 import SortSelect from "components/SortSelect";
-import { Container, Error, Loader } from "components/lib";
+import { Container, Error, CentredLoader } from "components/lib";
+import { useParams } from "react-router-dom";
+import { useFetchWithTimeout } from "utils/fetch";
 
-class TagBuilds extends Component {
-  constructor(props) {
-    super(props);
+function TagBuilds() {
+  const [loading, setLoading] = React.useState(true);
+  const [builds, setBuilds] = React.useState([]);
+  const [version, setVersion] = React.useState("");
+  const [latestVersion, setLatestVersion] = React.useState("");
+  const [gameClass, setGameClass] = React.useState("All");
+  const [error, setError] = React.useState(false);
+  const [sort, setSort] = React.useState("latest");
 
-    this.abortController = new AbortController();
+  const { tag } = useParams();
+  const { fetchWithTimeout } = useFetchWithTimeout(5000);
 
-    this.state = {
-      loading: true,
-      builds: [],
-      version: "",
-      latestVersion: "",
-      class: "All",
-      error: false,
-      sort: "latest",
-    };
-
-    this.handleVersionChange = this.handleVersionChange.bind(this);
-    this.handleClassChange = this.handleClassChange.bind(this);
-    this.handleSortChange = this.handleSortChange.bind(this);
-  }
-
-  componentDidMount() {
-    this.setTitle(this.props.match.params.tag);
-    this.fetchData();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.match.params.tag !== this.props.match.params.tag) {
-      this.setTitle(this.props.match.params.tag);
-      this.setState({
-        loading: true,
-        class: "All",
-        version: "",
-        builds: [],
-        sort: "latest",
-      });
-      this.fetchData();
-    }
-  }
-
-  setTitle(title) {
+  function setTitle(title) {
     const transformedTitle = ((title) => {
       return title
         .split(" ")
@@ -61,61 +34,50 @@ class TagBuilds extends Component {
 
     document.title = transformedTitle + " | PoE Build List";
   }
+  React.useEffect(() => {
+    setTitle(tag);
+  }, [tag]);
 
-  fetchData() {
-    fetchWithTimeout("/api/version", this.abortController, 5000)
-      .then((res) => res.json())
-      .then(({ version }) => {
-        this.setState({ latestVersion: version, version });
-      });
-
-    fetchWithTimeout(
-      "/api/tags/" + this.props.match.params.tag,
-      this.abortController,
-      5000
-    )
-      .then((res) => res.json())
-      .then((builds) =>
-        this.setState({
-          builds,
-          loading: false,
-          error: false,
-        })
-      )
-      .catch((err) => {
-        this.setState({
-          loading: false,
-          error: true,
-        });
-      });
-  }
-
-  componentWillUnmount() {
-    this.abortController.abort();
-  }
-
-  handleVersionChange(e) {
-    this.setState({
-      version: e.target.value,
-      class: "All",
+  React.useEffect(() => {
+    fetchWithTimeout("version").then(({ version }) => {
+      setLatestVersion(version);
+      setVersion(version);
     });
-  }
+  }, [fetchWithTimeout]);
 
-  handleClassChange(e) {
-    this.setState({ class: e.target.value });
-  }
+  React.useEffect(() => {
+    fetchWithTimeout(`tags/${tag}`)
+      .then((builds) => {
+        setLoading(false);
+        setBuilds(builds);
+        setError(false);
+      })
+      .catch((err) => {
+        setLoading(false);
+        setError(err);
+      });
+  }, [fetchWithTimeout, tag]);
 
-  handleSortChange(e) {
-    this.setState({ sort: e.target.value });
-  }
+  const handleVersionChange = React.useCallback((event) => {
+    setVersion(event.target.value);
+    setGameClass("All");
+  }, []);
 
-  filterBuilds(builds) {
+  const handleClassChange = React.useCallback((event) => {
+    setGameClass(event.target.value);
+  }, []);
+
+  const handleSortChange = React.useCallback((event) => {
+    setSort(event.target.value);
+  }, []);
+
+  function filterBuilds(builds) {
     const filter = (builds, ignoreVersion = false) => {
       if (ignoreVersion) {
-        return this.filterBuildsByClass(builds);
+        return filterBuildsByClass(builds);
       } else {
-        const filtered = this.filterBuildsByVersion(builds);
-        return this.filterBuildsByClass(filtered);
+        const filtered = filterBuildsByVersion(builds);
+        return filterBuildsByClass(filtered);
       }
     };
 
@@ -128,12 +90,9 @@ class TagBuilds extends Component {
     }
   }
 
-  filterBuildsByClass(builds) {
+  function filterBuildsByClass(builds) {
     const filtered = builds.filter((build) => {
-      if (
-        build.gameClass === this.state.class.toLowerCase() ||
-        this.state.class === "All"
-      ) {
+      if (build.gameClass === gameClass.toLowerCase() || gameClass === "All") {
         return true;
       }
 
@@ -143,9 +102,9 @@ class TagBuilds extends Component {
     return filtered;
   }
 
-  filterBuildsByVersion(builds) {
+  function filterBuildsByVersion(builds) {
     const filtered = builds.filter((build) => {
-      if (build.version === this.state.version) {
+      if (build.version === version) {
         return true;
       }
 
@@ -155,81 +114,57 @@ class TagBuilds extends Component {
     return filtered;
   }
 
-  render() {
-    const { loading, builds, error } = this.state;
-    const { tag } = this.props.match.params;
+  let buildsView;
+  if (loading) {
+    buildsView = <CentredLoader />;
+  } else if (error) {
+    buildsView = <Error>Failed to load builds, refresh to try again.</Error>;
+  } else {
+    const filteredBuilds = filterBuilds(builds);
 
-    let buildsView;
-    if (loading) {
-      buildsView = (
-        <LoaderContainer data-testid="loading">
-          <Loader />
-        </LoaderContainer>
-      );
-    } else if (error) {
-      buildsView = <Error>Failed to load builds, refresh to try again.</Error>;
+    let table;
+    if (filteredBuilds.length) {
+      table = <BuildsTable builds={filteredBuilds} sort={sort} />;
     } else {
-      const filteredBuilds = this.filterBuilds(builds);
-
-      let table;
-      if (filteredBuilds.length) {
-        table = <BuildsTable builds={filteredBuilds} sort={this.state.sort} />;
-      } else {
-        table = <Error>No builds found</Error>;
-      }
-
-      buildsView = (
-        <React.Fragment>
-          <FlexboxRow>
-            <FilterContainer>
-              <VersionFilter
-                value={this.state.version}
-                builds={builds}
-                onChange={this.handleVersionChange}
-                latestVersion={this.state.latestVersion}
-              />
-              <ClassFilter
-                value={this.state.class}
-                builds={this.filterBuildsByVersion(builds)}
-                onChange={this.handleClassChange}
-              />
-            </FilterContainer>
-            <SortSelect
-              value={this.state.sort}
-              onChange={this.handleSortChange}
-            />
-          </FlexboxRow>
-          {table}
-        </React.Fragment>
-      );
+      table = <Error>No builds found</Error>;
     }
 
-    return (
+    buildsView = (
       <React.Fragment>
-        <NavBar />
-        <Container>
-          <Title>{tag}</Title>
-          {buildsView}
-        </Container>
+        <FlexboxRow>
+          <FilterContainer>
+            <VersionFilter
+              value={version}
+              builds={builds}
+              onChange={handleVersionChange}
+              latestVersion={latestVersion}
+            />
+            <ClassFilter
+              value={gameClass}
+              builds={filterBuildsByVersion(builds)}
+              onChange={handleClassChange}
+            />
+          </FilterContainer>
+          <SortSelect value={sort} onChange={handleSortChange} />
+        </FlexboxRow>
+        {table}
       </React.Fragment>
     );
   }
+
+  return (
+    <React.Fragment>
+      <NavBar />
+      <Container>
+        <Title>{tag}</Title>
+        {buildsView}
+      </Container>
+    </React.Fragment>
+  );
 }
 
 const Title = styled.h1`
   text-transform: capitalize;
-`;
-
-const LoaderContainer = styled.div`
-  margin-top: 7em;
-
-  @media (min-width: 40em) {
-    margin-top: 10em;
-  }
-
-  div {
-    margin: 0 auto;
-  }
 `;
 
 const FlexboxRow = styled.div`
