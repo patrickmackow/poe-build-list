@@ -1,13 +1,15 @@
 import React from "react";
+import styled from "styled-components";
+import { useParams } from "react-router-dom";
+
 import BuildsTable from "components/BuildsTable";
 import VersionFilter from "components/filters/VersionFilter";
 import NavBar from "components/NavBar";
-import styled from "styled-components";
 import FilterContainer from "components/filters/FilterContainer";
 import { useFetchWithTimeout } from "utils/fetch";
 import SortSelect from "components/SortSelect";
 import { CentredLoader, Container, Error } from "components/lib";
-import { useParams } from "react-router-dom";
+import { setTitle } from "utils/misc";
 
 function ClassBuilds() {
   const [loading, setLoading] = React.useState(true);
@@ -32,19 +34,6 @@ function ClassBuilds() {
     return builds.filter(
       (build) => build.version === version && build.generatedTags.length
     );
-  }
-
-  function setTitle(title) {
-    const transformedTitle = ((title) => {
-      return title
-        .split(" ")
-        .map((t) => {
-          return t[0].toUpperCase() + t.slice(1);
-        })
-        .join(" ");
-    })(title);
-
-    document.title = transformedTitle + " | PoE Build List";
   }
 
   React.useEffect(() => {

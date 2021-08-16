@@ -1,14 +1,16 @@
 import React from "react";
+import styled from "styled-components";
+import { useParams } from "react-router-dom";
+
 import BuildsTable from "components/BuildsTable";
 import VersionFilter from "components/filters/VersionFilter";
 import ClassFilter from "components/filters/ClassFilter";
 import NavBar from "components/NavBar";
-import styled from "styled-components";
 import FilterContainer from "components/filters/FilterContainer";
 import SortSelect from "components/SortSelect";
 import { Container, Error, CentredLoader } from "components/lib";
-import { useParams } from "react-router-dom";
 import { useFetchWithTimeout } from "utils/fetch";
+import { setTitle } from "utils/misc";
 
 function TagBuilds() {
   const [loading, setLoading] = React.useState(true);
@@ -22,18 +24,6 @@ function TagBuilds() {
   const { tag } = useParams();
   const { fetchWithTimeout } = useFetchWithTimeout(5000);
 
-  function setTitle(title) {
-    const transformedTitle = ((title) => {
-      return title
-        .split(" ")
-        .map((t) => {
-          return t[0].toUpperCase() + t.slice(1);
-        })
-        .join(" ");
-    })(title);
-
-    document.title = transformedTitle + " | PoE Build List";
-  }
   React.useEffect(() => {
     setTitle(tag);
   }, [tag]);
