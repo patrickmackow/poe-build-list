@@ -9,44 +9,32 @@ import NavBar from "components/NavBar";
 import FilterContainer from "components/filters/FilterContainer";
 import SortSelect from "components/SortSelect";
 import { Container, Error, CentredLoader } from "components/lib";
-import { useFetchWithTimeout } from "utils/fetch";
 import { setTitle } from "utils/misc";
+import { useLatestVersion, useTagBuilds } from "utils/api";
 
 function TagBuilds() {
-  const [loading, setLoading] = React.useState(true);
-  const [builds, setBuilds] = React.useState([]);
-  const [version, setVersion] = React.useState("");
-  const [latestVersion, setLatestVersion] = React.useState("");
-  const [gameClass, setGameClass] = React.useState("All");
-  const [error, setError] = React.useState(false);
-  const [sort, setSort] = React.useState("latest");
-
   const { tag } = useParams();
-  const fetchWithTimeout = useFetchWithTimeout(5000);
+  const {
+    data: latestVersion,
+    isLoading: loadingLatestVersion,
+    isError: errorLatestVersion,
+  } = useLatestVersion();
+  const {
+    data: builds,
+    isLoading: loadingTagBuilds,
+    isError: errorTagBuilds,
+  } = useTagBuilds(tag);
+
+  const isLoading = loadingLatestVersion || loadingTagBuilds;
+  const isError = errorLatestVersion || errorTagBuilds;
+
+  const [version, setVersion] = React.useState("");
+  const [gameClass, setGameClass] = React.useState("All");
+  const [sort, setSort] = React.useState("latest");
 
   React.useEffect(() => {
     setTitle(tag);
   }, [tag]);
-
-  React.useEffect(() => {
-    fetchWithTimeout("version").then(({ version }) => {
-      setLatestVersion(version);
-      setVersion(version);
-    });
-  }, [fetchWithTimeout]);
-
-  React.useEffect(() => {
-    fetchWithTimeout(`tags/${tag}`)
-      .then((builds) => {
-        setLoading(false);
-        setBuilds(builds);
-        setError(false);
-      })
-      .catch((err) => {
-        setLoading(false);
-        setError(err);
-      });
-  }, [fetchWithTimeout, tag]);
 
   const handleVersionChange = React.useCallback((event) => {
     setVersion(event.target.value);
@@ -105,9 +93,9 @@ function TagBuilds() {
   }
 
   let buildsView;
-  if (loading) {
+  if (isLoading) {
     buildsView = <CentredLoader />;
-  } else if (error) {
+  } else if (isError) {
     buildsView = <Error>Failed to load builds, refresh to try again.</Error>;
   } else {
     const filteredBuilds = filterBuilds(builds);

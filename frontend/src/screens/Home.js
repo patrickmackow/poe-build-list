@@ -5,41 +5,25 @@ import SearchForm from "components/SearchForm";
 import BuildsTable from "components/BuildsTable";
 import ClassNav from "components/ClassNav";
 import { CentredLoader, Container, Error } from "components/lib";
-import { useFetchWithTimeout } from "utils/fetch";
+import { useBuilds } from "utils/api";
 
 function Home() {
-  const [loading, setLoading] = React.useState(true);
-  const [builds, setBuilds] = React.useState([]);
+  const { data, isLoading, isError } = useBuilds();
+  const builds = React.useMemo(() => data && data.slice(0, 10), [data]);
   const [open, setOpen] = React.useState(false);
-  const [error, setError] = React.useState(false);
 
   React.useEffect(() => {
     document.title = "PoE Build List";
   }, []);
-
-  const fetchWithTimeout = useFetchWithTimeout(5000);
-
-  React.useEffect(() => {
-    fetchWithTimeout("builds")
-      .then((data) => {
-        setLoading(false);
-        setError(false);
-        setBuilds(data.slice(0, 10));
-      })
-      .catch((err) => {
-        setLoading(false);
-        setError(err);
-      });
-  }, [fetchWithTimeout]);
 
   function toggleDropdown() {
     setOpen(!open);
   }
 
   let children;
-  if (loading) {
+  if (isLoading) {
     children = <CentredLoader />;
-  } else if (error) {
+  } else if (isError) {
     children = (
       <StyledError>Failed to load builds, refresh to try again.</StyledError>
     );
