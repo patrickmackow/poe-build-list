@@ -27,7 +27,7 @@ function useFetchWithTimeout(ms) {
     [abortController, ms]
   );
 
-  return { fetchWithTimeout };
+  return fetchWithTimeout;
 }
 
 export { useFetchWithTimeout };

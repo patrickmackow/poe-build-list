@@ -78,7 +78,7 @@ test("fetchWithTimeout should return data", async () => {
   );
 
   const { result } = renderHook(() => useFetchWithTimeout(5000));
-  const { fetchWithTimeout } = result.current;
+  const fetchWithTimeout = result.current;
   const data = await fetchWithTimeout("builds");
   expect(data).toStrictEqual(builds);
 });
@@ -94,7 +94,7 @@ test("fetchWithTimeout should reject after time has elapsed", async () => {
   );
 
   const { result } = renderHook(() => useFetchWithTimeout(5000));
-  const { fetchWithTimeout } = result.current;
+  const fetchWithTimeout = result.current;
   const promise = fetchWithTimeout("builds");
 
   jest.runAllTimers();

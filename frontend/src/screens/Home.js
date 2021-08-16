@@ -17,7 +17,7 @@ function Home() {
     document.title = "PoE Build List";
   }, []);
 
-  const { fetchWithTimeout } = useFetchWithTimeout(5000);
+  const fetchWithTimeout = useFetchWithTimeout(5000);
 
   React.useEffect(() => {
     fetchWithTimeout("builds")

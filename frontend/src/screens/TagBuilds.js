@@ -22,7 +22,7 @@ function TagBuilds() {
   const [sort, setSort] = React.useState("latest");
 
   const { tag } = useParams();
-  const { fetchWithTimeout } = useFetchWithTimeout(5000);
+  const fetchWithTimeout = useFetchWithTimeout(5000);
 
   React.useEffect(() => {
     setTitle(tag);

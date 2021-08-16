@@ -40,7 +40,7 @@ function ClassBuilds() {
     setTitle(gameClass);
   }, [gameClass]);
 
-  const { fetchWithTimeout } = useFetchWithTimeout(5000);
+  const fetchWithTimeout = useFetchWithTimeout(5000);
 
   React.useEffect(() => {
     fetchWithTimeout("version").then(({ version }) => {
