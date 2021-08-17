@@ -10,7 +10,7 @@ class NavBar extends Component {
 
     this.state = {
       isClassOpen: false,
-      isSearchOpen: false
+      isSearchOpen: false,
     };
 
     this.searchInputRef = React.createRef();
@@ -22,14 +22,14 @@ class NavBar extends Component {
   toggleClass() {
     this.setState({
       isClassOpen: !this.state.isClassOpen,
-      isSearchOpen: false
+      isSearchOpen: false,
     });
   }
 
   toggleSearch() {
     this.setState({
       isSearchOpen: !this.state.isSearchOpen,
-      isClassOpen: false
+      isClassOpen: false,
     });
 
     // Input won't focus until it is visible, so timeout is used
@@ -41,7 +41,7 @@ class NavBar extends Component {
   closeDrawers() {
     this.setState({
       isSearchOpen: false,
-      isClassOpen: false
+      isClassOpen: false,
     });
   }
 
@@ -71,7 +71,7 @@ class NavBar extends Component {
         <SearchContainer>
           <SearchLabel onClick={this.toggleSearch}>Search</SearchLabel>
           <SearchDrawer isSearchOpen={this.state.isSearchOpen}>
-            <SearchForm searchInputRef={this.searchInputRef} />
+            <SearchForm ref={this.searchInputRef} />
           </SearchDrawer>
         </SearchContainer>
       </StyledNavBar>
@@ -152,10 +152,10 @@ const ClassLabel = styled(Label)`
   ::after {
     position: absolute;
     right: 0.7em;
-    top: ${props => (props.isClassOpen ? "0.6em" : "1em")};
+    top: ${(props) => (props.isClassOpen ? "0.6em" : "1em")};
     content: "";
     border: 5px solid white;
-    border-color: ${props =>
+    border-color: ${(props) =>
       props.isClassOpen
         ? "transparent transparent white"
         : "white transparent transparent"};
@@ -175,7 +175,7 @@ const ClassLabel = styled(Label)`
 `;
 
 const ClassDrawer = styled(Drawer)`
-  display: ${props => (props.isClassOpen ? "block" : "none")};
+  display: ${(props) => (props.isClassOpen ? "block" : "none")};
 
   @media (min-width: 40em) {
     display: none;
@@ -197,7 +197,7 @@ const SearchLabel = styled(Label)`
 `;
 
 const SearchDrawer = styled(Drawer)`
-  display: ${props => (props.isSearchOpen ? "block" : "none")};
+  display: ${(props) => (props.isSearchOpen ? "block" : "none")};
   padding: 0.5em 1em;
 
   @media (min-width: 40em) {

@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import { useTags } from "utils/api";
 
-function SearchForm({ className }) {
+const SearchForm = React.forwardRef(({ className }, ref) => {
   const { data: tags } = useTags();
   const formattedTags = React.useMemo(
     () =>
@@ -62,6 +62,7 @@ function SearchForm({ className }) {
           onChange={(event) => handleChange("input", event.target.value)}
           onKeyDown={handleKeyDown}
           onBlur={() => setIsVisible(false)}
+          ref={ref}
         />
         <SearchButton>
           <I className="fa fa-search" aria-hidden="true" />
@@ -77,7 +78,7 @@ function SearchForm({ className }) {
       ) : null}
     </Form>
   );
-}
+});
 
 const Form = styled.form`
   position: relative;
