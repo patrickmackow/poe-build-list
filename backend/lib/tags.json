@@ -217,8 +217,8 @@
     "type": "int"
   },
   "rain of arrows": { "tags": ["rain of arrows", "roa"], "type": "dex" },
-  "raise spectre": { "tags": ["raise spectre"], "type": "int" },
-  "raise zombie": { "tags": ["raise zombie"], "type": "int" },
+  "spectres": { "tags": ["raise spectre, spectre"], "type": "int" },
+  "zombie": { "tags": ["raise zombie, zombie"], "type": "int" },
   "rallying cry": { "tags": ["rallying cry"], "type": "str" },
   "reap": { "tags": ["reap"], "type": "str" },
   "reaper": { "tags": ["summon reaper", "reaper"], "type": "int" },
