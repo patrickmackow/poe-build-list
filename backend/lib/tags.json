@@ -212,12 +212,12 @@
   "purity of lightning": { "tags": ["purity of lightning"], "type": "int" },
   "pyroclast mine": { "tags": ["pyroclast mine"], "type": "int" },
   "rage vortex": { "tags": ["rage vortex"], "type": "str" },
-  "raging spirit": {
-    "tags": ["summon raging spirit", "raging spirit"],
+  "summon raging spirit": {
+    "tags": ["summon raging spirit", "srs"],
     "type": "int"
   },
   "rain of arrows": { "tags": ["rain of arrows", "roa"], "type": "dex" },
-  "spectres": { "tags": ["raise spectre, spectre"], "type": "int" },
+  "spectre": { "tags": ["raise spectre, spectre"], "type": "int" },
   "zombie": { "tags": ["raise zombie, zombie"], "type": "int" },
   "rallying cry": { "tags": ["rallying cry"], "type": "str" },
   "reap": { "tags": ["reap"], "type": "str" },
