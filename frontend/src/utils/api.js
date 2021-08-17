@@ -23,4 +23,9 @@ function useTagBuilds(tag) {
   return useQuery(tag, () => fetchWithTimeout(`tags/${tag}`));
 }
 
-export { useLatestVersion, useBuilds, useClassBuilds, useTagBuilds };
+function useTags() {
+  const fetchWithTimeout = useFetchWithTimeout(5000);
+  return useQuery("tags", () => fetchWithTimeout(`tags`));
+}
+
+export { useLatestVersion, useBuilds, useClassBuilds, useTagBuilds, useTags };

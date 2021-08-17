@@ -1,109 +1,82 @@
-import React, { Component } from "react";
+import React from "react";
 import AutoSuggest from "./AutoSuggest";
 import styled from "styled-components";
-import { withRouter } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+import { useTags } from "utils/api";
 
-class SearchForm extends Component {
-  constructor(props) {
-    super(props);
+function SearchForm({ className }) {
+  const { data: tags } = useTags();
+  const formattedTags = React.useMemo(
+    () =>
+      tags
+        ? tags.map((d) =>
+            d
+              .split(" ")
+              .map((tag) => tag[0].toUpperCase() + tag.substr(1))
+              .join(" ")
+          )
+        : [],
+    [tags]
+  );
+  const [query, setQuery] = React.useState("");
+  const [isVisible, setIsVisible] = React.useState(false);
+  const history = useHistory();
 
-    this.abortController = new AbortController();
-
-    this.state = {
-      value: "",
-      autoSuggestVisible: false,
-      tags: []
-    };
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
-    this.focusSearchInput = this.focusSearchInput.bind(this);
-  }
-
-  componentDidMount() {
-    fetch("/api/tags", { signal: this.abortController.signal })
-      .then(res => res.json())
-      .then(data => {
-        const formattedTags = data.map(d =>
-          d
-            .split(" ")
-            .map(tag => tag[0].toUpperCase() + tag.substr(1))
-            .join(" ")
-        );
-        this.setState({ tags: formattedTags });
-      })
-      .catch();
-  }
-
-  componentWillUnmount() {
-    this.abortController.abort();
-  }
-
-  handleChange(element, value) {
+  function handleChange(element, value) {
     if (element === "button") {
-      this.setState({
-        value,
-        autoSuggestVisible: false
-      });
+      setQuery(value);
+      setIsVisible(false);
+      submit(value); // useState is asynchronous, so value needs to be passed to submit
     } else if (element === "input") {
-      this.setState({
-        value,
-        autoSuggestVisible: true
-      });
+      setQuery(value);
+      setIsVisible(true);
     }
   }
 
-  handleSubmit(e) {
-    e.preventDefault();
-    if (this.state.value === "") {
+  function submit(value = "") {
+    if (!query.length && !value.length) {
       return;
     }
-    this.props.history.push("/tag/" + this.state.value.toLowerCase());
+    setIsVisible(false);
+    history.push(`/tag/${value ? value.toLowerCase() : query.toLowerCase()}`);
   }
 
-  handleKeyDown(e) {
-    if (e.key === "Escape" && this.state.autoSuggestVisible) {
-      this.setState({ autoSuggestVisible: false });
+  function handleSubmit(event) {
+    event.preventDefault();
+    submit();
+  }
+
+  function handleKeyDown(event) {
+    if (event.key === "Escape" && isVisible) {
+      setIsVisible(false);
     }
   }
 
-  focusSearchInput() {
-    this.searchInputRef.current.focus();
-  }
-
-  render() {
-    return (
-      <Form
-        onSubmit={this.handleSubmit}
-        autoComplete="off"
-        className={this.props.className}
-      >
-        <InputGroup>
-          <SearchInput
-            type="text"
-            placeholder="Search by tag"
-            value={this.state.value}
-            onChange={e => this.handleChange("input", e.target.value)}
-            onKeyDown={this.handleKeyDown}
-            onBlur={() => this.setState({ autoSuggestVisible: false })}
-            ref={this.props.searchInputRef}
-          />
-          <SearchButton>
-            <I className="fa fa-search" aria-hidden="true" />
-            <SearchButtonText>Search</SearchButtonText>
-          </SearchButton>
-        </InputGroup>
-        {this.state.autoSuggestVisible ? (
-          <AutoSuggest
-            dataSrc={this.state.tags}
-            value={this.state.value}
-            onChange={this.handleChange}
-          />
-        ) : null}
-      </Form>
-    );
-  }
+  return (
+    <Form onSubmit={handleSubmit} autoComplete="off" className={className}>
+      <InputGroup>
+        <SearchInput
+          type="text"
+          placeholder="Search by tag"
+          value={query}
+          onChange={(event) => handleChange("input", event.target.value)}
+          onKeyDown={handleKeyDown}
+          onBlur={() => setIsVisible(false)}
+        />
+        <SearchButton>
+          <I className="fa fa-search" aria-hidden="true" />
+          <SearchButtonText>Search</SearchButtonText>
+        </SearchButton>
+      </InputGroup>
+      {isVisible ? (
+        <AutoSuggest
+          dataSrc={formattedTags}
+          query={query}
+          onChange={handleChange}
+        />
+      ) : null}
+    </Form>
+  );
 }
 
 const Form = styled.form`
@@ -151,4 +124,4 @@ const I = styled.i`
   }
 `;
 
-export default withRouter(SearchForm);
+export default SearchForm;

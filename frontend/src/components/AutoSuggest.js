@@ -1,116 +1,96 @@
-import React, { Component } from "react";
+import React from "react";
 import styled from "styled-components";
 
-class AutoSuggest extends Component {
-  constructor(props) {
-    super(props);
-    this.activeRef = React.createRef();
+function AutoSuggest({ dataSrc, query, onChange }) {
+  const activeRef = React.useRef(null);
+  const [activeIndex, setActiveIndex] = React.useState(null);
+  const filteredSuggestions = React.useMemo(
+    () => filterDataSrcByValue(dataSrc, query),
+    [dataSrc, query]
+  );
 
-    this.state = {
-      active: undefined,
-    };
-
-    this.handleKeyDown = this.handleKeyDown.bind(this);
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  componentDidMount() {
-    window.addEventListener("keydown", this.handleKeyDown);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener("keydown", this.handleKeyDown);
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.value !== this.props.value) {
-      this.setState({ active: undefined });
-    }
-  }
-
-  handleKeyDown(e) {
-    switch (e.keyCode) {
-      case 13: // Enter key
-        if (this.state.active !== undefined) {
-          e.preventDefault();
-          this.props.onChange(
-            "button",
-            this.filterDataSrcByValue(this.props.dataSrc, this.props.value)[
-              this.state.active
-            ].input
-          );
+  const changeActiveBy = React.useCallback(
+    (n) => {
+      if (n === 1) {
+        // Down Arrow
+        if (activeIndex === null) {
+          setActiveIndex(0);
+        } else if (activeIndex >= filteredSuggestions.length - 1) {
+          setActiveIndex(0);
+        } else {
+          setActiveIndex(activeIndex + 1);
         }
-        break;
-      case 38: // Up arrow
-        e.preventDefault();
-        this.changeActiveBy(-1);
-        this.scrollDrawer();
-        break;
-      case 40: // Down arrow
-        e.preventDefault();
-        this.changeActiveBy(1);
-        this.scrollDrawer();
-        break;
-      default:
-        break;
-    }
-  }
-
-  changeActiveBy(value) {
-    if (value === 1) {
-      // Down Arrow
-      if (this.state.active === undefined) {
-        this.setState({ active: 0 }); // TODO: what if dataSrc is empty?
-      } else if (
-        this.state.active >=
-        this.filterDataSrcByValue(this.props.dataSrc, this.props.value).length -
-          1
-      ) {
-        this.setState({ active: 0 }); // TODO: what if dataSrc is empty?
-      } else {
-        this.setState({ active: this.state.active + 1 });
+      } else if (n === -1) {
+        // Up Arrow
+        if (activeIndex === null || activeIndex <= 0) {
+          setActiveIndex(filteredSuggestions.length - 1);
+        } else {
+          setActiveIndex(activeIndex - 1);
+        }
       }
-    } else if (value === -1) {
-      // Up Arrow
-      if (this.state.active === undefined || this.state.active <= 0) {
-        this.setState({
-          active:
-            this.filterDataSrcByValue(this.props.dataSrc, this.props.value)
-              .length - 1,
-        });
-      } else {
-        this.setState({ active: this.state.active - 1 });
-      }
-    }
-  }
+    },
+    [activeIndex, filteredSuggestions]
+  );
 
-  scrollDrawer() {
-    const active = this.activeRef.current;
-    if (!active) {
+  const handleKeyDown = React.useCallback(
+    (event) => {
+      switch (event.keyCode) {
+        case 13: // Enter key
+          if (activeIndex !== null) {
+            event.preventDefault();
+            onChange("button", filteredSuggestions[activeIndex].input);
+          }
+          break;
+        case 38: // Up arrow
+          event.preventDefault();
+          changeActiveBy(-1);
+          break;
+        case 40: // Down arrow
+          event.preventDefault();
+          changeActiveBy(1);
+          break;
+        default:
+          break;
+      }
+    },
+    [activeIndex, changeActiveBy, filteredSuggestions, onChange]
+  );
+
+  React.useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [handleKeyDown]);
+
+  React.useEffect(() => {
+    scrollDrawer();
+  }, [activeIndex]);
+
+  function scrollDrawer() {
+    const activeEl = activeRef.current;
+    if (!activeEl) {
       return;
     }
 
-    const parent = active.parentElement;
+    const parent = activeEl.parentElement;
 
-    if (active.offsetTop < parent.scrollTop) {
-      parent.scrollTop = active.offsetTop;
+    if (activeEl.offsetTop < parent.scrollTop) {
+      parent.scrollTop = activeEl.offsetTop;
     } else if (
-      active.offsetTop + active.offsetHeight >
+      activeEl.offsetTop + activeEl.offsetHeight >
       parent.scrollTop + parent.offsetHeight
     ) {
       parent.scrollTop =
-        active.offsetTop + active.offsetHeight - parent.offsetHeight;
+        activeEl.offsetTop + activeEl.offsetHeight - parent.offsetHeight;
     }
   }
 
-  handleClick(e) {
-    e.preventDefault();
-    this.props.onChange("button", e.currentTarget.value);
+  function handleClick(event) {
+    event.preventDefault();
+    onChange("button", event.currentTarget.value);
   }
 
-  filterDataSrcByValue(dataSrc, value) {
-    // TODO: Memoize this?
-    // TODO: Arguments are always the same
+  function filterDataSrcByValue(dataSrc, value) {
     const escapeValue = (v) => {
       return v.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
     };
@@ -123,61 +103,55 @@ class AutoSuggest extends Component {
       : [];
   }
 
-  render() {
-    const { dataSrc, value } = this.props;
+  // Return early if there is no data
+  if (!dataSrc || dataSrc.length === 0) {
+    return null;
+  }
 
-    // Return early if there is no data
-    if (!dataSrc || dataSrc.length === 0) {
-      return null;
-    }
-
-    const filtered = this.filterDataSrcByValue(dataSrc, value);
-
-    let suggestions;
-    if (filtered.length) {
-      suggestions = filtered.map((d, i) => {
-        const active = i === this.state.active;
-        const tag = d.input;
-        const formattedTag = (
-          <React.Fragment>
-            {tag.substring(0, d.index)}
-            <span style={{ fontWeight: "bold" }}>{d[0]}</span>
-            {tag.substring(d.index + d[0].length)}
-          </React.Fragment>
-        );
-        return (
-          <Suggestion
-            key={d.input}
-            value={tag}
-            active={active}
-            ref={active ? this.activeRef : undefined}
-            onClick={this.handleClick}
-            onMouseDown={(e) => e.preventDefault()}
-            data-testid={"suggestion" + (active ? "-active" : "")}
-          >
-            {formattedTag}
-          </Suggestion>
-        );
-      });
-    } else {
-      // Add a suggestion when filtered data is empty
-      suggestions = (
+  let suggestions;
+  if (filteredSuggestions.length) {
+    suggestions = filteredSuggestions.map((d, i) => {
+      const isActive = i === activeIndex;
+      const tag = d.input;
+      const formattedTag = (
+        <React.Fragment>
+          {tag.substring(0, d.index)}
+          <span style={{ fontWeight: "bold" }}>{d[0]}</span>
+          {tag.substring(d.index + d[0].length)}
+        </React.Fragment>
+      );
+      return (
         <Suggestion
-          data-testid="suggestion"
-          disabled
-          onClick={(e) => e.preventDefault()}
+          key={d.input}
+          value={tag}
+          active={isActive}
+          ref={isActive ? activeRef : undefined}
+          onClick={handleClick}
+          onMouseDown={(event) => event.preventDefault()}
+          data-testid={"suggestion" + (isActive ? "-active" : "")}
         >
-          No suggestions found
+          {formattedTag}
         </Suggestion>
       );
-    }
-
-    return suggestions ? (
-      <Dropdown>
-        <DropdownDrawer>{suggestions}</DropdownDrawer>
-      </Dropdown>
-    ) : null;
+    });
+  } else {
+    // Add a suggestion when filtered data is empty
+    suggestions = (
+      <Suggestion
+        data-testid="suggestion"
+        disabled
+        onClick={(e) => e.preventDefault()}
+      >
+        No suggestions found
+      </Suggestion>
+    );
   }
+
+  return suggestions ? (
+    <Dropdown>
+      <DropdownDrawer>{suggestions}</DropdownDrawer>
+    </Dropdown>
+  ) : null;
 }
 
 const Dropdown = styled.div`
