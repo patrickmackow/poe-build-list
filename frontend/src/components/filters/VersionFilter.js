@@ -82,4 +82,4 @@ function VersionFilter({ builds, onChange, value, latestVersion }) {
   ) : null;
 }
 
-export default VersionFilter;
+export default React.memo(VersionFilter);

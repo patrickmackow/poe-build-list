@@ -1,43 +1,40 @@
-import React, { Component } from "react";
+import React from "react";
 import styled from "styled-components";
 
-class BuildRow extends Component {
-  render() {
-    const { build, ...rest } = this.props;
-    const cssClass = "game-class " + build.gameClass;
-    return (
-      <Build {...rest}>
-        <BuildLeft>
-          <BuildTitle
-            rel="noopener noreferrer"
-            target="_blank"
-            href={build.url}
-            data-testid="build-link"
-          >
-            {build.title}
-          </BuildTitle>
-          <Tag key={build.gameClass} className={cssClass}>
-            {build.gameClass}
+function BuildRow({ build, ...rest }) {
+  const cssClass = `game-class ${build.gameClass}`;
+  return (
+    <Build {...rest}>
+      <BuildLeft>
+        <BuildTitle
+          rel="noopener noreferrer"
+          target="_blank"
+          href={build.url}
+          data-testid="build-link"
+        >
+          {build.title}
+        </BuildTitle>
+        <Tag key={build.gameClass} className={cssClass}>
+          {build.gameClass}
+        </Tag>
+        {build.generatedTags.map((tag) => (
+          <Tag key={tag.tag} data-testid="build-tag" className={tag.type}>
+            {tag.tag}
           </Tag>
-          {build.generatedTags.map(tag => (
-            <Tag key={tag.tag} data-testid="build-tag" className={tag.type}>
-              {tag.tag}
-            </Tag>
-          ))}
-        </BuildLeft>
-        <BuildRight>
-          <BuildMetaInfo data-testid="build-views">
-            <i className="fa fa-eye" aria-hidden="true" />
-            {build.views}
-          </BuildMetaInfo>
-          <BuildMetaInfo data-testid="build-replies">
-            <i className="fa fa-comment-o" aria-hidden="true" />
-            {build.replies}
-          </BuildMetaInfo>
-        </BuildRight>
-      </Build>
-    );
-  }
+        ))}
+      </BuildLeft>
+      <BuildRight>
+        <BuildMetaInfo data-testid="build-views">
+          <i className="fa fa-eye" aria-hidden="true" />
+          {build.views}
+        </BuildMetaInfo>
+        <BuildMetaInfo data-testid="build-replies">
+          <i className="fa fa-comment-o" aria-hidden="true" />
+          {build.replies}
+        </BuildMetaInfo>
+      </BuildRight>
+    </Build>
+  );
 }
 
 const Build = styled.div`
@@ -146,4 +143,4 @@ const Tag = styled.span`
   }
 `;
 
-export default BuildRow;
+export default React.memo(BuildRow);

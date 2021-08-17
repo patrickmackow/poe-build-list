@@ -2,10 +2,10 @@ import React from "react";
 import { Filter, Label, Select } from "./filters/FilterStyles";
 import styled from "styled-components";
 
-const SortSelect = props => {
+function SortSelect({ value, onChange }) {
   const sortOptions = { latest: "Latest Updated", views: "Most Views" };
 
-  const options = Object.keys(sortOptions).map(option => {
+  const options = Object.keys(sortOptions).map((option) => {
     return (
       <option key={option} value={option}>
         {sortOptions[option]}
@@ -16,12 +16,12 @@ const SortSelect = props => {
   return (
     <StyledFilter>
       <Label htmlFor="sort-select">Sort by:</Label>
-      <Select id="sort-select" value={props.value} onChange={props.onChange}>
+      <Select id="sort-select" value={value} onChange={onChange}>
         {options}
       </Select>
     </StyledFilter>
   );
-};
+}
 
 const StyledFilter = styled(Filter)`
   margin-bottom: 0.5em;
@@ -33,4 +33,4 @@ const StyledFilter = styled(Filter)`
   }
 `;
 
-export default SortSelect;
+export default React.memo(SortSelect);

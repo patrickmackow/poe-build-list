@@ -1,33 +1,21 @@
-import React, { Component } from "react";
+import React from "react";
 import styled from "styled-components";
 
-class FilterContainer extends Component {
-  constructor(props) {
-    super(props);
+function FilterContainer({ children }) {
+  const [isOpen, setIsOpen] = React.useState(false);
 
-    this.state = {
-      isOpen: false
-    };
-
-    this.toggleOpen = this.toggleOpen.bind(this);
+  function toggleOpen() {
+    setIsOpen(!isOpen);
   }
 
-  toggleOpen() {
-    this.setState({ isOpen: !this.state.isOpen });
-  }
-
-  render() {
-    return (
-      <StyledFilterContainer>
-        <FilterLabel isOpen={this.state.isOpen} onClick={this.toggleOpen}>
-          Filters
-        </FilterLabel>
-        <FilterDrawer isOpen={this.state.isOpen}>
-          {this.props.children}
-        </FilterDrawer>
-      </StyledFilterContainer>
-    );
-  }
+  return (
+    <StyledFilterContainer>
+      <FilterLabel isOpen={isOpen} onClick={toggleOpen}>
+        Filters
+      </FilterLabel>
+      <FilterDrawer isOpen={isOpen}>{children}</FilterDrawer>
+    </StyledFilterContainer>
+  );
 }
 
 const StyledFilterContainer = styled.div`
@@ -54,7 +42,7 @@ const FilterLabel = styled.button`
     font-weight: normal;
     margin-left: 0.2em;
     display: inline-block;
-    content: "${props => (props.isOpen ? "-" : "+")}";
+    content: "${(props) => (props.isOpen ? "-" : "+")}";
     transform: scale(1.3);
   }
 
@@ -64,7 +52,7 @@ const FilterLabel = styled.button`
 `;
 
 const FilterDrawer = styled.div`
-  display: ${props => (props.isOpen ? "block" : "none")};
+  display: ${(props) => (props.isOpen ? "block" : "none")};
   padding: 0.5em 1em 0.5em 0;
 
   > * + * {

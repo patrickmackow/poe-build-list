@@ -1,82 +1,60 @@
-import React, { Component } from "react";
-import { Link, withRouter } from "react-router-dom";
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
 import SearchForm from "./SearchForm";
 import styled from "styled-components";
 import ClassNav from "./ClassNav";
 
-class NavBar extends Component {
-  constructor(props) {
-    super(props);
+function NavBar() {
+  const [isClassOpen, setIsClassOpen] = React.useState(false);
+  const [isSearchOpen, setIsSearchOpen] = React.useState(false);
+  const searchInputRef = React.useRef();
+  const location = useLocation();
 
-    this.state = {
-      isClassOpen: false,
-      isSearchOpen: false,
-    };
+  React.useEffect(() => {
+    closeDrawers();
+  }, [location.pathname]);
 
-    this.searchInputRef = React.createRef();
-
-    this.toggleClass = this.toggleClass.bind(this);
-    this.toggleSearch = this.toggleSearch.bind(this);
+  function toggleClass() {
+    setIsClassOpen(!isClassOpen);
+    setIsSearchOpen(false);
   }
 
-  toggleClass() {
-    this.setState({
-      isClassOpen: !this.state.isClassOpen,
-      isSearchOpen: false,
-    });
-  }
-
-  toggleSearch() {
-    this.setState({
-      isSearchOpen: !this.state.isSearchOpen,
-      isClassOpen: false,
-    });
+  function toggleSearch() {
+    setIsClassOpen(false);
+    setIsSearchOpen(!isSearchOpen);
 
     // Input won't focus until it is visible, so timeout is used
     setTimeout(() => {
-      this.searchInputRef.current.focus();
+      searchInputRef.current.focus();
     }, 0);
   }
 
-  closeDrawers() {
-    this.setState({
-      isSearchOpen: false,
-      isClassOpen: false,
-    });
+  function closeDrawers() {
+    setIsClassOpen(false);
+    setIsSearchOpen(false);
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.location.pathname !== this.props.location.pathname) {
-      this.closeDrawers();
-    }
-  }
-
-  render() {
-    return (
-      <StyledNavBar>
-        <LinkContainer>
-          <StyledLink to="/">PoE Build List</StyledLink>
-        </LinkContainer>
-        <ClassContainer>
-          <ClassLabel
-            onClick={this.toggleClass}
-            isClassOpen={this.state.isClassOpen}
-          >
-            Classes
-          </ClassLabel>
-          <ClassDrawer isClassOpen={this.state.isClassOpen}>
-            <StyledClassNav />
-          </ClassDrawer>
-        </ClassContainer>
-        <SearchContainer>
-          <SearchLabel onClick={this.toggleSearch}>Search</SearchLabel>
-          <SearchDrawer isSearchOpen={this.state.isSearchOpen}>
-            <SearchForm ref={this.searchInputRef} />
-          </SearchDrawer>
-        </SearchContainer>
-      </StyledNavBar>
-    );
-  }
+  return (
+    <StyledNavBar>
+      <LinkContainer>
+        <StyledLink to="/">PoE Build List</StyledLink>
+      </LinkContainer>
+      <ClassContainer>
+        <ClassLabel onClick={toggleClass} isClassOpen={isClassOpen}>
+          Classes
+        </ClassLabel>
+        <ClassDrawer isClassOpen={isClassOpen}>
+          <StyledClassNav />
+        </ClassDrawer>
+      </ClassContainer>
+      <SearchContainer>
+        <SearchLabel onClick={toggleSearch}>Search</SearchLabel>
+        <SearchDrawer isSearchOpen={isSearchOpen}>
+          <SearchForm ref={searchInputRef} />
+        </SearchDrawer>
+      </SearchContainer>
+    </StyledNavBar>
+  );
 }
 
 const StyledNavBar = styled.nav`
@@ -239,4 +217,4 @@ const StyledClassNav = styled(ClassNav)`
   }
 `;
 
-export default withRouter(NavBar);
+export default React.memo(NavBar);

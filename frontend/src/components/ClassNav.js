@@ -1,9 +1,9 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-function ClassNav(props) {
+function ClassNav({ className }) {
   return (
-    <ul className={props.className}>
+    <ul className={className}>
       <li>
         <NavLink to="/class/duelist">Duelist</NavLink>
       </li>
@@ -29,4 +29,4 @@ function ClassNav(props) {
   );
 }
 
-export default ClassNav;
+export default React.memo(ClassNav);
